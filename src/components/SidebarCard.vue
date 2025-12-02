@@ -32,7 +32,7 @@
       </ul>
     </el-card>
 
-    <el-card v-if="hotTags?.length" class="block-card" shadow="hover">
+    <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
       <div class="section-title">热门标签</div>
       <div class="section-list">
         <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" data-ajax="post" class="item-link">
@@ -41,7 +41,7 @@
       </div>
     </el-card>
 
-    <el-card v-if="recommendations?.length" class="block-card" shadow="hover">
+    <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
       <div class="section-title">推荐文章</div>
       <ul class="rec-list">
         <li v-for="r in recommendations" :key="r.slug"><a :href="`/posts/${r.slug}`" data-ajax="post" class="rec-link">{{ r.title }}</a></li>
@@ -108,4 +108,8 @@ function onToc(slug: string) {
 .toc-card .toc-list li { margin:6px 0; }
 .toc-card .toc-link { text-decoration:none; color:#409eff; }
 .toc-card .toc-link:hover { text-decoration:underline; }
+@media (max-width: 900px) {
+  .sidebar { position: static; top: auto; }
+  .toc-card, .hot-tags-card, .recommend-card { display: none; }
+}
 </style>

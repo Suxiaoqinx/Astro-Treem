@@ -206,6 +206,18 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         const title = dom.querySelector('title')?.textContent || document.title
         if (next){
           syncHeadAssets(dom)
+          function syncHomeHero(doc){
+            const nextHero = doc.getElementById('home-hero')
+            const currentHero = document.getElementById('home-hero')
+            const grid = document.querySelector('.page-grid')
+            if (nextHero && grid){
+              if (currentHero && currentHero.parentNode) currentHero.parentNode.removeChild(currentHero)
+              const clone = nextHero.cloneNode(true)
+              grid.insertBefore(clone, grid.firstChild)
+            } else {
+              if (currentHero && currentHero.parentNode) currentHero.parentNode.removeChild(currentHero)
+            }
+          }
           // sync attributes/classes from target container (e.g., class="post")
           // clear existing non-id attributes
           Array.from(container.attributes).forEach((attr) => {
@@ -216,6 +228,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           })
           container.innerHTML = next.innerHTML
           document.title = title
+          syncHomeHero(dom)
           runFragmentScripts()
           try { document.dispatchEvent(new Event('astro:page-load')) } catch {}
           enhancePostImages()
@@ -256,6 +269,13 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       #pjax-container img { max-width: 100%; height: auto; }
       #pjax-container .post-content-card .prose img { cursor: zoom-in; }
       #pjax-container .page-grid { display: grid; align-items: start; }
+      @media (max-width: 900px) {
+        header > div { padding: 12px !important; gap: 10px !important; }
+        header nav { gap: 8px !important; }
+        header > div > a[href="/"] { font-size: 16px !important; }
+        #nav-search-button { width: 32px !important; height: 32px !important; }
+        .sidebar { display: none !important; }
+      }
     </style>
     <script type="module" is:inline>
       let INDEX = []

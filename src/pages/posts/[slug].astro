@@ -51,6 +51,14 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <div class="page-grid">
+    <div id="home-hero" class="hero-card">
+      <img class="hero-img" src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua" alt="头图" referrerpolicy="no-referrer" />
+      <div class="hero-overlay">
+        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
+        <div class="hero-title">苏晓晴博客</div>
+        <div class="hero-desc">落花如泪，寄托相思情长。</div>
+      </div>
+    </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} />
     <article id="pjax-container" class="post">
       <div class="post-header">
@@ -72,7 +80,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     </div>
     <style>
     .page-grid { display:grid; gap:20px; align-items:start; grid-template-columns: 360px minmax(0, 1fr); }
-    .post { width: 100%; max-width: 880px; margin: 0; justify-self: stretch; }
+    .post { width: 100%; margin: 0; justify-self: stretch; }
     .post-header { display:flex; flex-direction:column; gap:18px; }
     .post-title-box { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px 28px; }
     .post-title { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: .2px; }
@@ -110,6 +118,18 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
       .post-content-card { padding: 20px; border-radius: 20px; min-height: 420px; }
       .prose { font-size: 16px; line-height: 1.85; }
     }
+    </style>
+    <style>
+      .hero-card { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #fff; grid-column: 1 / -1; }
+      .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
+      .hero-overlay { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 24px; background:
+        linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0)),
+        linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0));
+        color: #fff; text-align:center; }
+      .hero-avatar { width: 84px; height: 84px; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); box-shadow: 0 6px 16px rgba(0,0,0,.25); margin-bottom: 12px; }
+      .hero-title { font-size: 28px; font-weight: 800; }
+      .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
+      @media (max-width: 900px) { .hero-img { height: 220px; } .hero-title { font-size: 22px; } .hero-desc { font-size: 13px; } .hero-avatar { width: 72px; height: 72px; } }
     </style>
     <style is:global>
     .post-content-card .prose img,
