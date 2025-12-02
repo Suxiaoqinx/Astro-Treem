@@ -1,16 +1,46 @@
 ---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import TagFilter from '@components/TagFilter.vue'
+import PaginationNav from '@components/PaginationNav.vue'
+import SidebarCard from '@components/SidebarCard.vue'
+import { getCollection } from 'astro:content'
+
+const PAGE_SIZE = 9
+const all = await getCollection('posts')
+all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+const total = all.length
+const slice = all.slice(0, PAGE_SIZE)
+const clientPosts = slice.map((p) => ({
+  slug: p.slug,
+  data: {
+    title: p.data.title,
+    description: p.data.description || '',
+    date: (p.data.date as Date).toISOString(),
+    tags: p.data.tags || [],
+    category: p.data.category || ''
+  }
+}))
+
+const postsCount = total
+const tagSet = new Set<string>()
+const catSet = new Set<string>()
+for (const p of all) {
+  ;(p.data.tags || []).forEach((t) => tagSet.add(t))
+  if (p.data.category) catSet.add(p.data.category)
+}
+const counts = { posts: postsCount, tags: tagSet.size, categories: catSet.size }
+const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
 
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="博客主页">
+  <div style="display:grid; gap:24px; align-items:start;">
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} />
+    <div>
+      <h1 style="margin-top:0;">博客文章</h1>
+      <TagFilter client:only="vue" posts={clientPosts} />
+      <div style="margin-top:20px; display:flex; justify-content:center;">
+        <PaginationNav client:only="vue" current={1} pageSize={PAGE_SIZE} total={total} basePath="/page" />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

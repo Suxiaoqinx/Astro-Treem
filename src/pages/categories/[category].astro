@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import TimelineList from '@components/TimelineList.vue'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  const cats = new Set()
+  for (const p of posts) if (p.data.category) cats.add(p.data.category)
+  return Array.from(cats).map((c) => ({ params: { category: c } }))
+}
+
+const { category } = Astro.params
+const all = await getCollection('posts')
+const filtered = all.filter((p) => p.data.category === category)
+filtered.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+const clientPosts = filtered.map((p) => ({
+  slug: p.slug,
+  data: {
+    title: p.data.title,
+    description: p.data.description || '',
+    date: (p.data.date as Date).toISOString(),
+    tags: p.data.tags || [],
+    category: p.data.category || ''
+  }
+}))
+---
+<BaseLayout title={`分类：${category}`}>
+  <h1>分类：{category}</h1>
+  <TimelineList client:only="vue" posts={clientPosts} />
+</BaseLayout>

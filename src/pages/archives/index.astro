@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import TagsList from '@components/TagsList.vue'
+
+const posts = await getCollection('posts')
+const years = new Map<number, number>()
+for (const p of posts) {
+  const y = (p.data.date as Date).getFullYear()
+  years.set(y, (years.get(y) || 0) + 1)
+}
+const list = Array.from(years.entries()).sort((a, b) => b[0] - a[0])
+---
+<BaseLayout title="归档">
+  <h1>归档</h1>
+  <TagsList client:only="vue" items={list.map(([y,n]) => ({ name: String(y), count: n }))} basePath="/archives" />
+</BaseLayout>

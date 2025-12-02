@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import TagsList from '@components/TagsList.vue'
+
+const posts = await getCollection('posts')
+const catCount = new Map<string, number>()
+for (const p of posts) {
+  const c = p.data.category
+  if (c) catCount.set(c, (catCount.get(c) || 0) + 1)
+}
+const cats = Array.from(catCount.entries()).sort((a, b) => a[0].localeCompare(b[0]))
+---
+<BaseLayout title="分类">
+  <h1>分类</h1>
+  <TagsList client:only="vue" items={cats.map(([c,n]) => ({ name: c, count: n }))} basePath="/categories" />
+</BaseLayout>

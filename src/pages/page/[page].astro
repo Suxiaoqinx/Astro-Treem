@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import TagFilter from '@components/TagFilter.vue'
+import PaginationNav from '@components/PaginationNav.vue'
+import { getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  const total = posts.length
+  const PAGE_SIZE = 9
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  return Array.from({ length: pages }, (_, i) => ({ params: { page: String(i + 1) } }))
+}
+
+const PAGE_SIZE = 9
+const { page } = Astro.params
+const current = Math.max(1, Number(page))
+
+const all = await getCollection('posts')
+// sort by date desc
+all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+
+const total = all.length
+const start = (current - 1) * PAGE_SIZE
+const slice = all.slice(start, start + PAGE_SIZE)
+
+const clientPosts = slice.map((p) => ({
+  slug: p.slug,
+  data: {
+    title: p.data.title,
+    description: p.data.description || '',
+    date: (p.data.date as Date).toISOString(),
+    tags: p.data.tags || [],
+    category: p.data.category || ''
+  }
+}))
+---
+<BaseLayout title="博客">
+  <h1>博客</h1>
+  <TagFilter client:only="vue" posts={clientPosts} />
+  <div style="margin-top:20px; display:flex; justify-content:center;">
+    <PaginationNav client:only="vue" current={current} pageSize={PAGE_SIZE} total={total} basePath="/page" />
+  </div>
+</BaseLayout>

@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import TimelineList from '@components/TimelineList.vue'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  const years = new Set()
+  for (const p of posts) years.add((p.data.date as Date).getFullYear())
+  return Array.from(years).map((y) => ({ params: { year: String(y) } }))
+}
+
+const { year } = Astro.params
+const all = await getCollection('posts')
+const filtered = all.filter((p) => (p.data.date as Date).getFullYear() === Number(year))
+filtered.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+const clientPosts = filtered.map((p) => ({
+  slug: p.slug,
+  data: {
+    title: p.data.title,
+    description: p.data.description || '',
+    date: (p.data.date as Date).toISOString(),
+    tags: p.data.tags || [],
+    category: p.data.category || ''
+  }
+}))
+---
+<BaseLayout title={`归档：${year} 年`}>
+  <h1>归档：{year} 年</h1>
+  <TimelineList client:only="vue" posts={clientPosts} />
+</BaseLayout>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro'
+import { getEntry, getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts')
+  return posts.map((p) => ({ params: { slug: p.slug } }))
+}
+
+const { slug } = Astro.params
+const entry = await getEntry('posts', slug as string)
+
+if (!entry) {
+  throw new Error(`Post not found: ${slug}`)
+}
+
+const { Content, headings } = await entry.render()
+const all = await getCollection('posts')
+all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+const index = all.findIndex((p) => p.slug === slug)
+const prev = index > 0 ? all[index - 1] : undefined
+const next = index >= 0 && index < all.length - 1 ? all[index + 1] : undefined
+
+const raw = entry.body || ''
+const plain = raw
+  .replace(/```[\s\S]*?```/g, '')
+  .replace(/!\[[^\]]*\]\([^\)]+\)/g, '')
+  .replace(/\[[^\]]*\]\([^\)]+\)/g, '')
+  .replace(/[#>*`_~\-]/g, '')
+  .replace(/\s+/g, '')
+const han = (plain.match(/\p{Script=Han}/gu) || []).length
+const words = (plain.match(/\p{L}+/gu) || []).length
+const wordCount = Math.max(han + words, plain.length)
+const readMinutes = Math.max(1, Math.round(wordCount / 500))
+---
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <article class="post">
+    <h1 class="post-title">{entry.data.title}</h1>
+    <div class="post-meta">
+      <span>{new Date(entry.data.date as Date).toLocaleDateString()}</span>
+      <span class="dot">•</span>
+      <span>字数：{wordCount}</span>
+      <span class="dot">•</span>
+      <span>预计阅读：{readMinutes} 分钟</span>
+    </div>
+    {headings?.length ? (
+      <aside style="padding:12px; background:#fafafa; border:1px solid #eee; margin:16px 0;">
+        <div style="font-weight:600; margin-bottom:8px;">目录</div>
+        <ul>
+          {headings.map((h) => (
+            <li style={`margin-left:${(h.depth - 2) * 12}px`}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    ) : null}
+    <div class="prose">
+      <Content />
+    </div>
+    <hr />
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      {prev ? (<a href={`/posts/${prev.slug}`}>← 上一篇：{prev.data.title}</a>) : (<span />)}
+      {next ? (<a href={`/posts/${next.slug}`}>下一篇：{next.data.title} →</a>) : (<span />)}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+.post { max-width: 840px; margin: 0 auto; }
+.post-title { font-size: 32px; font-weight: 800; margin: 0; }
+.post-meta { color: #909399; margin: 12px 0 22px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.post-meta .dot { color:#c0c4cc }
+.prose { color: #333; font-size: 16px; line-height: 1.8; }
+.prose p { margin: 1em 0; }
+.prose h2 { font-size: 24px; margin: 1.2em 0 .6em; font-weight: 700; }
+.prose h3 { font-size: 20px; margin: 1em 0 .5em; font-weight: 700; }
+.prose h4 { font-size: 18px; margin: .8em 0 .4em; font-weight: 700; }
+.prose a { color: #409eff; text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
+.prose img { max-width: 100%; display: block; margin: 12px auto; border-radius: 12px; }
+.prose pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 12px; overflow: auto; }
+.prose code { background: #f5f7fa; padding: 2px 6px; border-radius: 6px; }
+.prose pre code { background: transparent; padding: 0; }
+.prose blockquote { border-left: 4px solid #409eff; background: #f5f7fa; padding: 10px 14px; border-radius: 8px; color: #555; }
+.prose ul, .prose ol { padding-left: 1.2em; margin: .8em 0; }
+.prose li { margin: .3em 0; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+.prose th, .prose td { border: 1px solid #eee; padding: 8px 10px; }
+.prose th { background: #fafafa; font-weight: 600; }
+.prose hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+</style>
