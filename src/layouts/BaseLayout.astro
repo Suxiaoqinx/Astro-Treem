@@ -12,6 +12,8 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
   </head>
   <body>
     <header style="border-bottom:1px solid #eee;">
@@ -54,10 +56,53 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         <div id="nav-search-list" style="max-height:52vh; overflow:auto;">
         </div>
         <div id="nav-search-empty" style="display:none; padding:24px; text-align:center; color:#777; font-size:14px;">无搜索结果</div>
-      </div>
+    </div>
+    </div>
+    <div id="viewer-progress" style="position:fixed; left:50%; bottom:18px; transform:translateX(-50%); width:min(60vw, 520px); height:4px; background:rgba(255,255,255,.35); border-radius:999px; overflow:hidden; display:none; z-index:10002;">
+      <div id="viewer-progress-bar" style="height:100%; width:0; background:#409eff;"></div>
     </div>
     <script type="module" is:inline>
       const CONTAINER_ID = 'pjax-container'
+      let VIEWER_INSTANCE = null
+      let VIEW_TIMER = 0
+      function startProgress(){
+        const wrap = document.getElementById('viewer-progress')
+        const bar = document.getElementById('viewer-progress-bar')
+        if (!wrap || !(bar instanceof HTMLElement)) return
+        wrap.style.display = 'block'
+        bar.style.width = '0%'
+        if (VIEW_TIMER) window.clearInterval(VIEW_TIMER)
+        let w = 0
+        VIEW_TIMER = window.setInterval(() => { w = Math.min(90, w + 2); bar.style.width = w + '%'}, 60)
+      }
+      function endProgress(){
+        const wrap = document.getElementById('viewer-progress')
+        const bar = document.getElementById('viewer-progress-bar')
+        if (!wrap || !(bar instanceof HTMLElement)) return
+        if (VIEW_TIMER) { window.clearInterval(VIEW_TIMER); VIEW_TIMER = 0 }
+        bar.style.width = '100%'
+        setTimeout(() => { wrap.style.display = 'none'; bar.style.width = '0%' }, 250)
+      }
+      function setupViewer(){
+        const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
+        if (!root || !(window && window.Viewer)) return
+        if (VIEWER_INSTANCE && typeof VIEWER_INSTANCE.destroy === 'function') {
+          try { VIEWER_INSTANCE.destroy() } catch {}
+          VIEWER_INSTANCE = null
+        }
+        VIEWER_INSTANCE = new window.Viewer(root, {
+          navbar: false,
+          title: false,
+          toolbar: { zoomIn: 1, zoomOut: 1, reset: 1, prev: 1, next: 1 },
+          tooltip: false,
+          movable: true,
+          transition: true,
+          backdrop: true,
+          view() { startProgress() },
+          viewed() { endProgress() },
+        })
+      }
+      
       function enhancePostImages(){
         const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
         if (!root) return
@@ -67,6 +112,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           img.setAttribute('loading','lazy')
           img.setAttribute('decoding','async')
           img.setAttribute('referrerpolicy','no-referrer')
+          img.style.cursor = 'zoom-in'
           img.addEventListener('error', function(){
             const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='#f5f7fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#999' font-family='system-ui' font-size='16'>图片加载失败</text></svg>"
             this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
@@ -202,10 +248,11 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       window.addEventListener('popstate', () => ajaxNavigate(window.location.href, true))
       window.ajaxNavigate = ajaxNavigate
       try { document.addEventListener('astro:page-load', () => emitSidebarHeadings()) } catch {}
-      setTimeout(() => { emitSidebarHeadings() }, 0)
+      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupViewer() }, 0)
     </script>
     <style is:global>
       #pjax-container img { max-width: 100%; height: auto; }
+      #pjax-container .post-content-card .prose img { cursor: zoom-in; }
       #pjax-container .page-grid { display: grid; align-items: start; }
     </style>
     <script type="module" is:inline>
