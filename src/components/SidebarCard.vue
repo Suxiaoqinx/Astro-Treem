@@ -23,6 +23,15 @@
 
     
 
+    <el-card v-if="headings?.length" class="block-card toc-card" shadow="hover">
+      <div class="section-title">目录</div>
+      <ul class="toc-list">
+        <li v-for="h in headings" :key="h.slug">
+          <a :href="`#${h.slug}`" class="toc-link" :style="{ marginLeft: `${(h.depth - 2) * 12}px` }">{{ h.text }}</a>
+        </li>
+      </ul>
+    </el-card>
+
     <el-card v-if="hotTags?.length" class="block-card" shadow="hover">
       <div class="section-title">热门标签</div>
       <div class="section-list">
@@ -49,9 +58,10 @@ defineProps<{
   description?: string
   avatar: string
   counts: { posts: number; tags: number }
+  headings?: { slug: string; text: string; depth: number }[]
   hotTags?: { name: string; count: number }[]
   recommendations?: { slug: string; title: string }[]
-}> ()
+}>()
 </script>
 
 <style scoped>
@@ -71,4 +81,8 @@ defineProps<{
 .rec-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; }
 .rec-link { text-decoration:none; color:#333; }
 .rec-link:hover { color:#409eff; }
+.toc-card .toc-list { list-style:none; padding:0; margin:0; }
+.toc-card .toc-list li { margin:6px 0; }
+.toc-card .toc-link { text-decoration:none; color:#409eff; }
+.toc-card .toc-link:hover { text-decoration:underline; }
 </style>

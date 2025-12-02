@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
+import SidebarCard from '@components/SidebarCard.vue'
 import { getEntry, getCollection } from 'astro:content'
 
 export async function getStaticPaths() {
@@ -21,6 +22,21 @@ const index = all.findIndex((p) => p.slug === slug)
 const prev = index > 0 ? all[index - 1] : undefined
 const next = index >= 0 && index < all.length - 1 ? all[index + 1] : undefined
 
+// sidebar data
+const postsCount = all.length
+const tagSet = new Set<string>()
+const tagCount = new Map<string, number>()
+for (const p of all) {
+  ;(p.data.tags || []).forEach((t) => {
+    tagSet.add(t)
+    tagCount.set(t, (tagCount.get(t) || 0) + 1)
+  })
+}
+const counts = { posts: postsCount, tags: tagSet.size }
+const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
+const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+
 const raw = entry.body || ''
 const plain = raw
   .replace(/```[\s\S]*?```/g, '')
@@ -34,59 +50,118 @@ const wordCount = Math.max(han + words, plain.length)
 const readMinutes = Math.max(1, Math.round(wordCount / 500))
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
-  <article class="post">
-    <h1 class="post-title">{entry.data.title}</h1>
-    <div class="post-meta">
-      <span>{new Date(entry.data.date as Date).toLocaleDateString()}</span>
-      <span class="dot">•</span>
-      <span>字数：{wordCount}</span>
-      <span class="dot">•</span>
-      <span>预计阅读：{readMinutes} 分钟</span>
-    </div>
-    {headings?.length ? (
-      <aside style="padding:12px; background:#fafafa; border:1px solid #eee; margin:16px 0;">
-        <div style="font-weight:600; margin-bottom:8px;">目录</div>
-        <ul>
-          {headings.map((h) => (
-            <li style={`margin-left:${(h.depth - 2) * 12}px`}>
-              <a href={`#${h.slug}`}>{h.text}</a>
-            </li>
-          ))}
-        </ul>
-      </aside>
-    ) : null}
-    <div class="prose">
-      <Content />
-    </div>
-    <hr />
-    <div style="display:flex; justify-content:space-between; margin-top:16px;">
-      {prev ? (<a href={`/posts/${prev.slug}`}>← 上一篇：{prev.data.title}</a>) : (<span />)}
-      {next ? (<a href={`/posts/${next.slug}`}>下一篇：{next.data.title} →</a>) : (<span />)}
-    </div>
-  </article>
+  <div class="page-grid">
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} />
+    <article class="post">
+      <div class="post-header">
+        <div class="post-title-box">
+          <h1 class="post-title">{entry.data.title}</h1>
+        </div>
+        <div class="post-meta-box">
+          <div class="meta-item">
+            <div class="meta-label">发布时间</div>
+            <div class="meta-value">{new Date(entry.data.date as Date).toLocaleDateString()}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">字数</div>
+            <div class="meta-value">{wordCount}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">预计阅读</div>
+            <div class="meta-value">{readMinutes} 分钟</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="post-content-card">
+        <div class="prose">
+          <Content />
+        </div>
+        <hr />
+        <div class="post-nav">
+          {prev ? (<a href={`/posts/${prev.slug}`}>← 上一篇：{prev.data.title}</a>) : (<span />)}
+          {next ? (<a href={`/posts/${next.slug}`}>下一篇：{next.data.title} →</a>) : (<span />)}
+        </div>
+      </div>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
-.post { max-width: 840px; margin: 0 auto; }
-.post-title { font-size: 32px; font-weight: 800; margin: 0; }
-.post-meta { color: #909399; margin: 12px 0 22px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-.post-meta .dot { color:#c0c4cc }
-.prose { color: #333; font-size: 16px; line-height: 1.8; }
-.prose p { margin: 1em 0; }
-.prose h2 { font-size: 24px; margin: 1.2em 0 .6em; font-weight: 700; }
-.prose h3 { font-size: 20px; margin: 1em 0 .5em; font-weight: 700; }
-.prose h4 { font-size: 18px; margin: .8em 0 .4em; font-weight: 700; }
-.prose a { color: #409eff; text-decoration: none; }
-.prose a:hover { text-decoration: underline; }
-.prose img { max-width: 100%; display: block; margin: 12px auto; border-radius: 12px; }
-.prose pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 12px; overflow: auto; }
-.prose code { background: #f5f7fa; padding: 2px 6px; border-radius: 6px; }
-.prose pre code { background: transparent; padding: 0; }
-.prose blockquote { border-left: 4px solid #409eff; background: #f5f7fa; padding: 10px 14px; border-radius: 8px; color: #555; }
-.prose ul, .prose ol { padding-left: 1.2em; margin: .8em 0; }
-.prose li { margin: .3em 0; }
-.prose table { width: 100%; border-collapse: collapse; margin: 1em 0; }
-.prose th, .prose td { border: 1px solid #eee; padding: 8px 10px; }
-.prose th { background: #fafafa; font-weight: 600; }
-.prose hr { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+.page-grid { display:grid; gap:20px; align-items:start; grid-template-columns: 360px minmax(0, 1fr); }
+.post { width: 100%; max-width: 880px; margin: 0; justify-self: stretch; }
+.post-header { display:flex; flex-direction:column; gap:18px; }
+.post-title-box { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px 28px; }
+.post-title { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: .2px; }
+.post-meta-box { display:flex; gap:12px; align-items:stretch; flex-wrap:wrap; }
+.meta-item { background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:10px 12px; min-width:140px; }
+.meta-label { color:#666; font-size:12px; }
+.meta-value { color:#222; font-weight:700; font-size:14px; margin-top:4px; }
+.post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:560px; display:flex; flex-direction:column; }
+.prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; flex: 1 1 auto; }
+.prose p { margin: 1.1em 0; }
+.prose h2 { font-size: 26px; margin: 1.4em 0 .7em; font-weight: 800; color:#111827; }
+.prose h3 { font-size: 22px; margin: 1.2em 0 .6em; font-weight: 700; color:#111827; }
+.prose h4 { font-size: 18px; margin: 1em 0 .5em; font-weight: 700; color:#111827; }
+.prose a { color:#2563eb; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+.prose a:hover { color:#1d4ed8; }
+.post-content-card .prose img { max-width: 100%; height: auto; display: block; margin: 14px auto; border-radius: 16px; padding: 8px; background: #fff; border: 1px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); box-sizing: border-box; }
+.prose pre { background:#0b1220; color:#e5eaf3; padding: 16px 18px; border-radius: 14px; overflow: auto; font-size:14px; line-height:1.6; tab-size: 2; }
+.prose code { background:#f2f6fc; color:#1f2d3d; padding: 2px 6px; border-radius: 6px; }
+.prose pre code { background: transparent; padding: 0; color: inherit; }
+.prose blockquote { border-left: 4px solid #409eff; background: #f5f7fa; padding: 12px 16px; border-radius: 10px; color: #4b5563; }
+.prose ul, .prose ol { padding-left: 1.4em; margin: .9em 0; }
+.prose li { margin: .35em 0; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1.2em 0; }
+.prose th, .prose td { border: 1px solid #eee; padding: 10px 12px; }
+.prose th { background: #fafafa; font-weight: 700; }
+.prose hr { border: none; border-top: 1px solid #eee; margin: 28px 0; }
+.post-nav { display:flex; justify-content:space-between; margin-top:auto; }
+.post-nav a { color:#374151; text-decoration:none; }
+.post-nav a:hover { color:#111827; text-decoration:underline; }
+.img-error { border-color:#ddd; border-style:dashed; }
+@media (max-width: 900px) {
+  .page-grid { grid-template-columns: 1fr; }
+  .post { max-width: 100%; }
+}
+@media (max-width: 640px) {
+  .post-title { font-size: 28px; }
+  .post-content-card { padding: 20px; border-radius: 20px; min-height: 420px; }
+  .prose { font-size: 16px; line-height: 1.85; }
+}
 </style>
+
+<style is:global>
+.post-content-card .prose img,
+.post-content-card .prose img.posts-img,
+.post-content-card .prose picture img,
+.post-content-card .prose figure img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  border-radius: 16px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 3px 10px rgba(0,0,0,.06);
+  box-sizing: border-box;
+}
+.post-content-card .prose { overflow-wrap: anywhere; }
+.post-content-card .prose table { max-width: 100%; }
+</style>
+
+<script is:inline>
+  const imgs = Array.from(document.querySelectorAll('#pjax-container .post-content-card .prose img'))
+  for (const img of imgs) {
+    img.setAttribute('class', 'posts-img')
+    img.setAttribute('loading', 'lazy')
+    img.setAttribute('decoding', 'async')
+    img.setAttribute('referrerpolicy', 'no-referrer')
+    img.addEventListener('error', () => {
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='#f5f7fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#999' font-family='system-ui' font-size='16'>图片加载失败</text></svg>`
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+      img.classList.add('img-error')
+    }, { once: true })
+  }
+</script>
