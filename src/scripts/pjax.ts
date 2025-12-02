@@ -1,50 +1,41 @@
 const CONTAINER_ID = 'pjax-container'
 const PROGRESS_ID = 'pjax-progress'
 const PROGRESS_STYLE_ID = 'pjax-progress-style'
-let progressTimer: number | null = null
+const SPINNER_CLASS = 'spinner'
 
 function ensureProgressDom() {
   if (!document.getElementById(PROGRESS_STYLE_ID)) {
     const style = document.createElement('style')
     style.id = PROGRESS_STYLE_ID
-    style.textContent = `#${PROGRESS_ID}{position:fixed;top:0;left:0;height:2px;width:0;background:#409eff;z-index:9999;opacity:0;transition:width .2s ease, opacity .3s ease}`
+    style.textContent = `#${PROGRESS_ID}{position:fixed;inset:0;background:rgba(255,255,255,.6);backdrop-filter:blur(2px);z-index:9999;opacity:0;transition:opacity .2s ease;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#${PROGRESS_ID} .${SPINNER_CLASS}{width:48px;height:48px;border:4px solid rgba(64,158,255,.3);border-top-color:#409eff;border-radius:50%;animation:pjax-spin 1s linear infinite}
+@keyframes pjax-spin{to{transform:rotate(360deg)}}`
     document.head.appendChild(style)
   }
   if (!document.getElementById(PROGRESS_ID)) {
-    const bar = document.createElement('div')
-    bar.id = PROGRESS_ID
-    document.body.appendChild(bar)
+    const overlay = document.createElement('div')
+    overlay.id = PROGRESS_ID
+    const spinner = document.createElement('div')
+    spinner.className = SPINNER_CLASS
+    overlay.appendChild(spinner)
+    document.body.appendChild(overlay)
   }
-}
-
-function setBarWidth(p: number) {
-  const bar = document.getElementById(PROGRESS_ID)
-  if (bar) (bar as HTMLElement).style.width = `${Math.max(0, Math.min(100, p))}%`
 }
 
 function startProgress() {
   ensureProgressDom()
-  const bar = document.getElementById(PROGRESS_ID) as HTMLElement | null
-  if (!bar) return
-  bar.style.opacity = '1'
-  setBarWidth(0)
-  if (progressTimer) window.clearInterval(progressTimer)
-  let p = 0
-  progressTimer = window.setInterval(() => {
-    p += Math.random() * 12 + 8
-    if (p > 90) p = 90
-    setBarWidth(p)
-  }, 200) as unknown as number
+  const overlay = document.getElementById(PROGRESS_ID) as HTMLElement | null
+  if (!overlay) return
+  overlay.style.opacity = '1'
+  overlay.style.pointerEvents = 'auto'
 }
 
 function doneProgress() {
-  const bar = document.getElementById(PROGRESS_ID) as HTMLElement | null
-  if (progressTimer) { window.clearInterval(progressTimer); progressTimer = null }
-  if (!bar) return
-  setBarWidth(100)
+  const overlay = document.getElementById(PROGRESS_ID) as HTMLElement | null
+  if (!overlay) return
   window.setTimeout(() => {
-    bar.style.opacity = '0'
-    setBarWidth(0)
+    overlay.style.opacity = '0'
+    overlay.style.pointerEvents = 'none'
   }, 300)
 }
 

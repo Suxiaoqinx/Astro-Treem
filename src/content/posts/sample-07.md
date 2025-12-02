@@ -4,7 +4,8 @@ description: '使用 Element Plus 的 ElCarousel 构建响应式头图。'
 date: 2025-01-07
 tags: ['UI', 'ElementPlus']
 category: 'Code'
-cover: '/images/covers/hero.jpg'
+cover: 'https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp'
+coverSide: 'right'
 ---
 
 ## 设计

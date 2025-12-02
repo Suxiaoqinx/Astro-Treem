@@ -4,7 +4,8 @@ description: '使用 Astro 快速搭建最小博客骨架，了解目录结构�
 date: 2025-01-01
 tags: ['Astro', '入门']
 category: 'Guide'
-cover: '/images/covers/astro-starter.jpg'
+cover: 'https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp'
+coverSide: 'right'
 ---
 
 ## 概述

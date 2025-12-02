@@ -8,7 +8,8 @@ const posts = defineCollection({
     date: z.date(),
     tags: z.array(z.string()).default([]),
     category: z.string().optional(),
-    cover: z.string().optional()
+    cover: z.string().optional(),
+    coverSide: z.enum(['left', 'right']).optional()
   })
 })
 

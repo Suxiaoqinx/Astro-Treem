@@ -4,7 +4,8 @@ description: '在 Astro 中使用 @astrojs/vue 集成 Element Plus，并解决 S
 date: 2025-01-02
 tags: ['Vue', 'ElementPlus']
 category: 'Code'
-cover: '/images/covers/element-plus.jpg'
+cover: 'https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp'
+coverSide: 'left'
 ---
 
 ## 说明

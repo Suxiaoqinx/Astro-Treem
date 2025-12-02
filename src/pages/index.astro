@@ -17,24 +17,30 @@ const clientPosts = slice.map((p) => ({
     description: p.data.description || '',
     date: (p.data.date as Date).toISOString(),
     tags: p.data.tags || [],
-    category: p.data.category || ''
+    category: p.data.category || '',
+    cover: p.data.cover || '',
+    coverSide: (p.data as any).coverSide || 'left'
   }
 }))
 
 const postsCount = total
 const tagSet = new Set<string>()
-const catSet = new Set<string>()
+const tagCount = new Map<string, number>()
 for (const p of all) {
-  ;(p.data.tags || []).forEach((t) => tagSet.add(t))
-  if (p.data.category) catSet.add(p.data.category)
+  ;(p.data.tags || []).forEach((t) => {
+    tagSet.add(t)
+    tagCount.set(t, (tagCount.get(t) || 0) + 1)
+  })
 }
-const counts = { posts: postsCount, tags: tagSet.size, categories: catSet.size }
+const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
+const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
 
 ---
 <BaseLayout title="博客主页">
-  <div style="display:grid; gap:24px; align-items:start;">
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} />
+  <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
     <div>
       <h1 style="margin-top:0;">博客文章</h1>
       <TagFilter client:only="vue" posts={clientPosts} />

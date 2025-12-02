@@ -18,7 +18,9 @@
         :date="p.data.date"
         :tags="p.data.tags"
         :slug="p.slug"
-        :category="p.data.category"
+        :cover="p.data.cover"
+        :side="p.data.coverSide"
+        :showCover="mode === 'list'"
         @tagClick="onTagClick"
       />
     </div>
@@ -32,7 +34,7 @@ import PostCard from './PostCard.vue'
 
 type Post = {
   slug: string
-  data: { title: string; description?: string; date: string; tags: string[]; category?: string }
+  data: { title: string; description?: string; date: string; tags: string[]; category?: string; cover?: string; coverSide?: 'left' | 'right' }
 }
 
 const props = defineProps<{ posts: Post[] }>()
