@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import TagFilter from '@components/TagFilter.vue'
-import PaginationNav from '@components/PaginationNav.vue'
+import PostCard from '@components/PostCard.vue'
 import SidebarCard from '@components/SidebarCard.vue'
 import { getCollection } from 'astro:content'
 
@@ -13,8 +12,8 @@ export async function getStaticPaths() {
   return Array.from({ length: pages }, (_, i) => ({ params: { page: String(i + 1) } }))
 }
 
-const PAGE_SIZE = 9
 const { page } = Astro.params
+const PAGE_SIZE = 9
 const current = Math.max(1, Number(page))
 
 const all = await getCollection('posts')
@@ -24,17 +23,6 @@ all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTi
 const total = all.length
 const start = (current - 1) * PAGE_SIZE
 const slice = all.slice(start, start + PAGE_SIZE)
-
-const clientPosts = slice.map((p) => ({
-  slug: p.slug,
-  data: {
-    title: p.data.title,
-    description: p.data.description || '',
-    date: (p.data.date as Date).toISOString(),
-    tags: p.data.tags || [],
-    category: p.data.category || ''
-  }
-}))
 
 const postsCount = total
 const tagSet = new Set<string>()
@@ -54,10 +42,20 @@ const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data
   <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
     <div id="pjax-container">
-      <h1 style="margin-top:0;">博客</h1>
-      <TagFilter client:only="vue" posts={clientPosts} />
-      <div style="margin-top:20px; display:flex; justify-content:center;">
-        <PaginationNav client:only="vue" current={current} pageSize={PAGE_SIZE} total={total} basePath="/page" />
+      <div class="simple-list">
+        {slice.map((p) => (
+          <PostCard
+            client:only="vue"
+            title={p.data.title}
+            description={p.data.description || ''}
+            date={(p.data.date as Date).toISOString()}
+            tags={p.data.tags || []}
+            slug={p.slug}
+            cover={p.data.cover || ''}
+            side={(p.data as any).coverSide || 'left'}
+            showCover={true}
+          />
+        ))}
       </div>
     </div>
   </div>

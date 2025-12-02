@@ -1,48 +1,48 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import { getCollection } from 'astro:content'
-import TagsList from '@components/TagsList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
+import { getCollection } from 'astro:content'
+import friends from '../data/friends.json'
 
 const posts = await getCollection('posts')
 posts.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
-const years = new Map<number, number>()
-for (const p of posts) {
-  const y = (p.data.date as Date).getFullYear()
-  years.set(y, (years.get(y) || 0) + 1)
-}
-const list = Array.from(years.entries()).sort((a, b) => b[0] - a[0])
 const postsCount = posts.length
 const tagSet = new Set<string>()
-for (const p of posts) { (p.data.tags || []).forEach((t) => tagSet.add(t)) }
-const counts = { posts: postsCount, tags: tagSet.size }
 const tagCount = new Map<string, number>()
-for (const p of posts) { (p.data.tags || []).forEach((t) => tagCount.set(t, (tagCount.get(t) || 0) + 1)) }
+for (const p of posts) { (p.data.tags || []).forEach((t) => { tagSet.add(t); tagCount.set(t, (tagCount.get(t) || 0) + 1) }) }
+const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
 const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+
 ---
-<BaseLayout title="归档">
+<BaseLayout title="友链">
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
       <img class="hero-img" src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua" alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
-        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
-        <div class="hero-title">苏晓晴博客</div>
-        <div class="hero-desc">落花如泪，寄托相思情长。</div>
+        <div class="hero-title">友情链接</div>
+        <div class="hero-desc">互相链接，共同成长</div>
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
-          <h1 class="post-title">归档</h1>
-          <div class="post-submeta">按年份查看文章数量</div>
+          <h1 class="post-title">友链</h1>
+          <div class="post-submeta">互相链接，共同成长</div>
         </div>
       </div>
       <div class="post-content-card">
         <div class="prose">
-          <TagsList client:only="vue" items={list.map(([y,n]) => ({ name: String(y), count: n }))} basePath="/archives" />
+          <div class="friends">
+            {friends.map((f) => (
+              <a href={f.url} target="_blank" rel="noopener" class="friend-item">
+                <div class="friend-name">{f.name}</div>
+                <div class="friend-desc">{f.desc}</div>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </article>
@@ -55,7 +55,6 @@ const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.da
       linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0)),
       linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0));
       color: #fff; text-align:center; }
-    .hero-avatar { width: 84px; height: 84px; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); box-shadow: 0 6px 16px rgba(0,0,0,.25); margin-bottom: 12px; }
     .hero-title { font-size: 28px; font-weight: 800; }
     .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
     .post { width: 100%; margin: 0; justify-self: stretch; }
@@ -66,12 +65,16 @@ const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.da
     .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:260px; display:flex; flex-direction:column; }
     .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
     .prose p { margin: 1.1em 0; }
+    .friends { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
+    .friend-item { display:block; padding:12px; text-decoration:none; color:#333; border:1px solid #e5e7eb; border-radius:12px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+    .friend-item:hover { border-color:#409eff; box-shadow:0 8px 16px rgba(64,158,255,.18); }
+    .friend-name { font-weight:700; }
+    .friend-desc { font-size:13px; color:#666; margin-top:4px; }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }
       .hero-img { height: 220px; }
       .hero-title { font-size: 22px; }
       .hero-desc { font-size: 13px; }
-      .hero-avatar { width: 72px; height: 72px; }
     }
   </style>
 </BaseLayout>

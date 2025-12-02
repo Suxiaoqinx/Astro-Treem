@@ -1,29 +1,15 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import TagFilter from '@components/TagFilter.vue'
-import PaginationNav from '@components/PaginationNav.vue'
+import PostCard from '@components/PostCard.vue'
 import SidebarCard from '@components/SidebarCard.vue'
 import { getCollection } from 'astro:content'
 
 const PAGE_SIZE = 9
 const all = await getCollection('posts')
 all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
-const total = all.length
 const slice = all.slice(0, PAGE_SIZE)
-const clientPosts = slice.map((p) => ({
-  slug: p.slug,
-  data: {
-    title: p.data.title,
-    description: p.data.description || '',
-    date: (p.data.date as Date).toISOString(),
-    tags: p.data.tags || [],
-    category: p.data.category || '',
-    cover: p.data.cover || '',
-    coverSide: (p.data as any).coverSide || 'left'
-  }
-}))
 
-const postsCount = total
+const postsCount = all.length
 const tagSet = new Set<string>()
 const tagCount = new Map<string, number>()
 for (const p of all) {
@@ -50,10 +36,20 @@ const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
     <div id="pjax-container">
-      <h1 style="margin-top:0;">博客文章</h1>
-      <TagFilter client:only="vue" posts={clientPosts} />
-      <div style="margin-top:20px; display:flex; justify-content:center;">
-        <PaginationNav client:only="vue" current={1} pageSize={PAGE_SIZE} total={total} basePath="/page" />
+      <div class="simple-list">
+        {slice.map((p) => (
+          <PostCard
+            client:only="vue"
+            title={p.data.title}
+            description={p.data.description || ''}
+            date={(p.data.date as Date).toISOString()}
+            tags={p.data.tags || []}
+            slug={p.slug}
+            cover={p.data.cover || ''}
+            side={(p.data as any).coverSide || 'left'}
+            showCover={true}
+          />
+        ))}
       </div>
     </div>
   </div>
@@ -68,6 +64,7 @@ const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data
     .hero-title { font-size: 28px; font-weight: 800; }
     .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
     .hero-avatar { width: 84px; height: 84px; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); box-shadow: 0 6px 16px rgba(0,0,0,.25); margin-bottom: 12px; }
+    .simple-list { display: grid; grid-template-columns: 1fr; gap: 16px; }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }
       .hero-img { height: 220px; }

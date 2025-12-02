@@ -3,6 +3,8 @@ title: xxx
 description: 随机内容示例，包含一张图片与若干段落。
 date: 2025-12-02
 tags: [随笔, 测试]
+cover: https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp
+coverSide: right
 ---
 
 ## 随机段落一
