@@ -1,0 +1,23 @@
+---
+import 'element-plus/dist/index.css'
+const { title = 'Astro Treem Blog', description = 'Astro + Element Plus 博客框架' } = Astro.props
+---
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <header style="padding:16px; border-bottom:1px solid #eee;">
+      <a href="/" style="text-decoration:none; font-weight:600; font-size:18px;">Astro Treem Blog</a>
+    </header>
+    <main style="padding:24px; max-width:1024px; margin:0 auto;">
+      <slot />
+    </main>
+    <footer style="padding:24px; border-top:1px solid #eee; text-align:center; color:#666;">
+      © {new Date().getFullYear()} Astro Treem Blog
+    </footer>
+  </body>
+</html>
