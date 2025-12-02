@@ -220,6 +220,8 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           try { document.dispatchEvent(new Event('astro:page-load')) } catch {}
           enhancePostImages()
           emitSidebarHeadings()
+          setupViewer()
+          try { document.dispatchEvent(new CustomEvent('ajax:afterNavigate', { detail: { url, container } })) } catch {}
           if (!replace) history.pushState({}, '', url)
           window.scrollTo({ top: 0, behavior: 'smooth' })
         } else {
