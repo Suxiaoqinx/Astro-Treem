@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover" class="post-card">
+  <el-card shadow="hover" class="post-card" @click="onCardClick">
     <div :class="['card-body', bodyClass]">
       <div v-if="showMedia" class="media">
         <img :src="cover as string" alt="cover" />
@@ -9,7 +9,7 @@
         <div class="post-desc" v-if="description">{{ description }}</div>
         <div class="post-meta">
           <el-tag type="danger" size="small" effect="dark" class="meta-date">{{ dateStr }}</el-tag>
-          <el-tag v-for="t in tags" :key="t" class="meta-tag clickable" @click="onTagClick(t)">{{ t }}</el-tag>
+          <el-tag v-for="t in tags" :key="t" class="meta-tag clickable" @click.stop="onTagClick(t)">{{ t }}</el-tag>
         </div>
       </div>
     </div>
@@ -32,7 +32,20 @@ const { title, description, date, tags, slug, cover, side, showCover } = defineP
 }> ()
 
 const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
-function onTagClick(t: string) { emit('tagClick', t) }
+
+function onTagClick(t: string) {
+  const url = `/tags/${t}`
+  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(url)
+  else window.location.href = url
+}
+
+function onCardClick(e: MouseEvent) {
+  const target = e.target as HTMLElement
+  if (target.closest('a')) return
+  const url = href.value
+  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(url)
+  else window.location.href = url
+}
 
 const dateStr = computed(() => new Date(date).toLocaleDateString())
 const href = computed(() => `/posts/${slug}`)
@@ -41,7 +54,7 @@ const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-rev
 </script>
 
 <style scoped>
-.post-card { border-radius: 16px; overflow: hidden; }
+.post-card { border-radius: 16px; overflow: hidden; cursor: pointer; }
 .card-body { display:flex; gap:12px; padding: 12px; align-items: center; }
 .card-body.row { flex-direction: row; }
 .card-body.row-reverse { flex-direction: row-reverse; }
