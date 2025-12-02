@@ -41,7 +41,7 @@ const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data
 <BaseLayout title="博客主页">
   <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
-    <div>
+    <div id="pjax-container">
       <h1 style="margin-top:0;">博客文章</h1>
       <TagFilter client:only="vue" posts={clientPosts} />
       <div style="margin-top:20px; display:flex; justify-content:center;">

@@ -1,27 +1,37 @@
 # Astro Treem Blog
 
-一个基于 `Astro` + `Vue 3` + `Element Plus` 的轻量博客框架，支持 PJAX 局部刷新、标签/分类/归档时间线、分页、侧边栏统计、文章字数统计与阅读时长、RSS 等功能。
+一个基于 `Astro` + `Vue 3` + `Element Plus` 的轻量博客框架，支持 AJAX 局部刷新导航、标签与归档时间线、分页、侧边栏统计、文章字数统计与阅读时长、RSS、快捷搜索等功能。
 
 ## 项目简介
 - 技术栈：`Astro`、`@astrojs/vue`、`Vue 3`、`Element Plus`
-- PJAX：所有站内链接支持无刷新跳转与进度条展示（`src/scripts/pjax.ts`）
 - 内容集合：Markdown 文章统一管理（`src/content/posts/`），并通过 `astro:content` 校验 frontmatter
+- 站点地图与 RSS：集成 `@astrojs/sitemap` 与 `@astrojs/rss`
 
 ## 功能特性
-- 文章列表支持列表/网格切换
-- 标签、分类、归档索引页以徽章样式展示，支持点击跳转
-- 标签、分类、归档详情页以时间线形式展示文章
-- 文章页展示字数统计与阅读时长
+- 无刷新导航（AJAX）：主容器 `#pjax-container`，站内链接添加 `data-ajax="post"`
+- 文章列表分页与标签筛选
+- 标签索引与详情页（时间线展示）
+- 归档索引与年份详情（时间线展示）
+- 文章字数统计与预计阅读时长
+- 快捷搜索弹窗（Ctrl/Cmd+K），索引接口：`/search-index.json`
 - RSS 订阅：`/rss.xml`
+- 图片懒加载与失败占位
 
 ## 目录结构
 ```text
 src/
   components/        # Vue 组件（卡片、时间线、分页、侧边栏、标签列表等）
-  layouts/           # 页面布局，入口处加载 PJAX（BaseLayout.astro）
-  pages/             # Astro 路由页面（首页、标签、分类、归档、文章详情）
-  content/           # 内容集合（posts）
-  scripts/pjax.ts    # PJAX 导航与进度条逻辑
+  layouts/           # 页面布局与内联 AJAX 导航（BaseLayout.astro）
+  pages/             # Astro 路由页面（首页、标签、归档、文章详情、分页）
+    posts/[slug].astro
+    tags/index.astro
+    tags/[tag].astro
+    archives/index.astro
+    archives/[year].astro
+    page/[page].astro
+    rss.xml.ts       # RSS 输出
+    search-index.json.ts  # 搜索索引接口
+  content/           # 内容集合（posts）与 schema（config.ts）
 ```
 
 ## 开发与构建
@@ -32,7 +42,7 @@ src/
 - 本地预览：`npm run preview`
 
 ## 编写文章
-文章放在 `src/content/posts/` 目录，文件名建议使用 `slug` 风格（例如 `my-first-post.md`）。frontmatter 字段如下：
+文章放在 `src/content/posts/` 目录，文件名建议使用 `slug` 风格（例如 `my-first-post.md`）。frontmatter 示例：
 
 ```md
 ---
@@ -42,26 +52,33 @@ date: 2024-12-01
 tags: [前端, Astro]
 category: 技术
 cover: https://example.com/cover.jpg
+coverSide: left # 或 right（可选）
 ---
 
 正文内容使用 Markdown 书写……
 ```
 
-frontmatter 的校验见 `src/content/config.ts`，字段包括：`title`、`description?`、`date`、`tags[]`、`category?`、`cover?`。
+frontmatter 的校验见 `src/content/config.ts`，字段包括：`title`、`description?`、`date`、`tags[]`、`category?`、`cover?`、`coverSide?`。
 
 ## 页面说明
 - 首页：`src/pages/index.astro`，包含分页与侧边栏统计
 - 文章详情：`src/pages/posts/[slug].astro`，计算字数与阅读时长
-- 标签索引：`src/pages/tags/index.astro`（按标签展示徽章，可点击）
-- 标签详情：`src/pages/tags/[tag].astro`（时间线列表）
-- 分类索引：`src/pages/categories/index.astro`
-- 分类详情：`src/pages/categories/[category].astro`
+- 标签索引：`src/pages/tags/index.astro`
+- 标签详情：`src/pages/tags/[tag].astro`
 - 归档索引：`src/pages/archives/index.astro`
 - 归档详情：`src/pages/archives/[year].astro`
+- 分页路由：`src/pages/page/[page].astro`
 
-## PJAX 使用
-- 布局文件 `src/layouts/BaseLayout.astro` 中加载了 PJAX 脚本，主容器为 `#pjax-container`
-- 站内链接使用 `data-pjax` 标记，或直接调用全局 `window.pjaxNavigate(url)` 进行导航
+## AJAX 导航
+- 布局文件 `src/layouts/BaseLayout.astro` 定义容器 `#pjax-container` 与全局 `window.ajaxNavigate(url)`
+- 给站内链接添加 `data-ajax="post"`，即可启用局部刷新导航
+- 浏览器前进/后退通过 `popstate` 已接管，无需额外处理
+- 片段脚本与样式同步机制已内置，切换页面后仍可正常运行
+
+## 搜索
+- 按 `Ctrl/Cmd+K` 打开搜索弹窗
+- 索引来源：内联注入或接口 `GET /search-index.json`
+- 匹配标题、描述与标签；回车打开第一条匹配结果
 
 ## 静态资源
 将图片等静态资源放到 `public/` 目录，构建后会原样复制到产物。页面中可通过 `/xxx.png` 直接引用。
@@ -69,6 +86,16 @@ frontmatter 的校验见 `src/content/config.ts`，字段包括：`title`、`des
 ## 部署
 - 构建：`npm run build`
 - 将 `dist/` 目录部署至任意静态托管（Nginx、Vercel、Netlify 等）
+- 将 `astro.config.mjs` 的 `site` 设置为生产域名（用于 sitemap 与 RSS）：
 
-## 许可证
-根据你的仓库设置选择合适的许可证；若未指定，默认遵循本仓库的使用约定。
+```ts
+// astro.config.mjs
+import { defineConfig } from 'astro/config'
+import vue from '@astrojs/vue'
+import sitemap from '@astrojs/sitemap'
+
+export default defineConfig({
+  site: 'https://your.domain',
+  integrations: [vue({ appEntrypoint: '/src/pages/_app' }), sitemap()],
+})
+```

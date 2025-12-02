@@ -23,11 +23,11 @@
 
     
 
-    <el-card v-if="headings?.length" class="block-card toc-card" shadow="hover">
+    <el-card v-if="headingsState?.length" class="block-card toc-card" shadow="hover">
       <div class="section-title">目录</div>
       <ul class="toc-list">
-        <li v-for="h in headings" :key="h.slug">
-          <a :href="`#${h.slug}`" class="toc-link" :style="{ marginLeft: `${(h.depth - 2) * 12}px` }">{{ h.text }}</a>
+        <li v-for="h in headingsState" :key="h.slug">
+          <a :href="`#${h.slug}`" class="toc-link" :style="{ marginLeft: `${(h.depth - 2) * 12}px` }" @click.prevent="onToc(h.slug)">{{ h.text }}</a>
         </li>
       </ul>
     </el-card>
@@ -35,7 +35,7 @@
     <el-card v-if="hotTags?.length" class="block-card" shadow="hover">
       <div class="section-title">热门标签</div>
       <div class="section-list">
-        <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" data-pjax class="item-link">
+        <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" data-ajax="post" class="item-link">
           <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
         </a>
       </div>
@@ -44,7 +44,7 @@
     <el-card v-if="recommendations?.length" class="block-card" shadow="hover">
       <div class="section-title">推荐文章</div>
       <ul class="rec-list">
-        <li v-for="r in recommendations" :key="r.slug"><a :href="`/posts/${r.slug}`" data-pjax class="rec-link">{{ r.title }}</a></li>
+        <li v-for="r in recommendations" :key="r.slug"><a :href="`/posts/${r.slug}`" data-ajax="post" class="rec-link">{{ r.title }}</a></li>
       </ul>
     </el-card>
   </div>
@@ -52,16 +52,39 @@
 
 <script setup lang="ts">
 import { ElCard, ElAvatar, ElTag } from 'element-plus'
+import { ref } from 'vue'
 
-defineProps<{
+type Heading = { slug: string; text: string; depth: number }
+
+const props = defineProps<{
   name: string
   description?: string
   avatar: string
   counts: { posts: number; tags: number }
-  headings?: { slug: string; text: string; depth: number }[]
+  headings?: Heading[]
   hotTags?: { name: string; count: number }[]
   recommendations?: { slug: string; title: string }[]
 }>()
+
+const headingsState = ref<Heading[]>(props.headings || [])
+
+try {
+  document.addEventListener('ajax:updateSidebar', (e: Event) => {
+    const ce = e as CustomEvent<{ headings?: Heading[] }>
+    const hs = (ce.detail && ce.detail.headings) || []
+    headingsState.value = Array.isArray(hs) ? hs : []
+  })
+} catch {}
+
+function onToc(slug: string) {
+  try {
+    const el = document.getElementById(slug)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      try { history.replaceState(null, '', `#${slug}`) } catch {}
+    }
+  } catch {}
+}
 </script>
 
 <style scoped>

@@ -5,7 +5,7 @@
         <img :src="cover as string" alt="cover" />
       </div>
       <div class="content">
-        <a :href="href" data-pjax class="post-title">{{ title }}</a>
+        <a :href="href" data-ajax="post" class="post-title">{{ title }}</a>
         <div class="post-desc" v-if="description">{{ description }}</div>
         <div class="post-meta">
           <el-tag type="danger" size="small" effect="dark" class="meta-date">{{ dateStr }}</el-tag>

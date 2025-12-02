@@ -4,7 +4,7 @@
       v-for="(item, i) in items"
       :key="i"
       :href="`${base}/${item.name}`"
-      data-pjax
+      data-ajax="post"
       class="tag-link"
     >
       <el-tag class="tag" effect="plain">{{ item.name }}（{{ item.count }}）</el-tag>

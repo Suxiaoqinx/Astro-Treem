@@ -16,8 +16,7 @@ const props = defineProps<{ current: number; pageSize: number; total: number; ba
 function onChange(page: number) {
   const base = props.basePath || '/page'
   const href = `${base}/${page}`
-  const nav = (window as any).pjaxNavigate
-  if (typeof nav === 'function') nav(href)
+  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(href)
   else window.location.href = href
 }
 </script>

@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 import TimelineList from '@components/TimelineList.vue'
+import SidebarCard from '@components/SidebarCard.vue'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -12,6 +13,7 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params
 const all = await getCollection('posts')
+all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
 const filtered = all.filter((p) => (p.data.tags || []).includes(tag as string))
 filtered.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
 const clientPosts = filtered.map((p) => ({
@@ -24,8 +26,21 @@ const clientPosts = filtered.map((p) => ({
     category: p.data.category || ''
   }
 }))
+const postsCount = all.length
+const tagSet = new Set<string>()
+const tagCount = new Map<string, number>()
+for (const p of all) { (p.data.tags || []).forEach((t) => { tagSet.add(t); tagCount.set(t, (tagCount.get(t) || 0) + 1) }) }
+const counts = { posts: postsCount, tags: tagSet.size }
+const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
+const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
 ---
 <BaseLayout title={`标签：${tag}`}>
-  <h1>标签：{tag}</h1>
-  <TimelineList client:only="vue" posts={clientPosts} />
+  <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
+    <div id="pjax-container">
+      <h1>标签：{tag}</h1>
+      <TimelineList client:only="vue" posts={clientPosts} />
+    </div>
+  </div>
 </BaseLayout>
