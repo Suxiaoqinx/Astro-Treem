@@ -1,19 +1,19 @@
 <template>
   <nav class="header-nav">
     <div class="nav-list-card">
-      <a href="/friends" data-ajax="post" class="nav-item">
+      <a href="/friends" class="nav-item">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 20a8 8 0 0 1 16 0" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         友链
       </a>
-      <a href="/archives" data-ajax="post" class="nav-item">
+      <a href="/archives" class="nav-item">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 7h16v3H4zM6 10v9h12v-9" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         归档
       </a>
-      <a href="/donate" data-ajax="post" class="nav-item">
+      <a href="/donate" class="nav-item">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.35-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.65-7 9-7 9Z" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         赞助
       </a>
-      <a href="/about" data-ajax="post" class="nav-item">
+      <a href="/about" class="nav-item">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm0-9v5M12 8h.01" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         关于
       </a>

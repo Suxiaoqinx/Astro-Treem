@@ -2,7 +2,7 @@
   <div class="sidebar">
     <el-card class="profile-card" shadow="hover">
       <div class="profile">
-        <el-avatar :src="avatar" size="64" />
+        <el-avatar :src="avatar" size="large" />
         <div class="info">
           <div class="name">{{ name }}</div>
           <div class="desc" v-if="description">{{ description }}</div>
@@ -38,7 +38,7 @@
     <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
       <div class="section-title">热门标签</div>
       <div class="section-list">
-        <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" data-ajax="post" class="item-link">
+        <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
           <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
         </a>
       </div>
@@ -49,7 +49,7 @@
       <ul class="rec-list">
         <li v-for="(r, i) in recommendations" :key="r.slug" class="rec-item">
           <span class="rec-index">{{ i + 1 }}</span>
-          <a :href="`/posts/${r.slug}`" data-ajax="post" class="rec-link">{{ r.title }}</a>
+          <a :href="`/posts/${r.slug}`" class="rec-link">{{ r.title }}</a>
           <span v-if="r.date" class="rec-date">{{ formatDate(r.date as any) }}</span>
         </li>
       </ul>

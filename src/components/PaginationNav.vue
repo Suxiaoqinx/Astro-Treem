@@ -16,7 +16,6 @@ const props = defineProps<{ current: number; pageSize: number; total: number; ba
 function onChange(page: number) {
   const base = props.basePath || '/page'
   const href = `${base}/${page}`
-  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(href)
-  else window.location.href = href
+  window.location.href = href
 }
 </script>

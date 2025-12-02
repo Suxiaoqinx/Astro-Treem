@@ -5,7 +5,7 @@
         <img :src="cover as string" alt="cover" />
       </div>
       <div class="content">
-        <a :href="href" data-ajax="post" class="post-title">{{ title }}</a>
+        <a :href="href" class="post-title">{{ title }}</a>
         <div class="post-desc" v-if="description">{{ description }}</div>
         <div class="post-meta">
           <el-tag type="danger" size="small" effect="dark" class="meta-date">{{ dateStr }}</el-tag>
@@ -35,16 +35,14 @@ const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
 
 function onTagClick(t: string) {
   const url = `/tags/${t}`
-  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(url)
-  else window.location.href = url
+  window.location.href = url
 }
 
 function onCardClick(e: MouseEvent) {
   const target = e.target as HTMLElement
   if (target.closest('a')) return
   const url = href.value
-  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(url)
-  else window.location.href = url
+  window.location.href = url
 }
 
 const dateStr = computed(() => new Date(date).toLocaleDateString())

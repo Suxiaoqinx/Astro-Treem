@@ -6,7 +6,7 @@
       :timestamp="formatDate(p.data.date)"
       placement="top"
     >
-      <a :href="`/posts/${p.slug}`" data-ajax="post" class="title">{{ p.data.title }}</a>
+      <a :href="`/posts/${p.slug}`" class="title">{{ p.data.title }}</a>
       <div v-if="p.data.description" class="desc">{{ p.data.description }}</div>
       <div class="tags" v-if="p.data.tags?.length">
         <el-tag v-for="t in p.data.tags" :key="t" size="small" effect="plain" class="clickable" @click="onTag(t)">{{ t }}</el-tag>
@@ -25,8 +25,7 @@ function formatDate(d: string) { return new Date(d).toLocaleDateString() }
 
 function onTag(t: string) {
   const href = `/tags/${t}`
-  if ((window as any).ajaxNavigate) (window as any).ajaxNavigate(href)
-  else window.location.href = href
+  window.location.href = href
 }
 </script>
 

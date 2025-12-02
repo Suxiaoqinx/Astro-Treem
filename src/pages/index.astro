@@ -28,14 +28,14 @@ const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
 <BaseLayout title="苏晓晴博客">
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
-      <img class="hero-img" src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua" alt="首页头图" referrerpolicy="no-referrer" />
+      <img class="hero-img" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='300'><rect width='100%' height='100%' fill='%23eef2ff'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23666' font-family='system-ui' font-size='20'>Hero</text></svg>" alt="首页头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
         <img class="hero-avatar" src={profile.avatar} alt="avatar" />
         <div class="hero-title">苏晓晴博客</div>
         <div class="hero-desc">落花如泪，寄托相思情长。</div>
       </div>
     </div>
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <SidebarCard client:load name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <div class="simple-list">
         {slice.map((p) => (

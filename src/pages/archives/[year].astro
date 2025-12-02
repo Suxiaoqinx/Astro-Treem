@@ -47,10 +47,19 @@ const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
-    <div id="pjax-container">
-      <h1>归档：{year} 年</h1>
-      <TimelineList client:only="vue" posts={clientPosts} />
-    </div>
+    <article id="pjax-container" class="post">
+      <div class="post-header">
+        <div class="post-title-box">
+          <h1 class="post-title">归档：{year} 年</h1>
+          <div class="post-submeta">共 {clientPosts.length} 篇</div>
+        </div>
+      </div>
+      <div class="post-content-card">
+        <div class="prose">
+          <TimelineList client:only="vue" posts={clientPosts} />
+        </div>
+      </div>
+    </article>
   </div>
   <style>
     .page-grid { display:grid; gap:24px; align-items:start; grid-template-columns: 360px minmax(0,1fr); }
@@ -63,6 +72,13 @@ const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
     .hero-avatar { width: 84px; height: 84px; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); box-shadow: 0 6px 16px rgba(0,0,0,.25); margin-bottom: 12px; }
     .hero-title { font-size: 28px; font-weight: 800; }
     .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
+    .post { width: 100%; margin: 0; justify-self: stretch; }
+    .post-header { display:flex; flex-direction:column; gap:18px; }
+    .post-title-box { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px 28px; }
+    .post-title { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: .2px; }
+    .post-submeta { color:#666; font-size:14px; margin-top:10px; }
+    .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:260px; display:flex; flex-direction:column; }
+    .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }
       .hero-img { height: 220px; }

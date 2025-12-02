@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
+import WalineComments from '@components/WalineComments.vue'
 import { getEntry, getCollection } from 'astro:content'
 
 export async function getStaticPaths() {
@@ -60,7 +61,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
         <div class="hero-desc">落花如泪，寄托相思情长。</div>
       </div>
     </div>
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
+    <SidebarCard client:load name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
@@ -76,8 +77,8 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
         <div class="donate-card">
           <div class="donate-text">喜欢这篇文章噢，觉得不错的话，奖励奖励我！</div>
           <div class="donate-actions">
-            <a data-ajax="post" class="btn btn-blue" data-donate="alipay">支付宝</a>
-            <a data-ajax="post" class="btn btn-green" data-donate="wechat">微信</a>
+            <a class="btn btn-blue" data-donate="alipay">支付宝</a>
+            <a class="btn btn-green" data-donate="wechat">微信</a>
           </div>
         </div>
         <div id="donate-overlay" class="donate-overlay" style="display:none;">
@@ -88,16 +89,17 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
             <button id="donate-close" class="donate-close" aria-label="关闭">×</button>
           </div>
         </div>
-        <div class="meta-card">
-          <div class="meta-line">本文由 <span class="author">{profile.name}</span> 于 {new Date(entry.data.date as Date).toLocaleString()} 发布</div>
-          <div class="meta-line">文章地址：<a id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a></div>
-          <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 苏晓晴博客。</div>
-        </div>
-        <hr />
-      <div class="post-nav">
-          {prev ? (<a href={`/posts/${prev.slug}`} data-ajax="post">← 上一篇：{prev.data.title}</a>) : (<span />)}
-          {next ? (<a href={`/posts/${next.slug}`} data-ajax="post">下一篇：{next.data.title} →</a>) : (<span />)}
+      <div class="meta-card">
+        <div class="meta-line">本文由 <span class="author">{profile.name}</span> 于 {new Date(entry.data.date as Date).toLocaleString()} 发布</div>
+        <div class="meta-line">文章地址：<a id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a></div>
+        <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 苏晓晴博客。</div>
       </div>
+      <hr />
+      <div class="post-nav">
+          {prev ? (<a href={`/posts/${prev.slug}`}>← 上一篇：{prev.data.title}</a>) : (<span />)}
+          {next ? (<a href={`/posts/${next.slug}`}>下一篇：{next.data.title} →</a>) : (<span />)}
+      </div>
+      <WalineComments client:load />
     </div>
     <style>
     .page-grid { display:grid; gap:20px; align-items:start; grid-template-columns: 360px minmax(0, 1fr); }
@@ -115,7 +117,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .prose h2, .prose h3, .prose h4 { scroll-margin-top: 80px; }
     .prose a { color:#2563eb; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
     .prose a:hover { color:#1d4ed8; }
-    .post-content-card .prose img { max-width: 100%; height: auto; display: block; margin: 14px auto; border-radius: 16px; padding: 8px; background: #fff; border: 1px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); box-sizing: border-box; }
+    .post-content-card .prose img { max-width: 100%; height: auto; display: block; margin: 14px auto; border-radius: 16px; padding: 8px; background: #fff; border: 1px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); box-sizing: border-box; cursor: zoom-in; }
     .prose pre { background:#0b1220; color:#e5eaf3; padding: 16px 18px; border-radius: 14px; overflow: auto; font-size:14px; line-height:1.6; tab-size: 2; }
     .prose code { background:#f2f6fc; color:#1f2d3d; padding: 2px 6px; border-radius: 6px; }
     .prose pre code { background: transparent; padding: 0; color: inherit; }
@@ -190,47 +192,6 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .post-content-card .prose { overflow-wrap: anywhere; }
     .post-content-card .prose table { max-width: 100%; }
     </style>
-    <script is:inline>
-      const imgs = Array.from(document.querySelectorAll('#pjax-container .post-content-card .prose img'))
-      for (const img of imgs) {
-        img.setAttribute('class', 'posts-img')
-        img.setAttribute('loading', 'lazy')
-        img.setAttribute('decoding', 'async')
-        img.setAttribute('referrerpolicy', 'no-referrer')
-        img.addEventListener('error', () => {
-          const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='#f5f7fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#999' font-family='system-ui' font-size='16'>图片加载失败</text></svg>`
-          img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
-          img.classList.add('img-error')
-        }, { once: true })
-      }
-      ;(function(){
-        const overlay = document.getElementById('donate-overlay')
-        const title = document.getElementById('donate-title')
-        const img = document.getElementById('donate-qr')
-        const closeBtn = document.getElementById('donate-close')
-        const backdrop = overlay ? overlay.querySelector('.donate-backdrop') : null
-        function show(type){
-          if (!overlay || !(img instanceof HTMLImageElement) || !(title instanceof HTMLElement)) return
-          title.textContent = type === 'wechat' ? '推荐使用微信' : '推荐使用支付宝'
-          const src = type === 'wechat' ? '/assets/donate/wechat.png' : '/assets/donate/alipay.png'
-          img.src = src
-          img.onerror = function(){
-            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><rect width='100%' height='100%' rx='16' fill='#3498db'/><text x='50%' y='14%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='22'>推荐使用" + (type==='wechat'?'微信':'支付宝') + "</text><rect x='110' y='110' width='300' height='300' rx='12' fill='#f5f7fa' stroke='#e5e7eb'/><text x='50%' y='88%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='16'>请前往捐赠页面查看二维码</text></svg>"
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
-          }
-          overlay.style.display = 'flex'
-          document.body.style.overflow = 'hidden'
-        }
-        function hide(){ if (!overlay) return; overlay.style.display = 'none'; document.body.style.overflow = '' }
-        const btns = Array.from(document.querySelectorAll('.donate-card [data-donate]'))
-        for (const b of btns){
-          b.addEventListener('click', (e) => { e.preventDefault(); show(b.getAttribute('data-donate')||'') })
-        }
-        if (closeBtn) closeBtn.addEventListener('click', () => hide())
-        if (backdrop) backdrop.addEventListener('click', () => hide())
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide() })
-      })()
-    </script>
     </article>
   </div>
 </BaseLayout>

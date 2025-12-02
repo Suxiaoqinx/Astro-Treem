@@ -13,13 +13,14 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/viewerjs@1.11.6/dist/viewer.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/sodesu-comment@0.5.1/dist/sodesu-comment.css" />
+    <link rel="stylesheet" href="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css" />
+    <script src="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js"></script>
   </head>
   <body style="min-height:100vh; display:flex; flex-direction:column; margin:0;">
     <header style="border-bottom:1px solid #eee;">
       <div style="max-width:85rem; margin:0 auto; padding:16px; display:flex; align-items:center; gap:16px;">
-        <a href="/" data-ajax="post" class="home-button">
+        <a href="/" class="home-button">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 11l9-7 9 7v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-7Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M9 15c.8 1 2.2 1 3 0" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -37,7 +38,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         <span class="badge purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 4h10v4H7zM4 10h16v10H4z" stroke="#7e57c2" stroke-width="2"/></svg>Frame</span>
         <span class="badge purple">Astro</span>
         <a href="/sitemap-index.xml" class="badge orange" style="text-decoration:none;" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6h12v4H6zM6 14h12v4H6z" stroke="#e67e22" stroke-width="2"/></svg>Sitemap</a>
-        <a href="/rss.xml" data-ajax="post" class="badge orange" style="text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="2" fill="#e67e22"/><path d="M4 4c8 0 16 8 16 16" stroke="#e67e22" stroke-width="2"/><path d="M4 10c5 0 10 5 10 10" stroke="#e67e22" stroke-width="2"/></svg>RSS订阅</a>
+        <a href="/rss.xml" class="badge orange" style="text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="2" fill="#e67e22"/><path d="M4 4c8 0 16 8 16 16" stroke="#e67e22" stroke-width="2"/><path d="M4 10c5 0 10 5 10 10" stroke="#e67e22" stroke-width="2"/></svg>RSS订阅</a>
         <span class="badge gray">桂ICP备2022007996号-1</span>
       </div>
       <div style="margin-top:10px;">© 2020 - {new Date().getFullYear()} 苏晓晴博客</div>
@@ -62,30 +63,30 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         <div id="nav-search-empty" style="display:none; padding:24px; text-align:center; color:#777; font-size:14px;">无搜索结果</div>
     </div>
     </div>
-    <div id="viewer-progress" style="position:fixed; left:50%; bottom:18px; transform:translateX(-50%); width:min(60vw, 520px); height:4px; background:rgba(255,255,255,.35); border-radius:999px; overflow:hidden; display:none; z-index:10002;">
-      <div id="viewer-progress-bar" style="height:100%; width:0; background:#409eff;"></div>
-    </div>
+    
     <script type="module" is:inline>
       const CONTAINER_ID = 'pjax-container'
+      
+      
       let VIEWER_INSTANCE = null
-      let VIEW_TIMER = 0
-      function startProgress(){
-        const wrap = document.getElementById('viewer-progress')
-        const bar = document.getElementById('viewer-progress-bar')
-        if (!wrap || !(bar instanceof HTMLElement)) return
-        wrap.style.display = 'block'
-        bar.style.width = '0%'
-        if (VIEW_TIMER) window.clearInterval(VIEW_TIMER)
-        let w = 0
-        VIEW_TIMER = window.setInterval(() => { w = Math.min(90, w + 2); bar.style.width = w + '%'}, 60)
-      }
-      function endProgress(){
-        const wrap = document.getElementById('viewer-progress')
-        const bar = document.getElementById('viewer-progress-bar')
-        if (!wrap || !(bar instanceof HTMLElement)) return
-        if (VIEW_TIMER) { window.clearInterval(VIEW_TIMER); VIEW_TIMER = 0 }
-        bar.style.width = '100%'
-        setTimeout(() => { wrap.style.display = 'none'; bar.style.width = '0%' }, 250)
+      function enhancePostImages(){
+        const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
+        if (!root) return
+        const imgs = Array.from(root.querySelectorAll('img'))
+        for (const img of imgs){
+          img.setAttribute('class','posts-img')
+          img.setAttribute('loading','lazy')
+          img.setAttribute('decoding','async')
+          img.setAttribute('referrerpolicy','no-referrer')
+          img.style.cursor = 'zoom-in'
+          
+          img.addEventListener('error', function(){
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='#f5f7fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#999' font-family='system-ui' font-size='16'>图片加载失败</text></svg>"
+            this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+            this.classList.add('img-error')
+          }, { once: true })
+          
+        }
       }
       function setupViewer(){
         const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
@@ -102,27 +103,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           movable: true,
           transition: true,
           backdrop: true,
-          view() { startProgress() },
-          viewed() { endProgress() },
         })
-      }
-      
-      function enhancePostImages(){
-        const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
-        if (!root) return
-        const imgs = Array.from(root.querySelectorAll('img'))
-        for (const img of imgs){
-          img.setAttribute('class','posts-img')
-          img.setAttribute('loading','lazy')
-          img.setAttribute('decoding','async')
-          img.setAttribute('referrerpolicy','no-referrer')
-          img.style.cursor = 'zoom-in'
-          img.addEventListener('error', function(){
-            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect width='100%' height='100%' fill='#f5f7fa'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#999' font-family='system-ui' font-size='16'>图片加载失败</text></svg>"
-            this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
-            this.classList.add('img-error')
-          }, { once: true })
-        }
       }
       function setupDonateOverlay(){
         const overlay = document.querySelector('#'+CONTAINER_ID+' #donate-overlay')
@@ -150,32 +131,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         const a = document.querySelector('#'+CONTAINER_ID+' #article-url')
         if (a && a instanceof HTMLAnchorElement) { a.textContent = window.location.href; a.href = window.location.href }
       }
-      function runFragmentScripts(){
-        const root = document.getElementById(CONTAINER_ID)
-        if (!root) return
-        const scripts = Array.from(root.querySelectorAll('script'))
-        for (const s of scripts){
-          if (s.src) {
-            const exists = Array.from(document.head.querySelectorAll('script')).some((x) => x.src === s.src)
-            if (exists) continue
-            const copy = document.createElement('script')
-            for (const {name,value} of Array.from(s.attributes)) copy.setAttribute(name, value)
-            copy.removeAttribute('data-astro-cid')
-            copy.setAttribute('data-ajax-managed','1')
-            copy.src = s.src
-            document.head.appendChild(copy)
-          }
-        }
-        const prev = Array.from(document.head.querySelectorAll('style[data-ajax-style]'))
-        for (const p of prev) p.parentNode && p.parentNode.removeChild(p)
-        const styles = Array.from(root.querySelectorAll('style'))
-        for (const st of styles){
-          const clone = document.createElement('style')
-          clone.setAttribute('data-ajax-style','1')
-          clone.textContent = st.textContent || ''
-          document.head.appendChild(clone)
-        }
-      }
+      
       function emitSidebarHeadings(){
         const container = document.getElementById(CONTAINER_ID)
         if (!container) return
@@ -195,106 +151,13 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         }
         try { document.dispatchEvent(new CustomEvent('ajax:updateSidebar', { detail: { headings: hs } })) } catch {}
       }
-      function syncHeadAssets(doc){
-        const newLinks = Array.from(doc.querySelectorAll('head link[rel="stylesheet"]'))
-        const newHrefs = new Set(newLinks.map((l) => l.getAttribute('href') || '').filter((x) => !!x))
-        const managed = Array.from(document.head.querySelectorAll('link[rel="stylesheet"][data-ajax-managed="1"]'))
-        for (const m of managed){
-          const href = m.getAttribute('href') || ''
-          if (!newHrefs.has(href)) m.parentNode && m.parentNode.removeChild(m)
-        }
-        const currentHrefs = new Set(
-          Array.from(document.head.querySelectorAll('link[rel="stylesheet"]'))
-            .map((l) => l.getAttribute('href') || '')
-            .filter((x) => !!x)
-        )
-        for (const l of newLinks){
-          const href = l.getAttribute('href') || ''
-          if (!href) continue
-          if (!currentHrefs.has(href)){
-            const clone = l.cloneNode(true)
-            clone.setAttribute('data-ajax-managed','1')
-            document.head.appendChild(clone)
-          }
-        }
-        const prevHeadStyles = Array.from(document.head.querySelectorAll('style[data-ajax-managed="1"]'))
-        for (const s of prevHeadStyles) s.parentNode && s.parentNode.removeChild(s)
-        const newHeadStyles = Array.from(doc.querySelectorAll('head style'))
-        for (const st of newHeadStyles){
-          const clone = st.cloneNode(true)
-          clone.setAttribute('data-ajax-managed','1')
-          document.head.appendChild(clone)
-        }
-      }
-      async function ajaxNavigate(url, replace=false){
-        const container = document.getElementById(CONTAINER_ID)
-        if (!container) { window.location.href = url; return }
-        const res = await fetch(url, { headers: { 'X-Requested-With': 'fetch' } })
-        const html = await res.text()
-        const dom = new DOMParser().parseFromString(html, 'text/html')
-        const next = dom.getElementById(CONTAINER_ID)
-        const title = dom.querySelector('title')?.textContent || document.title
-        if (next){
-          syncHeadAssets(dom)
-          function syncHomeHero(doc){
-            const nextHero = doc.getElementById('home-hero')
-            const currentHero = document.getElementById('home-hero')
-            const grid = document.querySelector('.page-grid')
-            if (nextHero && grid){
-              if (currentHero && currentHero.parentNode) currentHero.parentNode.removeChild(currentHero)
-              const clone = nextHero.cloneNode(true)
-              grid.insertBefore(clone, grid.firstChild)
-            } else {
-              if (currentHero && currentHero.parentNode) currentHero.parentNode.removeChild(currentHero)
-            }
-          }
-          // sync attributes/classes from target container (e.g., class="post")
-          // clear existing non-id attributes
-          Array.from(container.attributes).forEach((attr) => {
-            if (attr.name !== 'id') container.removeAttribute(attr.name)
-          })
-          Array.from(next.attributes).forEach((attr) => {
-            if (attr.name !== 'id') container.setAttribute(attr.name, attr.value)
-          })
-          container.innerHTML = next.innerHTML
-          document.title = title
-          syncHomeHero(dom)
-          runFragmentScripts()
-          try { document.dispatchEvent(new Event('astro:page-load')) } catch {}
-          enhancePostImages()
-          setupDonateOverlay()
-          emitSidebarHeadings()
-          setupViewer()
-          try { document.dispatchEvent(new CustomEvent('ajax:afterNavigate', { detail: { url, container } })) } catch {}
-          if (!replace) history.pushState({}, '', url)
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        } else {
-          window.location.href = url
-        }
-      }
-      function isSameOrigin(url){
-        try { return new URL(url, window.location.href).origin === window.location.origin } catch { return false }
-      }
-      document.addEventListener('click', (e) => {
-        const t = e.target
-        if (!(t instanceof Element)) return
-        const a = t.closest('a')
-        if (!a) return
-        if (!a.matches('[data-ajax="post"]')) return
-        const href = a.getAttribute('href') || ''
-        if (!href || !isSameOrigin(href)) return
-        if (a.target === '_blank') return
-        const ev = e
-        if ((ev && (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey))) return
-        const u = new URL(href, window.location.href)
-        if (u.pathname === window.location.pathname && u.search === window.location.search && u.hash) return
-        e.preventDefault()
-        ajaxNavigate(href)
-      }, true)
-      window.addEventListener('popstate', () => ajaxNavigate(window.location.href, true))
-      window.ajaxNavigate = ajaxNavigate
-      try { document.addEventListener('astro:page-load', () => emitSidebarHeadings()) } catch {}
-      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupViewer(); setupDonateOverlay() }, 0)
+      
+      
+      
+      try {
+        document.addEventListener('astro:page-load', () => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer() })
+      } catch {}
+      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer() }, 0)
     </script>
     <style is:global>
       #pjax-container img { max-width: 100%; height: auto; }
@@ -379,7 +242,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           return
         }
         empty.style.display = 'none'
-        list.innerHTML = items.slice(0, 12).map((x) => `<a href="/posts/${x.slug}" data-ajax="post" style="display:block;padding:12px 16px;text-decoration:none;color:#333;border-bottom:1px solid #f2f2f2"><div style="font-weight:600;">${x.title}</div><div style="font-size:12px;color:#666;margin-top:4px;">${(x.tags||[]).join(', ')}</div></a>`).join('')
+        list.innerHTML = items.slice(0, 12).map((x) => `<a href="/posts/${x.slug}" style="display:block;padding:12px 16px;text-decoration:none;color:#333;border-bottom:1px solid #f2f2f2"><div style="font-weight:600;">${x.title}</div><div style="font-size:12px;color:#666;margin-top:4px;">${(x.tags||[]).join(', ')}</div></a>`).join('')
         const children = Array.from(list.querySelectorAll('a'))
         for (const a of children) {
           a.addEventListener('click', () => { closeOverlay() })
@@ -409,8 +272,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
             const r = INDEX.filter((x) => x.title.toLowerCase().includes(s) || (x.description||'').toLowerCase().includes(s) || (x.tags||[]).some((t) => (t||'').toLowerCase().includes(s)))
             if (r.length) {
               const href = `/posts/${r[0].slug}`
-              if (window.ajaxNavigate) window.ajaxNavigate(href)
-              else window.location.href = href
+              window.location.href = href
               closeOverlay()
             } else {
               empty && (empty.style.display = 'block')
