@@ -19,7 +19,8 @@ for (const p of posts) { (p.data.tags || []).forEach((t) => tagSet.add(t)) }
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
+const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
 ---
 <BaseLayout title="标签">
   <div class="page-grid">
@@ -31,7 +32,7 @@ const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.da
         <div class="hero-desc">落花如泪，寄托相思情长。</div>
       </div>
     </div>
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} />
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <h1>标签</h1>
       <TagsList client:only="vue" items={tags.map(([t,c]) => ({ name: t, count: c }))} />

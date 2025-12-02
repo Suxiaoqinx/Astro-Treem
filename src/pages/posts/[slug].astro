@@ -35,7 +35,8 @@ for (const p of all) {
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
+const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
 
 const raw = entry.body || ''
 const plain = raw
@@ -59,7 +60,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
         <div class="hero-desc">落花如泪，寄托相思情长。</div>
       </div>
     </div>
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} />
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
@@ -71,6 +72,26 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
       <div class="post-content-card">
         <div class="prose">
           <Content />
+        </div>
+        <div class="donate-card">
+          <div class="donate-text">喜欢这篇文章噢，觉得不错的话，奖励奖励我！</div>
+          <div class="donate-actions">
+            <a data-ajax="post" class="btn btn-blue" data-donate="alipay">支付宝</a>
+            <a data-ajax="post" class="btn btn-green" data-donate="wechat">微信</a>
+          </div>
+        </div>
+        <div id="donate-overlay" class="donate-overlay" style="display:none;">
+          <div class="donate-backdrop"></div>
+          <div class="donate-modal">
+            <div class="donate-modal-title" id="donate-title">推荐使用支付宝</div>
+            <img id="donate-qr" alt="二维码" referrerpolicy="no-referrer" />
+            <button id="donate-close" class="donate-close" aria-label="关闭">×</button>
+          </div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-line">本文由 <span class="author">{profile.name}</span> 于 {new Date(entry.data.date as Date).toLocaleString()} 发布</div>
+          <div class="meta-line">文章地址：<a id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a></div>
+          <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 苏晓晴博客。</div>
         </div>
         <hr />
       <div class="post-nav">
@@ -105,6 +126,25 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .prose th, .prose td { border: 1px solid #eee; padding: 10px 12px; }
     .prose th { background: #fafafa; font-weight: 700; }
     .prose hr { border: none; border-top: 1px solid #eee; margin: 28px 0; }
+    .donate-card { margin: 20px 0 10px; padding: 16px; background:#fff; border:1px solid #e5e7eb; border-radius:18px; box-shadow: 0 8px 24px rgba(0,0,0,.06); text-align:center; }
+    .donate-text { color:#6b7280; margin-bottom: 12px; }
+    .donate-actions { display:flex; gap:12px; justify-content:center; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; height:36px; padding:0 14px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; }
+    .btn-blue { background:#409eff; }
+    .btn-blue:hover { background:#337ecc; }
+    .btn-green { background:#10b981; }
+    .btn-green:hover { background:#0ea5a9; }
+    .meta-card { position: relative; margin: 6px 0 12px; padding: 16px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:18px; color:#374151; }
+    .meta-card::after { content: 'CC'; position:absolute; right:16px; bottom:8px; font-size:64px; color: rgba(0,0,0,.06); font-weight:800; }
+    .meta-line { margin: 6px 0; }
+    .meta-card a { color:#2563eb; text-decoration:none; }
+    .meta-card a:hover { text-decoration:underline; }
+    .donate-overlay { position: fixed; inset: 0; z-index: 10001; display:flex; align-items:center; justify-content:center; }
+    .donate-backdrop { position:absolute; inset:0; background: rgba(0,0,0,.35); }
+    .donate-modal { position:relative; z-index:1; width: min(360px, 88vw); border-radius: 18px; background:#fff; box-shadow: 0 16px 40px rgba(0,0,0,.18); border:1px solid #e5e7eb; padding: 16px; text-align:center; }
+    .donate-modal-title { font-weight:800; color:#1f2937; margin-bottom: 12px; }
+    #donate-qr { width: 260px; height: 260px; border-radius: 12px; display:block; margin: 0 auto; object-fit: contain; background:#f5f7fa; }
+    .donate-close { position:absolute; right:10px; top:10px; width:28px; height:28px; border:none; background:#f5f7fa; border-radius:8px; cursor:pointer; }
     .post-nav { display:flex; justify-content:space-between; margin-top:auto; }
     .post-nav a { color:#374151; text-decoration:none; }
     .post-nav a:hover { color:#111827; text-decoration:underline; }
@@ -163,6 +203,33 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
           img.classList.add('img-error')
         }, { once: true })
       }
+      ;(function(){
+        const overlay = document.getElementById('donate-overlay')
+        const title = document.getElementById('donate-title')
+        const img = document.getElementById('donate-qr')
+        const closeBtn = document.getElementById('donate-close')
+        const backdrop = overlay ? overlay.querySelector('.donate-backdrop') : null
+        function show(type){
+          if (!overlay || !(img instanceof HTMLImageElement) || !(title instanceof HTMLElement)) return
+          title.textContent = type === 'wechat' ? '推荐使用微信' : '推荐使用支付宝'
+          const src = type === 'wechat' ? '/assets/donate/wechat.png' : '/assets/donate/alipay.png'
+          img.src = src
+          img.onerror = function(){
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><rect width='100%' height='100%' rx='16' fill='#3498db'/><text x='50%' y='14%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='22'>推荐使用" + (type==='wechat'?'微信':'支付宝') + "</text><rect x='110' y='110' width='300' height='300' rx='12' fill='#f5f7fa' stroke='#e5e7eb'/><text x='50%' y='88%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='16'>请前往捐赠页面查看二维码</text></svg>"
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+          }
+          overlay.style.display = 'flex'
+          document.body.style.overflow = 'hidden'
+        }
+        function hide(){ if (!overlay) return; overlay.style.display = 'none'; document.body.style.overflow = '' }
+        const btns = Array.from(document.querySelectorAll('.donate-card [data-donate]'))
+        for (const b of btns){
+          b.addEventListener('click', (e) => { e.preventDefault(); show(b.getAttribute('data-donate')||'') })
+        }
+        if (closeBtn) closeBtn.addEventListener('click', () => hide())
+        if (backdrop) backdrop.addEventListener('click', () => hide())
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide() })
+      })()
     </script>
     </article>
   </div>

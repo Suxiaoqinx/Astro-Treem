@@ -1,6 +1,7 @@
 ---
 import 'element-plus/dist/index.css'
 import { getCollection } from 'astro:content'
+import HeaderMenu from '@components/HeaderMenu.vue'
 const { title = 'Astro Treem Blog', description = 'Astro + Element Plus 博客框架' } = Astro.props
 const all = await getCollection('posts')
 const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', description: p.data.description || '', tags: p.data.tags || [] }))
@@ -18,18 +19,14 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
   <body style="min-height:100vh; display:flex; flex-direction:column; margin:0;">
     <header style="border-bottom:1px solid #eee;">
       <div style="max-width:85rem; margin:0 auto; padding:16px; display:flex; align-items:center; gap:16px;">
-        <a href="/" data-ajax="post" style="text-decoration:none; color:#333;">首页</a>
-        <nav style="display:flex; gap:12px; margin-left:auto; align-items:center;">
-          <a href="/about" data-ajax="post" style="text-decoration:none; color:#333;">关于</a>
-          <a href="/friends" data-ajax="post" style="text-decoration:none; color:#333;">友链</a>
-          <a href="/donate" data-ajax="post" style="text-decoration:none; color:#333;">赞助</a>
-          <a href="/archives" data-ajax="post" style="text-decoration:none; color:#333;">归档</a>
-          <button id="nav-search-button" aria-label="搜索" style="margin-left:12px; display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border:none; background:#f5f5f7; border-radius:10px; cursor:pointer; color:#333;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm9-1-4.35-4.35" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </nav>
+        <a href="/" data-ajax="post" class="home-button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 11l9-7 9 7v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-7Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 15c.8 1 2.2 1 3 0" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Home</span>
+        </a>
+        <HeaderMenu client:only="vue" />
       </div>
     </header>
     <main style="flex:1 0 auto; padding:24px; max-width:85rem; margin:0 auto; width:100%; box-sizing:border-box;">
@@ -126,6 +123,32 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
             this.classList.add('img-error')
           }, { once: true })
         }
+      }
+      function setupDonateOverlay(){
+        const overlay = document.querySelector('#'+CONTAINER_ID+' #donate-overlay')
+        const title = document.querySelector('#'+CONTAINER_ID+' #donate-title')
+        const img = document.querySelector('#'+CONTAINER_ID+' #donate-qr')
+        const closeBtn = document.querySelector('#'+CONTAINER_ID+' #donate-close')
+        const backdrop = overlay ? overlay.querySelector('.donate-backdrop') : null
+        function show(type){
+          if (!(overlay instanceof HTMLElement) || !(title instanceof HTMLElement) || !(img instanceof HTMLImageElement)) return
+          title.textContent = type === 'wechat' ? '推荐使用微信' : '推荐使用支付宝'
+          const src = type === 'wechat' ? '/assets/donate/wechat.png' : '/assets/donate/alipay.png'
+          img.src = src
+          img.onerror = function(){
+            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><rect width='100%' height='100%' rx='16' fill='" + (type==='wechat'?'#10b981':'#409eff') + "'/><text x='50%' y='14%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='22'>推荐使用" + (type==='wechat'?'微信':'支付宝') + "</text><rect x='110' y='110' width='300' height='300' rx='12' fill='#f5f7fa' stroke='#e5e7eb'/><text x='50%' y='88%' dominant-baseline='middle' text-anchor='middle' fill='#fff' font-family='system-ui' font-size='16'>请前往捐赠页面查看二维码</text></svg>"
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+          }
+          overlay.style.display = 'flex'
+          document.body.style.overflow = 'hidden'
+        }
+        function hide(){ if (!(overlay instanceof HTMLElement)) return; overlay.style.display = 'none'; document.body.style.overflow = '' }
+        const btns = Array.from(document.querySelectorAll('#'+CONTAINER_ID+' .donate-card [data-donate]'))
+        for (const b of btns){ b.addEventListener('click', (e) => { e.preventDefault(); show(b.getAttribute('data-donate')||'') }) }
+        if (closeBtn) closeBtn.addEventListener('click', () => hide())
+        if (backdrop) backdrop.addEventListener('click', () => hide())
+        const a = document.querySelector('#'+CONTAINER_ID+' #article-url')
+        if (a && a instanceof HTMLAnchorElement) { a.textContent = window.location.href; a.href = window.location.href }
       }
       function runFragmentScripts(){
         const root = document.getElementById(CONTAINER_ID)
@@ -239,6 +262,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           runFragmentScripts()
           try { document.dispatchEvent(new Event('astro:page-load')) } catch {}
           enhancePostImages()
+          setupDonateOverlay()
           emitSidebarHeadings()
           setupViewer()
           try { document.dispatchEvent(new CustomEvent('ajax:afterNavigate', { detail: { url, container } })) } catch {}
@@ -270,11 +294,14 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       window.addEventListener('popstate', () => ajaxNavigate(window.location.href, true))
       window.ajaxNavigate = ajaxNavigate
       try { document.addEventListener('astro:page-load', () => emitSidebarHeadings()) } catch {}
-      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupViewer() }, 0)
+      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupViewer(); setupDonateOverlay() }, 0)
     </script>
     <style is:global>
       #pjax-container img { max-width: 100%; height: auto; }
       #pjax-container .post-content-card .prose img { cursor: zoom-in; }
+      .home-button { display:inline-flex; align-items:center; gap:8px; background:#10b981; color:#fff; text-decoration:none; border:none; border-radius:12px; height:36px; padding:0 12px; font-weight:700; }
+      .home-button:hover { background:#0ea5a9; }
+      .home-button svg { flex:0 0 auto; }
       #pjax-container .page-grid { display: grid; align-items: start; }
       #pjax-container .post { width: 100%; margin: 0; justify-self: stretch; }
       #pjax-container .post-title { font-weight: 800; }
@@ -287,10 +314,15 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       footer .badge.green { background:#e6f7f0; color:#14b66f; border-color:#cdeee0; }
       footer .badge.orange { background:#fff3e0; color:#e67e22; border-color:#ffe1ba; }
       footer .badge.purple { background:#f3e9ff; color:#7e57c2; border-color:#e6d3ff; }
+      .menu-panel { position:absolute; left:0; top:0; bottom:0; width:min(82vw, 320px); background:#fff; border-right:1px solid #e5e7eb; box-shadow: 0 16px 40px rgba(0,0,0,.12); padding:16px; display:flex; flex-direction:column; gap:12px; }
+      .menu-group-card { margin-top:8px; }
+      .menu-link { display:flex; align-items:center; gap:10px; text-decoration:none; color: inherit; width:100%; }
+      .el-menu-item { height: 40px; line-height: 40px; }
       @media (max-width: 900px) {
         header > div { padding: 12px !important; gap: 10px !important; }
         header nav { gap: 8px !important; }
-        header > div > a[href="/"] { font-size: 16px !important; }
+        header > div > a[href="/"] { font-size: 14px !important; }
+        .home-button { height: 32px; padding: 0 10px; }
         #nav-search-button { width: 32px !important; height: 32px !important; }
         .sidebar { display: none !important; }
         #pjax-container .page-grid { grid-template-columns: 1fr; gap: 16px; justify-items: center; }
@@ -360,6 +392,12 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         render(r)
       }
       if (btn) btn.addEventListener('click', () => openOverlay())
+      document.addEventListener('click', (e) => {
+        const t = e.target
+        if (!(t instanceof Element)) return
+        const b = t.closest('#nav-search-button') || t.closest('[data-search-trigger="1"]')
+        if (b) { e.preventDefault(); openOverlay() }
+      })
       if (backdrop) backdrop.addEventListener('click', () => closeOverlay())
       if (closeBtn) closeBtn.addEventListener('click', () => closeOverlay())
       if (input) {
@@ -385,6 +423,24 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openOverlay() }
         if (e.key === 'Escape') closeOverlay()
       })
+      const menuBtn = document.getElementById('nav-menu-button')
+      const menuOverlay = document.getElementById('menu-overlay')
+      const menuBackdrop = document.getElementById('menu-backdrop')
+      function openMenu(){ if (!menuOverlay) return; menuOverlay.style.display = 'flex'; document.body.style.overflow = 'hidden' }
+      function closeMenu(){ if (!menuOverlay) return; menuOverlay.style.display = 'none'; document.body.style.overflow = '' }
+      if (menuBtn) {
+        ;['click','touchstart'].forEach((ev) => menuBtn.addEventListener(ev, (e) => { e.preventDefault(); openMenu() }))
+      }
+      if (menuBackdrop) {
+        ;['click','touchstart'].forEach((ev) => menuBackdrop.addEventListener(ev, (e) => { e.preventDefault(); closeMenu() }))
+      }
+      try {
+        const links = Array.from(document.querySelectorAll('#menu-overlay .menu-item, #menu-overlay .menu-link'))
+        for (const a of links) {
+          ;['click','touchstart'].forEach((ev) => a.addEventListener(ev, () => closeMenu()))
+        }
+      } catch {}
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu() })
     </script>
   </body>
 </html>

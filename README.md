@@ -35,6 +35,7 @@ src/
 ```
 
 ## 开发与构建
+- 环境要求：`Node.js >= 18`
 - 安装依赖：`npm install`
 - 开发启动：`npm run dev`（默认 `http://localhost:4321`）
 - 类型/诊断检查：`npm run check`
@@ -69,6 +70,10 @@ frontmatter 的校验见 `src/content/config.ts`，字段包括：`title`、`des
 - 归档详情：`src/pages/archives/[year].astro`
 - 分页路由：`src/pages/page/[page].astro`
 
+- 关于页：`src/pages/about.astro`（内容来自 `src/content/pages/about.md`）
+- 友链页：`src/pages/friends.astro`（数据来自 `src/data/friends.json`）
+- 捐助页：`src/pages/donate.astro`（支持微信/支付宝二维码）
+
 ## AJAX 导航
 - 布局文件 `src/layouts/BaseLayout.astro` 定义容器 `#pjax-container` 与全局 `window.ajaxNavigate(url)`
 - 给站内链接添加 `data-ajax="post"`，即可启用局部刷新导航
@@ -82,6 +87,15 @@ frontmatter 的校验见 `src/content/config.ts`，字段包括：`title`、`des
 
 ## 静态资源
 将图片等静态资源放到 `public/` 目录，构建后会原样复制到产物。页面中可通过 `/xxx.png` 直接引用。
+
+- 捐助二维码放置在 `public/assets/donate/`，文件名为 `wechat.png` 与 `alipay.png`
+
+## 自定义与配置
+- 修改站点域名：`astro.config.mjs:6` 的 `site`
+- 修改首页个人信息：`src/pages/index.astro:22` 的 `profile`
+- 修改关于页内容：`src/content/pages/about.md`
+- 修改友链数据：`src/data/friends.json`
+- AJAX 导航函数定义：`src/layouts/BaseLayout.astro:229`，全局挂载于 `src/layouts/BaseLayout.astro:295`
 
 ## 部署
 - 构建：`npm run build`

@@ -61,10 +61,10 @@ const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-rev
 .card-body.single { display:block; padding: 12px; }
 .media { max-width: 30%; }
 .media img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
-.content { flex: 1; }
-.post-title { font-size: 18px; font-weight: 700; display:block; text-decoration:none; color:#333; margin: 0 0 0; }
-.post-desc { color: #666; margin: 6px 0 0; }
-.post-meta { margin: 10px 0 0; display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.content { flex: 1; display:grid; grid-template-rows: auto 1fr auto; gap: 6px; min-height: 120px; }
+.post-title { font-size: 18px; font-weight: 700; display:block; text-decoration:none; color:#333; margin: 0; }
+.post-desc { color: #666; margin: 0; align-self: start; }
+.post-meta { margin: 0; padding-top: 10px; border-top: 1px solid #f0f2f5; display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
 .meta-date { color:#ffffff; font-size:12px; }
 .meta-tag { margin-right: 8px; }
 .clickable { cursor: pointer; }
