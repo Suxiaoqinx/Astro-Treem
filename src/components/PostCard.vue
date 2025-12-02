@@ -68,4 +68,10 @@ const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-rev
 .meta-date { color:#ffffff; font-size:12px; }
 .meta-tag { margin-right: 8px; }
 .clickable { cursor: pointer; }
+
+@media (max-width: 768px) {
+  .card-body.row, .card-body.row-reverse { flex-direction: column; }
+  .media { max-width: 100%; width: 100%; }
+  .media img { height: 180px; }
+}
 </style>
