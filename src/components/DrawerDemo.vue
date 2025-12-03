@@ -2,7 +2,7 @@
   <div class="drawer-demo">
     <el-drawer v-model="visible" title="站点导航" direction="rtl" size="320px" :with-header="true">
       <div class="drawer-content">
-        <div class="drawer-title">苏晓晴博客</div>
+        <div class="drawer-title">{{ siteConfig.title }}</div>
         <div class="nav-card">
           <el-link href="/friends" class="menu-link">
             <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 20a8 8 0 0 1 16 0" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElDrawer, ElLink } from 'element-plus'
+import { siteConfig } from '../site.config'
 
 const visible = ref(false)
 function open() { visible.value = true }

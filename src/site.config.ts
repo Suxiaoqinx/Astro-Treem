@@ -1,0 +1,19 @@
+export const siteConfig = {
+  title: '苏晓晴博客', //网站标题
+  description: '落花如泪，寄托相思情长。', //网站描述
+  author: '苏晓晴', //作者名称
+  avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640', //作者头像 
+  pageSize: 9, //每页显示的文章数量
+  social: {
+    github: 'https://github.com/Suxiaoqinx',
+    mail: 'mailto:3074193836@qq.com',
+    qq: '3074193836',
+    wechat: 'Sakura_re0',
+  },
+  hero: {
+    title: '苏晓晴博客', //Hero中的标题
+    description: '落花如泪，寄托相思情长。', //Hero中的描述
+    bg: 'https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua', //Hero的背景图片
+  },
+  notice: '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。', //公告
+}

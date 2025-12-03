@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
 import WalineComments from '@components/WalineComments.vue'
 import { getEntry, getCollection } from 'astro:content'
+import { siteConfig } from 'src/site.config'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -34,10 +35,10 @@ for (const p of all) {
   })
 }
 const counts = { posts: postsCount, tags: tagSet.size }
-const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
+const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
 const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
-const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
+const notice = siteConfig.notice
 
 const raw = entry.body || ''
 const plain = raw
@@ -54,11 +55,11 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
-      <img class="hero-img" src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua" alt="头图" referrerpolicy="no-referrer" />
+      <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
         <img class="hero-avatar" src={profile.avatar} alt="avatar" />
-        <div class="hero-title">苏晓晴博客</div>
-        <div class="hero-desc">落花如泪，寄托相思情长。</div>
+        <div class="hero-title">{siteConfig.hero.title}</div>
+        <div class="hero-desc">{siteConfig.hero.description}</div>
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
@@ -92,7 +93,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
       <div class="meta-card">
         <div class="meta-line">本文由 <span class="author">{profile.name}</span> 于 {new Date(entry.data.date as Date).toLocaleString()} 发布</div>
         <div class="meta-line">文章地址：<a id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a></div>
-        <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 苏晓晴博客。</div>
+        <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 {siteConfig.title}。</div>
       </div>
       <hr />
       <div class="post-nav">

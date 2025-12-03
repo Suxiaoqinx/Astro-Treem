@@ -3,17 +3,18 @@ import BaseLayout from '@layouts/BaseLayout.astro'
 import PostCard from '@components/PostCard.vue'
 import SidebarCard from '@components/SidebarCard.vue'
 import { getCollection } from 'astro:content'
+import { siteConfig } from 'src/site.config'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
   const total = posts.length
-  const PAGE_SIZE = 9
+  const PAGE_SIZE = siteConfig.pageSize
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   return Array.from({ length: pages }, (_, i) => ({ params: { page: String(i + 1) } }))
 }
 
 const { page } = Astro.params
-const PAGE_SIZE = 9
+const PAGE_SIZE = siteConfig.pageSize
 const current = Math.max(1, Number(page))
 
 const all = await getCollection('posts')
@@ -34,10 +35,10 @@ for (const p of all) {
   })
 }
 const counts = { posts: postsCount, tags: tagSet.size }
-const profile = { name: '苏晓晴', description: '落花如泪，寄托相思情长。', avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640' }
+const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
-const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
+const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+const notice = siteConfig.notice
 ---
 <BaseLayout title="博客">
   <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">

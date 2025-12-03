@@ -2,7 +2,8 @@
 import 'element-plus/dist/index.css'
 import { getCollection } from 'astro:content'
 import HeaderMenu from '@components/HeaderMenu.vue'
-const { title = 'Astro Treem Blog', description = 'Astro + Element Plus 博客框架' } = Astro.props
+import { siteConfig } from 'src/site.config'
+const { title = siteConfig.title, description = siteConfig.description } = Astro.props
 const all = await getCollection('posts')
 const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', description: p.data.description || '', tags: p.data.tags || [] }))
 ---
@@ -41,7 +42,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         <a href="/rss.xml" class="badge orange" style="text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="2" fill="#e67e22"/><path d="M4 4c8 0 16 8 16 16" stroke="#e67e22" stroke-width="2"/><path d="M4 10c5 0 10 5 10 10" stroke="#e67e22" stroke-width="2"/></svg>RSS订阅</a>
         <span class="badge gray">桂ICP备2022007996号-1</span>
       </div>
-      <div style="margin-top:10px;">© 2020 - {new Date().getFullYear()} 苏晓晴博客</div>
+      <div style="margin-top:10px;">© 2020 - {new Date().getFullYear()} {siteConfig.title}</div>
     </footer>
     <script type="application/json" id="search-index">{JSON.stringify(searchIndex).replace(/</g, '\\u003c')}</script>
     <div id="search-overlay" style="position:fixed; inset:0; z-index:10000; display:none;">

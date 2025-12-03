@@ -14,7 +14,7 @@ onMounted(async () => {
   const { init } = await import('sodesu-comment/aio')
   init({
     el: '#sodesu',
-    serverURL: 'https://waline-cyan-phi.vercel.app/',
+    serverURL: 'https://waline-cyan-phi.vercel.app/',  //WARN *.vercel.app 在国内不可用，请在生产环境绑定自有域名
   })
 })
 </script>
