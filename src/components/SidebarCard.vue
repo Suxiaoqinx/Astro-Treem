@@ -95,7 +95,10 @@ function onToc(slug: string) {
 }
 
 function formatDate(d: string | Date) {
-  try { return new Date(d).toLocaleDateString() } catch { return '' }
+  try {
+    const iso = new Date(d).toISOString()
+    return iso.slice(0, 10)
+  } catch { return '' }
 }
 </script>
 

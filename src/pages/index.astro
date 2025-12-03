@@ -35,7 +35,7 @@ const notice = '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。'
         <div class="hero-desc">落花如泪，寄托相思情长。</div>
       </div>
     </div>
-    <SidebarCard client:load name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <div class="simple-list">
         {slice.map((p) => (
