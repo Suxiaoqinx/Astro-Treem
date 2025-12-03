@@ -111,24 +111,24 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .post-submeta { color:#666; font-size:14px; margin-top:10px; }
     .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:560px; display:flex; flex-direction:column; }
     .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; flex: 1 1 auto; }
-    .prose p { margin: 1.1em 0; }
-    .prose h2 { font-size: 26px; margin: 1.4em 0 .7em; font-weight: 800; color:#111827; }
-    .prose h3 { font-size: 22px; margin: 1.2em 0 .6em; font-weight: 700; color:#111827; }
-    .prose h4 { font-size: 18px; margin: 1em 0 .5em; font-weight: 700; color:#111827; }
-    .prose h2, .prose h3, .prose h4 { scroll-margin-top: 80px; }
-    .prose a { color:#2563eb; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
-    .prose a:hover { color:#1d4ed8; }
+    .prose :global(p) { margin: 1.1em 0; }
+    .prose :global(h2) { font-size: 26px; margin: 1.4em 0 .7em; font-weight: 800; color:#111827; }
+    .prose :global(h3) { font-size: 22px; margin: 1.2em 0 .6em; font-weight: 700; color:#111827; }
+    .prose :global(h4) { font-size: 18px; margin: 1em 0 .5em; font-weight: 700; color:#111827; }
+    .prose :global(h2), .prose :global(h3), .prose :global(h4) { scroll-margin-top: 80px; }
+    .prose :global(a) { color:#409eff; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+    .prose :global(a:hover) { color:#1d4ed8; }
     .post-content-card .prose img { max-width: 100%; height: auto; display: block; margin: 14px auto; border-radius: 16px; padding: 8px; background: #fff; border: 1px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); box-sizing: border-box; cursor: zoom-in; }
-    .prose pre { background:#0b1220; color:#e5eaf3; padding: 16px 18px; border-radius: 14px; overflow: auto; font-size:14px; line-height:1.6; tab-size: 2; }
-    .prose code { background:#f2f6fc; color:#1f2d3d; padding: 2px 6px; border-radius: 6px; }
-    .prose pre code { background: transparent; padding: 0; color: inherit; }
-    .prose blockquote { border-left: 4px solid #409eff; background: #f5f7fa; padding: 12px 16px; border-radius: 10px; color: #4b5563; }
-    .prose ul, .prose ol { padding-left: 1.4em; margin: .9em 0; }
-    .prose li { margin: .35em 0; }
-    .prose table { width: 100%; border-collapse: collapse; margin: 1.2em 0; }
-    .prose th, .prose td { border: 1px solid #eee; padding: 10px 12px; }
-    .prose th { background: #fafafa; font-weight: 700; }
-    .prose hr { border: none; border-top: 1px solid #eee; margin: 28px 0; }
+    .prose :global(pre) { background:#0b1220; color:#e5eaf3; padding: 16px 18px; border-radius: 14px; overflow: auto; font-size:14px; line-height:1.6; tab-size: 2; }
+    .prose :global(code) { background:#f2f6fc; color:#1f2d3d; padding: 2px 6px; border-radius: 6px; }
+    .prose :global(pre code) { background: transparent; padding: 0; color: inherit; }
+    .prose :global(blockquote) { border-left: 4px solid #409eff; background: #f5f7fa; padding: 12px 16px; border-radius: 10px; color: #4b5563; }
+    .prose :global(ul), .prose :global(ol) { padding-left: 1.4em; margin: .9em 0; }
+    .prose :global(li) { margin: .35em 0; }
+    .prose :global(table) { width: 100%; border-collapse: collapse; margin: 1.2em 0; }
+    .prose :global(th), .prose :global(td) { border: 1px solid #eee; padding: 10px 12px; }
+    .prose :global(th) { background: #fafafa; font-weight: 700; }
+    .prose :global(hr) { border: none; border-top: 1px solid #eee; margin: 28px 0; }
     .donate-card { margin: 20px 0 10px; padding: 16px; background:#fff; border:1px solid #e5e7eb; border-radius:18px; box-shadow: 0 8px 24px rgba(0,0,0,.06); text-align:center; }
     .donate-text { color:#6b7280; margin-bottom: 12px; }
     .donate-actions { display:flex; gap:12px; justify-content:center; }
@@ -140,7 +140,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .meta-card { position: relative; margin: 6px 0 12px; padding: 16px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:18px; color:#374151; }
     .meta-card::after { content: 'CC'; position:absolute; right:16px; bottom:8px; font-size:64px; color: rgba(0,0,0,.06); font-weight:800; }
     .meta-line { margin: 6px 0; }
-    .meta-card a { color:#2563eb; text-decoration:none; }
+    .meta-card a { color:#409eff; text-decoration:none; }
     .meta-card a:hover { text-decoration:underline; }
     .donate-overlay { position: fixed; inset: 0; z-index: 10001; display:flex; align-items:center; justify-content:center; }
     .donate-backdrop { position:absolute; inset:0; background: rgba(0,0,0,.35); }

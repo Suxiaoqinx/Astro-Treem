@@ -57,12 +57,12 @@ const { Content, headings } = await about.render()
     .post-submeta { color:#666; font-size:14px; margin-top:10px; }
     .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:360px; display:flex; flex-direction:column; }
     .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
-    .prose p { margin: 1.1em 0; }
-    .prose h2 { font-size: 26px; margin: 1.4em 0 .7em; font-weight: 800; color:#111827; }
-    .prose h3 { font-size: 22px; margin: 1.2em 0 .6em; font-weight: 700; color:#111827; }
-    .prose h4 { font-size: 18px; margin: 1em 0 .5em; font-weight: 700; }
-    .prose a { color:#2563eb; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
-    .prose a:hover { color:#1d4ed8; }
+    .prose :global(p) { margin: 1.1em 0; }
+    .prose :global(h2) { font-size: 26px; margin: 1.4em 0 .7em; font-weight: 800; color:#111827; }
+    .prose :global(h3) { font-size: 22px; margin: 1.2em 0 .6em; font-weight: 700; color:#111827; }
+    .prose :global(h4) { font-size: 18px; margin: 1em 0 .5em; font-weight: 700; }
+    .prose :global(a) { color:#409eff; text-decoration:underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+    .prose :global(a:hover) { color:#1d4ed8; }
     .post-content-card .prose img { max-width: 100%; height: auto; display: block; margin: 14px auto; border-radius: 16px; padding: 8px; background: #fff; border: 1px solid #eee; box-shadow: 0 3px 10px rgba(0,0,0,.06); box-sizing: border-box; }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }

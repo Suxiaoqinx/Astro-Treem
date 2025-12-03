@@ -13,7 +13,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={siteConfig.avatar} type="image/svg+xml" />
     <link rel="stylesheet" href="https://unpkg.com/sodesu-comment@0.5.1/dist/sodesu-comment.css" />
     <link rel="stylesheet" href="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css" />
     <script src="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js"></script>
