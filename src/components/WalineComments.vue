@@ -23,7 +23,7 @@ onMounted(async () => {
 .wl-card { margin: 16px 0; padding: 0; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; }
 .wl-title { font-weight: 800; font-size: 16px; padding: 12px 16px; border-bottom: 1px solid #f0f2f5; }
 .wl-empty { padding: 12px 16px; color: #6b7280; font-size: 13px; }
-#sodesu, [id="sodesu"] { padding: 0 12px 12px; }
-@media (max-width: 640px) { #sodesu, [id="sodesu"] { padding: 0 10px 10px; } }
+#sodesu, [id="sodesu"] { padding: 12px 12px; }
+@media (max-width: 640px) { #sodesu, [id="sodesu"] { padding: 10px 10px; } }
 </style>
 

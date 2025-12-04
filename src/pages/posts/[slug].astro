@@ -54,7 +54,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <div class="page-grid">
-    <div id="home-hero" class="hero-card">
+    <div id="home-hero" class="hero-card fade-up">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
         <img class="hero-avatar" src={profile.avatar} alt="avatar" />
@@ -63,7 +63,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
-    <article id="pjax-container" class="post">
+    <article id="pjax-container" class="post fade-up">
       <div class="post-header">
         <div class="post-title-box">
           <h1 class="post-title">{entry.data.title}</h1>
@@ -90,10 +90,23 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
             <button id="donate-close" class="donate-close" aria-label="关闭">×</button>
           </div>
         </div>
-      <div class="meta-card">
-        <div class="meta-line">本文由 <span class="author">{profile.name}</span> 于 {new Date(entry.data.date as Date).toLocaleString()} 发布</div>
-        <div class="meta-line">文章地址：<a id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a></div>
-        <div class="meta-line">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。完整转载请注明来自 {siteConfig.title}。</div>
+      <div class="meta-card meta-dark">
+        <a class="meta-title" href={`/posts/${slug}`}>{entry.data.title}</a>
+        <a class="meta-url" id="article-url" href={`/posts/${slug}`} rel="noopener">{`/posts/${slug}`}</a>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">作者</div>
+            <div class="meta-value">{profile.name}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">发布于</div>
+            <div class="meta-value">{new Date(entry.data.date as Date).toISOString().slice(0,10)}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">许可协议</div>
+            <div class="meta-value"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a></div>
+          </div>
+        </div>
       </div>
       <hr />
       <div class="post-nav">
@@ -137,11 +150,18 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .btn-blue:hover { background:#337ecc; }
     .btn-green { background:#10b981; }
     .btn-green:hover { background:#0ea5a9; }
-    .meta-card { position: relative; margin: 6px 0 12px; padding: 16px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:18px; color:#374151; }
-    .meta-card::after { content: 'CC'; position:absolute; right:16px; bottom:8px; font-size:64px; color: rgba(0,0,0,.06); font-weight:800; }
-    .meta-line { margin: 6px 0; }
-    .meta-card a { color:#409eff; text-decoration:none; }
-    .meta-card a:hover { text-decoration:underline; }
+    .meta-card { position: relative; margin: 6px 0 12px; padding: 1.5rem; border:1px solid #e5e7eb; border-radius:18px; }
+    .meta-card.meta-dark { background:#fff; border-color:#e5e7eb; color:#000; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .meta-card.meta-dark::after { content: 'CC'; position:absolute; right:16px; bottom:10px; font-size:80px; color: rgba(0,0,0,.06); font-weight:800; }
+    .meta-title { display:block; font-weight:800; font-size:18px; color:#000 !important; text-decoration:none; }
+    .meta-title:hover { color:#000; }
+    .meta-url { display:block; margin-top:4px; color:#000; text-decoration:none; }
+    .meta-url:hover { text-decoration:underline; }
+    .meta-grid { display:grid; grid-template-columns: auto auto auto; column-gap: 12px; row-gap: 0; margin-top:8px; align-items:start; }
+    .meta-item { display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+    .meta-label { color:#000; font-size:13px; }
+    .meta-value { color:#000; font-size:15px; font-weight:700; }
+    .meta-card a { color:#000; }
     .donate-overlay { position: fixed; inset: 0; z-index: 10001; display:flex; align-items:center; justify-content:center; }
     .donate-backdrop { position:absolute; inset:0; background: rgba(0,0,0,.35); }
     .donate-modal { position:relative; z-index:1; width: min(360px, 88vw); border-radius: 18px; background:#fff; box-shadow: 0 16px 40px rgba(0,0,0,.18); border:1px solid #e5e7eb; padding: 16px; text-align:center; }

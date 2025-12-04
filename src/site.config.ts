@@ -13,7 +13,7 @@ export const siteConfig = {
   hero: {
     title: '苏晓晴博客', //Hero中的标题
     description: '落花如泪，寄托相思情长。', //Hero中的描述
-    bg: 'https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/pic?img=ua', //Hero的背景图片
+    bg: 'https://eopfapi.2b2x.cn/pic?img=ua', //Hero的背景图片
   },
   notice: '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。', //公告
 }

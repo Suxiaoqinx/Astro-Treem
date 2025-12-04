@@ -103,7 +103,7 @@ function formatDate(d: string | Date) {
 </script>
 
 <style scoped>
-.sidebar { position: sticky; top: 24px; display:flex; flex-direction:column; gap:16px; }
+.sidebar { position: sticky; top: 24px; display:flex; flex-direction:column; gap:16px; animation: fadeUp .5s ease-out both; }
 .profile { display:flex; align-items:center; gap:12px; }
 .info { display:flex; flex-direction:column; }
 .name { font-weight:700; font-size:16px; }
