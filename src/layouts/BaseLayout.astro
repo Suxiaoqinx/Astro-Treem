@@ -75,6 +75,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         if (!root) return
         const imgs = Array.from(root.querySelectorAll('img'))
         for (const img of imgs){
+          if (img.classList.contains('friend-avatar')) continue
           img.setAttribute('class','posts-img')
           img.setAttribute('loading','lazy')
           img.setAttribute('decoding','async')

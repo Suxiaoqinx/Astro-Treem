@@ -40,8 +40,11 @@ const notice = siteConfig.notice
           <div class="friends">
             {friends.map((f) => (
               <a href={f.url} target="_blank" rel="noopener" class="friend-item">
-                <div class="friend-name">{f.name}</div>
-                <div class="friend-desc">{f.desc}</div>
+                <div class="friend-content">
+                  <div class="friend-name">{f.name}</div>
+                  <div class="friend-desc">{f.desc}</div>
+                </div>
+                {f.avatar && <img src={f.avatar} alt={f.name} class="friend-avatar" />}
               </a>
             ))}
           </div>
@@ -68,10 +71,12 @@ const notice = siteConfig.notice
     .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
     .prose p { margin: 1.1em 0; }
     .friends { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
-    .friend-item { display:block; padding:12px; text-decoration:none; color:#333; border:1px solid #e5e7eb; border-radius:12px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.06); }
-    .friend-item:hover { border-color:#409eff; box-shadow:0 8px 16px rgba(64,158,255,.18); }
-    .friend-name { font-weight:700; }
-    .friend-desc { font-size:13px; color:#666; margin-top:4px; }
+    .friend-item { display:flex; align-items:center; padding:12px; text-decoration:none; color:#333; border:1px solid #e5e7eb; border-radius:12px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.06); transition: all .3s; }
+    .friend-item:hover { border-color:#409eff; box-shadow:0 8px 16px rgba(64,158,255,.18); transform: translateY(-2px); }
+    .friend-content { flex: 1; min-width: 0; margin-right: 12px; }
+    .friend-name { font-weight:700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .friend-desc { font-size:13px; color:#666; margin-top:4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .friend-item :global(.friend-avatar) { width: 44px !important; height: 44px !important; border-radius: 50% !important; object-fit: cover; flex-shrink: 0; border: 1px solid #f0f0f0; background: #f5f7fa; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }
       .hero-img { height: 220px; }

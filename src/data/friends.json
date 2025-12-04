@@ -1,4 +1,4 @@
 [
-  { "name": "示例站点 A", "url": "https://example.com", "desc": "内容分享" },
-  { "name": "示例站点 B", "url": "https://example.org", "desc": "技术交流" }
+  { "name": "示例站点 A", "url": "https://example.com", "desc": "内容分享", "avatar": "https://ui-avatars.com/api/?name=Site+A&background=random" },
+  { "name": "示例站点 B", "url": "https://example.org", "desc": "技术交流", "avatar": "https://ui-avatars.com/api/?name=Site+B&background=random" }
 ]
