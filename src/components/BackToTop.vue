@@ -19,6 +19,9 @@ import { ElBacktop } from 'element-plus'
   --el-backtop-hover-bg-color: #f2f6fc;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
   border: 1px solid #e5e7eb;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
 }
 .backtop-content {
   display: flex;

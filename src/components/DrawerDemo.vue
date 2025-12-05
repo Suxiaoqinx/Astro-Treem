@@ -41,7 +41,6 @@ defineExpose({ open })
 </script>
 
 <style scoped>
-.drawer-demo { }
 .drawer-content { display:flex; flex-direction:column; gap:12px; }
 .drawer-title { font-weight:800; font-size:18px; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:12px; text-align:center; color:#374151; }
 .nav-card { background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:8px; display:flex; flex-direction:column; }

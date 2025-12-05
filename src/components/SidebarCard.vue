@@ -64,11 +64,6 @@
           <span class="rt-latency" :class="latencyClass('vercel')">{{ latencyText('vercel') }}</span>
           <span class="rt-dot" :class="dotClass('vercel')"></span>
         </a>
-        <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
-          <span class="rt-label">Dev</span>
-          <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
-          <span class="rt-dot" :class="dotClass('dev')"></span>
-        </a>
         <a href="https://netlify-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'netlify' }">
           <span class="rt-label">Netlify</span>
           <span class="rt-latency" :class="latencyClass('netlify')">{{ latencyText('netlify') }}</span>
@@ -78,6 +73,11 @@
           <span class="rt-label">Cloudflare</span>
           <span class="rt-latency" :class="latencyClass('Cloudflare')">{{ latencyText('Cloudflare') }}</span>
           <span class="rt-dot" :class="dotClass('Cloudflare')"></span>
+        </a>
+        <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
+          <span class="rt-label">Dev</span>
+          <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
+          <span class="rt-dot" :class="dotClass('dev')"></span>
         </a>
       </div>
     </el-card>
@@ -256,7 +256,6 @@ function formatDate(d: string | Date) {
 :deep(.toc-depth-5) { padding-left: 36px; }
 :deep(.custom-anchor) { background: transparent; }
 @media (max-width: 900px) {
-  .sidebar { position: static; top: auto; }
-  .toc-card, .hot-tags-card, .recommend-card { display: none; }
+  .sidebar { display: none; }
 }
 </style>

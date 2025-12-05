@@ -43,7 +43,7 @@ const { Content, headings } = await entry.render()
             const items = [...friends].sort(() => Math.random() - 0.5)
             function colorOf(name: string) {
               const seed = Array.from(name).reduce((s, c) => s + c.charCodeAt(0), 0) % 360
-              return `hsl(${seed}, 70%, 96%)`
+              return `hsl(${seed}, 65%, 94%)`
             }
             return (
               <div class="friends">
@@ -63,36 +63,4 @@ const { Content, headings } = await entry.render()
       </div>
     </article>
   </div>
-  <style>
-    .page-grid { display:grid; gap:24px; align-items:start; grid-template-columns: 360px minmax(0,1fr); }
-    .hero-card { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #fff; grid-column: 1 / -1; }
-    .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
-    .hero-overlay { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 24px; background:
-      linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0)),
-      linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,0));
-      color: #fff; text-align:center; }
-    .hero-title { font-size: 28px; font-weight: 800; }
-    .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
-    .post { width: 100%; margin: 0; justify-self: stretch; }
-    .post-header { display:flex; flex-direction:column; gap:18px; }
-    .post-title-box { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px 28px; }
-    .post-title { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: .2px; }
-    .post-submeta { color:#666; font-size:14px; margin-top:10px; }
-    .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:26px 28px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:260px; display:flex; flex-direction:column; }
-    .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
-    .prose p { margin: 1.1em 0; }
-    .friends { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px; }
-    .friend-item { display:flex; align-items:center; padding:12px; text-decoration:none; color:#333; border:1px solid #e5e7eb; border-radius:12px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.06); transition: all .3s; }
-    .friend-item:hover { border-color:#409eff; box-shadow:0 8px 16px rgba(64,158,255,.18); transform: translateY(-2px); }
-    .friend-content { flex: 1; min-width: 0; margin-right: 12px; }
-    .friend-name { font-weight:700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .friend-desc { font-size:13px; color:#666; margin-top:4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .friend-item :global(.friend-avatar) { width: 44px !important; height: 44px !important; border-radius: 50% !important; object-fit: cover; flex-shrink: 0; border: 1px solid #f0f0f0; background: #f5f7fa; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
-    @media (max-width: 900px) {
-      .page-grid { grid-template-columns: 1fr; }
-      .hero-img { height: 220px; }
-      .hero-title { font-size: 22px; }
-      .hero-desc { font-size: 13px; }
-    }
-  </style>
 </BaseLayout>

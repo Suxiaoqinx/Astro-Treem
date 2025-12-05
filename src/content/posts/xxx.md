@@ -6,7 +6,7 @@ updated: 2025-12-05
 id: post-test
 categories: []
 tags: [测试, 演示, 样式]
-cover: https://eopfapi.2b2x.cn/ri/h/128.webp
+cover: https://eopfapi.2b2x.cn/ri/h/355.webp
 coverSide: left
 recommend: true
 top: false
@@ -32,7 +32,7 @@ comment: true
 
 ### 图片示例
 
-<img src="https://eopfapi.2b2x.cn/ri/h/128.webp" alt="测试图片" class="posts-img" />
+![测试图片](https://eopfapi.2b2x.cn/ri/h/355.webp)
 
 ### 代码块示例
 

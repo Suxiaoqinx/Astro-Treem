@@ -41,7 +41,7 @@ const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data
 const notice = siteConfig.notice
 ---
 <BaseLayout title="博客">
-  <div style="display:grid; gap:24px; align-items:start; grid-template-columns: 360px 1fr;">
+  <div class="page-grid">
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <div class="simple-list">
