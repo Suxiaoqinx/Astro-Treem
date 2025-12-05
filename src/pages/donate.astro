@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
-import { getCollection } from 'astro:content'
+import { getCollection, getEntry } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
 const posts = await getCollection('posts')
@@ -15,36 +15,29 @@ const profile = { name: siteConfig.author, description: siteConfig.description, 
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
 const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
+const entry = await getEntry('pages', 'donate')
+const { Content } = await entry.render()
 ---
-<BaseLayout title="赞助">
+<BaseLayout title={entry.data.title}>
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
-        <div class="hero-title">赞助支持</div>
-        <div class="hero-desc">感谢你的支持</div>
+        <div class="hero-title">{entry.data.title}</div>
+        <div class="hero-desc">{entry.data.description || ''}</div>
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
-          <h1 class="post-title">赞助</h1>
-          <div class="post-submeta">感谢你的支持</div>
+          <h1 class="post-title">{entry.data.title}</h1>
+          <div class="post-submeta">{entry.data.description || ''}</div>
         </div>
       </div>
       <div class="post-content-card">
         <div class="prose">
-          <div class="donate">
-            <div class="donate-card">
-              <div class="donate-title">赞助说明</div>
-              <div class="donate-desc">如果你觉得本站内容对你有帮助，欢迎赞助支持。</div>
-            </div>
-            <div class="donate-card">
-              <div class="donate-title">方式</div>
-              <div class="donate-desc">可通过留言或联系页面获取赞助方式。</div>
-            </div>
-          </div>
+          <Content />
         </div>
       </div>
     </article>

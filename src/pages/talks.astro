@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
-import { getCollection } from 'astro:content'
+import { getCollection, getEntry } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 import talks from 'src/data/talks.json'
-const hero = { title: '说说', description: '记录日常与随感片刻' }
+const entry = await getEntry('pages', 'talks')
+const { Content } = await entry.render()
 
 const all = await getCollection('posts')
 all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
@@ -20,17 +21,17 @@ const notice = siteConfig.notice
 
 const list = [...talks].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 ---
-<BaseLayout title="说说">
+<BaseLayout title={entry.data.title}>
   <div class="page-grid">
     <div id="home-hero" class="hero-card fade-up">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
-        <div class="hero-title">{hero.title}</div>
-        <div class="hero-desc">{hero.description}</div>
+        <div class="hero-title">{entry.data.title}</div>
+        <div class="hero-desc">{entry.data.description || ''}</div>
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
-    <div id="pjax-container">
+    <article id="pjax-container" class="post">
       <div class="talks-list fade-up">
         {list.map((t) => (
           <div class="talk-card">
@@ -44,9 +45,9 @@ const list = [...talks].sort((a, b) => new Date(b.date).getTime() - new Date(a.d
           </div>
         ))}
       </div>
-    </div>
+    </article>
     <style>
-    .page-grid { display:grid; gap:24px; align-items:start; grid-template-columns: 360px minmax(0,1fr); }
+    .page-grid { display:grid; gap:16px; align-items:start; grid-template-columns: 360px minmax(0,1fr); }
     .hero-card { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #fff; grid-column: 1 / -1; }
     .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
     .hero-overlay { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 24px; background:
@@ -55,6 +56,8 @@ const list = [...talks].sort((a, b) => new Date(b.date).getTime() - new Date(a.d
       color: #fff; text-align:center; }
     .hero-title { font-size: 28px; font-weight: 800; }
     .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
+    .post { width: 100%; margin: 0; justify-self: stretch; }
+    .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
     .talks-list { display:grid; grid-template-columns: 1fr; gap: 16px; }
     .talk-card { background:#fff; border:1px solid #e5e7eb; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,.06); padding:16px; }
     .talk-meta { color:#6b7280; font-size:12px; margin-bottom:8px; }

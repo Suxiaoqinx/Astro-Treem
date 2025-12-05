@@ -152,6 +152,7 @@ function dotClass(key: LineKey) {
 
 onMounted(() => {
   ;(['cn', 'vercel', 'dev'] as LineKey[]).forEach((k) => measure(k))
+  try { document.dispatchEvent(new CustomEvent('sidebar:mounted')) } catch {}
 })
 
 try {

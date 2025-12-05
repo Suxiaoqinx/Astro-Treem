@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
-import { getCollection } from 'astro:content'
+import { getCollection, getEntry } from 'astro:content'
 import friends from '../data/friends.json'
 import { siteConfig } from 'src/site.config'
 
@@ -16,38 +16,49 @@ const profile = { name: siteConfig.author, description: siteConfig.description, 
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
 const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
-
+const entry = await getEntry('pages', 'friends')
+const { Content, headings } = await entry.render()
 ---
-<BaseLayout title="友链">
+<BaseLayout title={entry.data.title}>
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
-        <div class="hero-title">友情链接</div>
-        <div class="hero-desc">互相链接，共同成长</div>
+        <div class="hero-title">{entry.data.title}</div>
+        <div class="hero-desc">{entry.data.description || ''}</div>
       </div>
     </div>
-    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} headings={headings} />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
-          <h1 class="post-title">友链</h1>
-          <div class="post-submeta">互相链接，共同成长</div>
+          <h1 class="post-title">{entry.data.title}</h1>
+          <div class="post-submeta">{entry.data.description || ''}</div>
         </div>
       </div>
       <div class="post-content-card">
         <div class="prose">
-          <div class="friends">
-            {friends.map((f) => (
-              <a href={f.url} target="_blank" rel="noopener" class="friend-item">
-                <div class="friend-content">
-                  <div class="friend-name">{f.name}</div>
-                  <div class="friend-desc">{f.desc}</div>
-                </div>
-                {f.avatar && <img src={f.avatar} alt={f.name} class="friend-avatar" />}
-              </a>
-            ))}
-          </div>
+          <Content />
+          {(() => {
+            const items = [...friends].sort(() => Math.random() - 0.5)
+            function colorOf(name: string) {
+              const seed = Array.from(name).reduce((s, c) => s + c.charCodeAt(0), 0) % 360
+              return `hsl(${seed}, 70%, 96%)`
+            }
+            return (
+              <div class="friends">
+                {items.map((f) => (
+                  <a href={f.url} target="_blank" rel="noopener" class="friend-item" style={{ background: colorOf(f.name) }}>
+                    <div class="friend-content">
+                      <div class="friend-name">{f.name}</div>
+                      <div class="friend-desc">{f.desc}</div>
+                    </div>
+                    {f.avatar && <img src={f.avatar} alt={f.name} class="friend-avatar" />}
+                  </a>
+                ))}
+              </div>
+            )
+          })()}
         </div>
       </div>
     </article>

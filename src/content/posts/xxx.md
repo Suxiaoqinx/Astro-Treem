@@ -1,98 +1,78 @@
 ---
-title: xxx
-description: 随机内容示例，包含一张图片与若干段落。
-date: 2025-12-02
-updated: 2025-12-02
-id: postxxg
+title: 测试文章：样式与功能验证
+description: 覆盖图片、列表、代码、高亮、表格、引用等组件表现
+date: 2025-12-05
+updated: 2025-12-05
+id: post-test
 categories: []
-tags: [随笔, 测试]
-cover: https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp
+tags: [测试, 演示, 样式]
+cover: https://eopfapi.2b2x.cn/ri/h/128.webp
 coverSide: left
-recommend: true # 是否推荐文章
-top: true # 是否置顶文章
-hide: false # 是否隐藏文章
-comment: true # 是否开启评论
+recommend: true
+top: false
+hide: false
+comment: true
 ---
 
-## 随机段落一
+## 概述
 
-清风拂面，思绪如潮。在不经意的瞬间，我们会为某个细节驻足：一抹光影、一段旋律、一次偶遇。记录当下，并不为了证明什么，而是让时间在文字里慢慢沉淀。
+本篇用于验证文章页的布局与功能，包括图片查看、代码高亮、表格渲染、引用样式以及锚点目录生成。
 
-## 随机段落二
+> 引用示例：统一排版与留白，提升可读性。
 
-当你从喧嚣退后半步，一切都变得清晰。复杂的问题被拆解成简单的步骤，难以跨越的距离被分解为脚下的每一步。写下此刻，也是在和未来的自己对话。
+### 列表示例
 
-## 随机段落三
+- 要点一：文章卡片左内边距 16px 对齐
+- 要点二：封面固定尺寸裁剪，保持一致性
+- 要点三：图片支持点击放大预览
 
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
+1. 步骤一：加载页面框架
+2. 步骤二：渲染正文内容
+3. 步骤三：启用目录与图片查看器
 
-## 随机段落三
+### 图片示例
 
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
+<img src="https://eopfapi.2b2x.cn/ri/h/128.webp" alt="测试图片" class="posts-img" />
 
-## 随机段落三
-
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
-
-## 随机段落三
-
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
-
-## 随机段落三
-
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
-
-## 随机段落三
-
-偶尔抬头，世界仍在运转；偶尔低头，答案就在纸上。我们把不确定交给时间，把确定交给行动。
-
-<img src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp" alt="插图" class="posts-img" />
-
-> 这是一张随机插图，用于丰富文章内容。封面未设置，仅在正文中展示图片。
-
-## 语法高亮与代码块测试
+### 代码块示例
 
 ```ts
-// TypeScript 示例
 type User = { id: string; name: string }
-function greet(u: User) {
-  const msg = `Hello, ${u.name}!`
-  return msg
-}
+function greet(u: User) { return `Hello, ${u.name}!` }
 console.log(greet({ id: '1', name: 'Astro' }))
 ```
 
 ```js
-// JavaScript 示例
 const nums = [1,2,3]
-const squared = nums.map(n => n*n)
-console.log('squared =', squared)
+console.log(nums.map(n => n*n))
 ```
 
 ```python
-# Python 示例
 def add(a, b):
     return a + b
 print(add(2, 3))
 ```
 
 ```bash
-# Bash 示例
 echo "build project"
 npm run build
 ```
 
 ```json
-{
-  "name": "astro-treem-blog",
-  "private": true,
-  "scripts": { "dev": "astro dev" }
-}
+{ "name": "astro-treem-blog", "private": true, "scripts": { "dev": "astro dev" } }
 ```
 
 ```html
-<!-- HTML 示例 -->
-<div class="card">
-  <span>hello</span>
-</div>
+<div class="card"><span>hello</span></div>
 ```
+
+### 表格示例
+
+| 名称 | 值 |
+|---|---|
+| 文章字数 | 约 500 |
+| 阅读时长 | 1-2 分钟 |
+
+---
+
+更多内容与样式可根据需要继续扩展。

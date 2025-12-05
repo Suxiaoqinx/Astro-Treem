@@ -18,7 +18,7 @@ const notice = siteConfig.notice
 const about = await getEntry('pages', 'about')
 const { Content, headings } = await about.render()
 ---
-<BaseLayout title="关于">
+<BaseLayout title={about.data.title}>
   <div class="page-grid">
     <div id="home-hero" class="hero-card">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
