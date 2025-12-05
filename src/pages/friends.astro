@@ -13,8 +13,8 @@ const tagCount = new Map<string, number>()
 for (const p of posts) { (p.data.tags || []).forEach((t) => { tagSet.add(t); tagCount.set(t, (tagCount.get(t) || 0) + 1) }) }
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
-const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,50).map(([name,count]) => ({ name, count }))
+const recommendations = posts.slice(0,50).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
 const entry = await getEntry('pages', 'friends')
 const { Content, headings } = await entry.render()

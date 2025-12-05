@@ -21,8 +21,8 @@ const tagCount = new Map<string, number>()
 for (const p of posts) { (p.data.tags || []).forEach((t) => tagCount.set(t, (tagCount.get(t) || 0) + 1)) }
 const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
 const hero = { title: '归档', description: '按年份浏览文章' }
-const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = posts.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,50).map(([name,count]) => ({ name, count }))
+const recommendations = posts.slice(0,50).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
 ---
 <BaseLayout title="归档">

@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import PostCard from '@components/PostCard.vue'
 import SidebarCard from '@components/SidebarCard.vue'
+import PaginationNav from '@components/PaginationNav.vue'
 import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -54,6 +55,7 @@ const notice = siteConfig.notice
           />
         ))}
       </div>
+      <PaginationNav client:visible current={1} pageSize={PAGE_SIZE} total={postsCount} basePath="/page" />
     </div>
   </div>
 

@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import PostCard from '@components/PostCard.vue'
 import SidebarCard from '@components/SidebarCard.vue'
+import PaginationNav from '@components/PaginationNav.vue'
 import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -36,12 +37,20 @@ for (const p of all) {
 }
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
-const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title }))
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,50).map(([name,count]) => ({ name, count }))
+const recommendations = all.slice(0,50).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
 ---
 <BaseLayout title="博客">
   <div class="page-grid">
+    <div id="home-hero" class="hero-card fade-up">
+      <img class="hero-img" src={siteConfig.hero.bg} alt="首页头图" referrerpolicy="no-referrer" />
+      <div class="hero-overlay">
+        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
+        <div class="hero-title">{siteConfig.hero.title}</div>
+        <div class="hero-desc">{siteConfig.hero.description}</div>
+      </div>
+    </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <div class="simple-list">
@@ -59,6 +68,7 @@ const notice = siteConfig.notice
           />
         ))}
       </div>
+      <PaginationNav client:visible current={current} pageSize={PAGE_SIZE} total={total} basePath="/page" />
     </div>
   </div>
 </BaseLayout>

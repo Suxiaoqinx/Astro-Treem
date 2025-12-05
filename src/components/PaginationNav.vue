@@ -1,11 +1,14 @@
 <template>
-  <el-pagination
-    :current-page="current"
-    :page-size="pageSize"
-    :total="total"
-    layout="prev, pager, next"
-    @current-change="onChange"
-  />
+  <div class="pagination-card fade-up">
+    <el-pagination
+      background
+      :current-page="current"
+      :page-size="pageSize"
+      :total="total"
+      layout="prev, pager, next"
+      @current-change="onChange"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -19,3 +22,15 @@ function onChange(page: number) {
   window.location.href = href
 }
 </script>
+
+<style scoped>
+.pagination-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+</style>

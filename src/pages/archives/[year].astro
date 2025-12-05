@@ -34,8 +34,8 @@ for (const p of all) { (p.data.tags || []).forEach((t) => { tagSet.add(t); tagCo
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
 const hero = { title: `归档：${year} 年`, description: '查看该年所有文章' }
-const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
-const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
+const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,50).map(([name,count]) => ({ name, count }))
+const recommendations = all.slice(0,50).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
 ---
 <BaseLayout title={`归档：${year} 年`}>

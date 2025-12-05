@@ -1,8 +1,9 @@
 <template>
   <div class="sidebar">
+      <div class="sidebar-content fade-up">
     <el-card class="profile-card" shadow="hover">
       <div class="profile">
-        <el-avatar :src="avatar" size="large" />
+        <el-avatar :src="avatar" :size="72" />
         <div class="info">
           <div class="name">{{ name }}</div>
           <div class="desc" v-if="description">{{ description }}</div>
@@ -17,14 +18,20 @@
           <span class="label">标签</span>
           <span class="value">{{ counts.tags }}</span>
         </div>
-        
+      </div>
+      
+      <div class="social-links">
+        <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
+        </a>
       </div>
     </el-card>
 
     <el-card class="block-card todo-card" shadow="hover">
-      <div class="section-title">
-        待办事项
-      </div>
+      <div class="section-title">待办事项</div>
       <div class="todo-list">
         <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
           <div class="checkbox-custom">
@@ -132,6 +139,7 @@
           <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
       </div>
     </el-card>
+      </div>
   </div>
 </template>
 
@@ -209,7 +217,7 @@ function updateTimeStats() {
 }
 
 // Tags logic
-const visibleTagLimit = ref(3)
+const visibleTagLimit = ref(11)
 const visibleTags = computed(() => (props.hotTags || []).slice(0, visibleTagLimit.value))
 function loadMoreTags() { visibleTagLimit.value += 3 }
 
@@ -319,10 +327,14 @@ function formatDate(d: string | Date) {
 </script>
 
 <style scoped>
-.sidebar { position: sticky; display:flex; flex-direction:column; gap:10px; animation: fadeUp .3s ease-out both; }
+.sidebar { height: 100%; }
+.sidebar-inner::-webkit-scrollbar { display: none; }
+.sidebar-content { display:flex; flex-direction:column; gap:10px; }
 .profile-card { border-radius: 18px; overflow: hidden; }
-.profile { display:flex; align-items:center; gap:12px; }
-.info { display:flex; flex-direction:column; }
+.profile { display:flex; flex-direction:column; align-items:center; gap:12px; padding: 12px 0; }
+:deep(.el-avatar) { transition: transform .6s ease-in-out; }
+:deep(.el-avatar:hover) { transform: rotate(360deg); }
+.info { display:flex; flex-direction:column; align-items:center; text-align: center; }
 .name { font-weight:700; font-size:16px; }
 .desc { color:#666; margin-top:4px; font-size:13px; }
 .stats { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:14px; }
@@ -396,4 +408,9 @@ function formatDate(d: string | Date) {
 .time-item { display: flex; flex-direction: column; gap: 6px; }
 .time-label { font-size: 13px; color: #666; display: flex; align-items: center; }
 .time-value { font-weight: bold; font-size: 15px; margin: 0 4px; }
+
+.social-links { display: flex; justify-content: space-between; margin-top: 14px; gap: 8px; }
+.social-item { display: flex; align-items: center; justify-content: center; flex: 1; height: 40px; border: 1px solid #e5e7eb; border-radius: 12px; color: #374151; transition: all .2s; }
+.social-item:hover { border-color: #e05d98; color: #e05d98; background: #fff0f6; transform: translateY(-2px); }
+.social-item svg { width: 20px; height: 20px; }
 </style>
