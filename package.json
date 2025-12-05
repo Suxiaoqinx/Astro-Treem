@@ -25,5 +25,9 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*",
     "@rollup/rollup-win32-x64-msvc": "*"
+  },
+  "devDependencies": {
+    "remark-directive": "^4.0.0",
+    "unist-util-visit": "^5.0.0"
   }
 }

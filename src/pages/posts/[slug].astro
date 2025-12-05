@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
+import DonateButtons from '@components/DonateButtons.vue'
 import WalineComments from '@components/WalineComments.vue'
 import { getEntry, getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
@@ -77,10 +78,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
         </div>
         <div class="donate-card">
           <div class="donate-text">喜欢这篇文章噢，觉得不错的话，奖励奖励我！</div>
-          <div class="donate-actions">
-            <a class="btn btn-blue" data-donate="alipay">支付宝</a>
-            <a class="btn btn-green" data-donate="wechat">微信</a>
-          </div>
+          <DonateButtons client:only="vue" />
         </div>
         <div id="donate-overlay" class="donate-overlay" style="display:none;">
           <div class="donate-backdrop"></div>
@@ -145,11 +143,6 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .donate-card { margin: 20px 0 10px; padding: 16px; background:#fff; border:1px solid #e5e7eb; border-radius:18px; box-shadow: 0 8px 24px rgba(0,0,0,.06); text-align:center; }
     .donate-text { color:#6b7280; margin-bottom: 12px; }
     .donate-actions { display:flex; gap:12px; justify-content:center; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; height:36px; padding:0 14px; border-radius:12px; text-decoration:none; font-weight:700; color:#fff; }
-    .btn-blue { background:#409eff; }
-    .btn-blue:hover { background:#337ecc; }
-    .btn-green { background:#10b981; }
-    .btn-green:hover { background:#0ea5a9; }
     .meta-card { position: relative; margin: 6px 0 12px; padding: 1.5rem; border:1px solid #e5e7eb; border-radius:18px; }
     .meta-card.meta-dark { background:#fff; border-color:#e5e7eb; color:#000; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
     .meta-card.meta-dark::after { content: 'CC'; position:absolute; right:16px; bottom:10px; font-size:80px; color: rgba(0,0,0,.06); font-weight:800; }

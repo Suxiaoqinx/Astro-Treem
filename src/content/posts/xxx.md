@@ -76,3 +76,11 @@ npm run build
 ---
 
 更多内容与样式可根据需要继续扩展。
+
+<!-- 按钮组件演示 -->
+
+::btn[查看官网]{link="https://element-plus.org" type="info"}
+
+::btn[打赏支付宝]{link="/assets/donate/alipay.png" type="import"}
+
+::btn[联系微信]{link="/assets/donate/wechat.png" type="success"}
