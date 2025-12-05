@@ -66,6 +66,16 @@
           <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
           <span class="rt-dot" :class="dotClass('dev')"></span>
         </a>
+        <a href="https://netlify-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'netlify' }">
+          <span class="rt-label">Netlify</span>
+          <span class="rt-latency" :class="latencyClass('netlify')">{{ latencyText('netlify') }}</span>
+          <span class="rt-dot" :class="dotClass('netlify')"></span>
+        </a>
+        <a href="https://cf-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'Cloudflare' }">
+          <span class="rt-label">Cloudflare</span>
+          <span class="rt-latency" :class="latencyClass('Cloudflare')">{{ latencyText('Cloudflare') }}</span>
+          <span class="rt-dot" :class="dotClass('Cloudflare')"></span>
+        </a>
       </div>
     </el-card>
 
