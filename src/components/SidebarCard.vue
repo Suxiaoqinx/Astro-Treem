@@ -28,11 +28,15 @@
 
     <el-card v-if="headingsState?.length" class="block-card toc-card" shadow="hover">
       <div class="section-title">目录</div>
-      <ul class="toc-list">
-        <li v-for="h in headingsState" :key="h.slug">
-          <a :href="`#${h.slug}`" class="toc-link" :style="{ marginLeft: `${(h.depth - 2) * 12}px` }" @click.prevent="onToc(h.slug)">{{ h.text }}</a>
-        </li>
-      </ul>
+      <el-anchor :offset="80" class="custom-anchor">
+        <el-anchor-link 
+          v-for="h in headingsState" 
+          :key="h.slug" 
+          :href="`#${h.slug}`" 
+          :title="h.text"
+          :class="`toc-depth-${h.depth}`"
+        />
+      </el-anchor>
     </el-card>
 
     <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
@@ -79,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElCard, ElAvatar, ElTag } from 'element-plus'
+import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink } from 'element-plus'
 import { ref, onMounted } from 'vue'
 
 type Heading = { slug: string; text: string; depth: number }
@@ -217,10 +221,14 @@ function formatDate(d: string | Date) {
 .rec-link { text-decoration:none; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .rec-link:hover { color:#409eff; }
 .rec-date { margin-left:auto; color:#888; font-size:12px; }
-.toc-card .toc-list { list-style:none; padding:0; margin:0; }
-.toc-card .toc-list li { margin:6px 0; }
-.toc-card .toc-link { text-decoration:none; color:#409eff; }
-.toc-card .toc-link:hover { text-decoration:underline; }
+:deep(.custom-anchor .el-anchor__marker) { background: #409eff; }
+:deep(.custom-anchor .el-anchor__link) { font-size: 13px; line-height: 1.6; height: auto; padding: 6px 0; color: #606266; }
+:deep(.custom-anchor .el-anchor__link.is-active) { color: #409eff; font-weight: 700; }
+:deep(.custom-anchor .el-anchor__link:hover) { color: #409eff; }
+:deep(.toc-depth-3) { padding-left: 12px; }
+:deep(.toc-depth-4) { padding-left: 24px; }
+:deep(.toc-depth-5) { padding-left: 36px; }
+:deep(.custom-anchor) { background: transparent; }
 @media (max-width: 900px) {
   .sidebar { position: static; top: auto; }
   .toc-card, .hot-tags-card, .recommend-card { display: none; }

@@ -3,7 +3,7 @@
     <div class="button-row">
       <el-popover trigger="hover" placement="top" width="300" @show="onShow('alipay')">
         <template #reference>
-          <el-button type="primary" size="large" round :icon="Star" data-donate="alipay">支付宝</el-button>
+          <el-button type="primary" size="large" round :icon="Star" data-donate="alipay" class="donate-btn">支付宝</el-button>
         </template>
         <div class="qr-wrap">
           <img :src="alipaySrc" alt="二维码" class="qr-img" />
@@ -12,7 +12,7 @@
 
       <el-popover trigger="hover" placement="top" width="300" @show="onShow('wechat')">
         <template #reference>
-          <el-button type="success" size="large" round :icon="Message" data-donate="wechat">微信</el-button>
+          <el-button type="success" size="large" round :icon="Message" data-donate="wechat" class="donate-btn">微信</el-button>
         </template>
         <div class="qr-wrap">
           <img :src="wechatSrc" alt="二维码" class="qr-img" />
@@ -42,4 +42,5 @@ function onShow(type: 'alipay' | 'wechat') {
 .button-row > * { margin: 0; }
 .qr-wrap { display:flex; align-items:center; justify-content:center; }
 .qr-img { width: 240px; height: 240px; border-radius: 12px; object-fit: contain; background:#f5f7fa; }
+.donate-btn { color: #fff !important; }
 </style>

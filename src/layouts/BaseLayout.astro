@@ -2,6 +2,7 @@
 import 'element-plus/dist/index.css'
 import { getCollection } from 'astro:content'
 import HeaderMenu from '@components/HeaderMenu.vue'
+import BackToTop from '@components/BackToTop.vue'
 import { siteConfig } from 'src/site.config'
 const { title = siteConfig.title, description = siteConfig.description } = Astro.props
 const all = await getCollection('posts')
@@ -66,6 +67,8 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     </div>
     </div>
     
+    <BackToTop client:only="vue" />
+
     <script type="module" is:inline>
       const CONTAINER_ID = 'pjax-container'
       
@@ -133,7 +136,11 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         if (closeBtn) closeBtn.addEventListener('click', () => hide())
         if (backdrop) backdrop.addEventListener('click', () => hide())
         const a = document.querySelector('#'+CONTAINER_ID+' #article-url')
-        if (a && a instanceof HTMLAnchorElement) { a.textContent = window.location.href; a.href = window.location.href }
+        if (a && a instanceof HTMLAnchorElement) {
+          const url = window.location.origin + window.location.pathname
+          a.textContent = url
+          a.href = url
+        }
       }
       
       function emitSidebarHeadings(){
@@ -162,11 +169,22 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
         const c = document.getElementById(CONTAINER_ID)
         if (c) c.classList.add('page-ready')
       }
+      function wrapTables() {
+        const tables = document.querySelectorAll('#pjax-container .prose table')
+        tables.forEach(table => {
+          if (table.parentNode.className !== 'table-wrapper') {
+            const wrapper = document.createElement('div')
+            wrapper.className = 'table-wrapper'
+            table.parentNode.insertBefore(wrapper, table)
+            wrapper.appendChild(table)
+          }
+        })
+      }
       try {
-        document.addEventListener('astro:page-load', () => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer() })
+        document.addEventListener('astro:page-load', () => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer(); wrapTables() })
         document.addEventListener('sidebar:mounted', () => { revealPage() })
       } catch {}
-      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer() }, 0)
+      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer(); wrapTables() }, 0)
       setTimeout(() => { revealPage() }, 1500)
     </script>
     <style is:global>
@@ -183,7 +201,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       #pjax-container .post-title { font-weight: 800; }
       #pjax-container .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
       #pjax-container .prose { overflow-wrap: anywhere; }
-      #pjax-container .prose a.el-button { text-decoration: none; }
+      #pjax-container .prose a.el-button { text-decoration: none; color: #fff !important; }
       #pjax-container .prose { overflow-wrap: anywhere; }
       footer .footer-badges { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; margin: 4px 0; }
       footer .badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:6px 10px; border-radius:12px; border:1px solid #e5e7eb; box-shadow:0 1px 3px rgba(0,0,0,.06); }
@@ -204,7 +222,14 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       #pjax-container .prose .btn-green:hover { background:#0ea5a9; }
       #pjax-container .prose .btn-gray { background:#9ca3af; }
       #pjax-container .prose .btn-gray:hover { background:#6b7280; }
+      .table-wrapper { overflow-x: auto; width: 100%; margin: 20px 0; }
+      #pjax-container .prose table { width: 100%; border-collapse: collapse; background-color: #fff; font-size: 14px; color: #606266; }
+      #pjax-container .prose th { padding: 12px 10px; text-align: left; font-weight: 600; color: #909399; border-bottom: 1px solid #ebeef5; }
+      #pjax-container .prose td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #ebeef5; color: #606266; }
+      #pjax-container .prose tr:hover td { background-color: #f5f7fa; }
       @media (max-width: 900px) {
+        #pjax-container .prose table { width: 100% !important; table-layout: fixed; display: table; }
+        #pjax-container .prose th, #pjax-container .prose td { white-space: normal; word-break: break-word; overflow-wrap: break-word; }
         .main-container { padding: 10px; }
         header > div { padding: 24px !important; gap: 10px !important; }
         header nav { gap: 8px !important; }
