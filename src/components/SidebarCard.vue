@@ -101,21 +101,25 @@ const props = defineProps<{
 
 const headingsState = ref<Heading[]>(props.headings || [])
 
-const currentLine = ref<'cn' | 'vercel' | 'dev' | 'other'>('other')
+const currentLine = ref<LineKey>('cn')
 try {
   const h = window.location.host
   if (h === 'blog.toubiec.cn') currentLine.value = 'cn'
   else if (h === 'vercel-blog.toubiec.cn') currentLine.value = 'vercel'
+  else if (h === 'netlify-blog.toubiec.cn') currentLine.value = 'netlify'
+  else if (h === 'cf-blog.toubiec.cn') currentLine.value = 'Cloudflare'
   else if (h === 'localhost:4321') currentLine.value = 'dev'
 } catch {}
 
-type LineKey = 'cn' | 'vercel' | 'dev'
+type LineKey = 'cn' | 'vercel' | 'dev' | 'netlify' | 'Cloudflare'
 const targets: Record<LineKey, string> = {
   cn: 'https://blog.toubiec.cn/',
   vercel: 'https://vercel-blog.toubiec.cn/',
-  dev: 'http://localhost:4321/'
+  dev: 'http://localhost:4321/',
+  netlify: 'https://netlify-blog.toubiec.cn/',
+  Cloudflare: 'https://cf-blog.toubiec.cn/',
 }
-const latencies = ref<Record<LineKey, number | null>>({ cn: null, vercel: null, dev: null })
+const latencies = ref<Record<LineKey, number | null>>({ cn: null, vercel: null, dev: null, netlify: null, Cloudflare: null })
 
 async function measure(key: LineKey) {
   const url = targets[key]
@@ -155,7 +159,7 @@ function dotClass(key: LineKey) {
 }
 
 onMounted(() => {
-  ;(['cn', 'vercel', 'dev'] as LineKey[]).forEach((k) => measure(k))
+  ;(['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => measure(k))
   try { document.dispatchEvent(new CustomEvent('sidebar:mounted')) } catch {}
 })
 
