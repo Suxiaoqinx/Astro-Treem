@@ -49,7 +49,10 @@
     </el-card>
 
     <el-card class="block-card route-card" shadow="hover">
-      <div class="section-title">线路切换</div>
+      <div class="section-header">
+        <div class="section-title">线路切换</div>
+        <el-button link type="primary" size="small" @click="refreshLatencies">手动测试</el-button>
+      </div>
       <div class="routes">
         <a href="https://blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'cn' }">
           <span class="rt-label">EdgeOne CN</span>
@@ -93,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink } from 'element-plus'
+import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink, ElButton } from 'element-plus'
 import { ref, onMounted } from 'vue'
 
 type Heading = { slug: string; text: string; depth: number }
@@ -168,6 +171,13 @@ function dotClass(key: LineKey) {
   return 'dot bad'
 }
 
+function refreshLatencies() {
+  (['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => {
+    latencies.value[k] = null
+    measure(k)
+  })
+}
+
 onMounted(() => {
   ;(['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => measure(k))
   try { document.dispatchEvent(new CustomEvent('sidebar:mounted')) } catch {}
@@ -211,6 +221,8 @@ function formatDate(d: string | Date) {
 .label { color:#666; font-size:12px; }
 .value { display:block; font-weight:700; font-size:18px; margin-top:4px; }
 .block-card { border-radius: 16px; }
+.section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.section-header .section-title { margin-bottom: 0; }
 .section-title { font-weight:700; font-size:14px; margin-bottom:8px; }
 .section-list { display:flex; gap:8px; flex-wrap:wrap; }
 .item-link { text-decoration:none; }
