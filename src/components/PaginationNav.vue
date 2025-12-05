@@ -25,6 +25,7 @@ function onChange(page: number) {
 
 <style scoped>
 .pagination-card {
+  --el-card-border-color: #dcdfe6;
   background: #fff;
   border-radius: 18px;
   padding: 12px 16px;
@@ -32,5 +33,6 @@ function onChange(page: number) {
   display: flex;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--el-card-border-color);
 }
 </style>

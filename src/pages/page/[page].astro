@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import PostCard from '@components/PostCard.vue'
+import PostList from '@components/PostList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
 import PaginationNav from '@components/PaginationNav.vue'
 import { getCollection } from 'astro:content'
@@ -25,6 +25,18 @@ all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTi
 const total = all.length
 const start = (current - 1) * PAGE_SIZE
 const slice = all.slice(start, start + PAGE_SIZE)
+
+const clientPosts = slice.map((p) => ({
+  title: p.data.title,
+  description: p.data.description || '',
+  date: (p.data.date as Date).toISOString(),
+  tags: p.data.tags || [],
+  slug: p.slug,
+  cover: p.data.cover || '',
+  side: (p.data as any).coverSide || 'left',
+  showCover: true,
+  top: (p.data as any).top === true
+}))
 
 const postsCount = total
 const tagSet = new Set<string>()
@@ -53,20 +65,8 @@ const notice = siteConfig.notice
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
-      <div class="simple-list">
-        {slice.map((p) => (
-          <PostCard
-            client:visible
-            title={p.data.title}
-            description={p.data.description || ''}
-            date={(p.data.date as Date).toISOString()}
-            tags={p.data.tags || []}
-            slug={p.slug}
-            cover={p.data.cover || ''}
-            side={(p.data as any).coverSide || 'left'}
-            showCover={true}
-          />
-        ))}
+      <div class="fade-up">
+        <PostList client:only="vue" posts={clientPosts} />
       </div>
       <PaginationNav client:visible current={current} pageSize={PAGE_SIZE} total={total} basePath="/page" />
     </div>

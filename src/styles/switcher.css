@@ -1,0 +1,38 @@
+.layout-switcher-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.switcher-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+.layout-switcher-box .mode-switch {
+  display: flex;
+  gap: 12px;
+}
+.layout-switcher-box .mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  color: #606266;
+}
+.layout-switcher-box .mode-btn:hover {
+  border-color: #c6e2ff;
+  color: #409eff;
+  background-color: #ecf5ff;
+}
+.layout-switcher-box .mode-btn.active {
+  border-color: #409eff;
+  color: #fff;
+  background-color: #409eff;
+}

@@ -2,7 +2,10 @@
   <el-card shadow="hover" class="post-card" @click="onCardClick">
     <div :class="['card-body', bodyClass]">
       <div v-if="showMedia" class="media">
-        <img :src="cover as string" alt="cover" loading="lazy" />
+        <div v-if="!loaded" class="img-loading">
+          <div class="loading-bar"></div>
+        </div>
+        <img :src="cover as string" alt="cover" loading="lazy" @load="onLoad" :class="{ 'loaded': loaded }" />
       </div>
       <div class="content">
         <div v-if="top" class="pin-top">置顶</div>
@@ -18,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { ElCard, ElTag } from 'element-plus'
 
-const { title, description, date, tags, slug, cover, side, showCover, top } = defineProps<{
+const { title, description, date, tags, slug, cover, side, showCover, top, mode } = defineProps<{
   title: string
   description?: string
   date: string
@@ -31,7 +34,13 @@ const { title, description, date, tags, slug, cover, side, showCover, top } = de
   side?: 'left' | 'right'
   showCover?: boolean
   top?: boolean
+  mode?: 'list' | 'grid'
 }> ()
+
+const loaded = ref(false)
+function onLoad() {
+  loaded.value = true
+}
 
 const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
 
@@ -50,7 +59,10 @@ function onCardClick(e: MouseEvent) {
 const dateStr = computed(() => new Date(date).toLocaleDateString())
 const href = computed(() => `/posts/${slug}`)
 const showMedia = computed(() => !!cover && ((showCover ?? true) === true))
-const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-reverse' : 'row') : 'single'))
+const bodyClass = computed(() => {
+  if (mode === 'grid') return 'col'
+  return showMedia.value ? (side === 'right' ? 'row-reverse' : 'row') : 'single'
+})
 const displayTags = computed(() => (tags ?? []).slice(0, 4))
 </script>
 
@@ -60,8 +72,31 @@ const displayTags = computed(() => (tags ?? []).slice(0, 4))
 .card-body.row { flex-direction: row; }
 .card-body.row-reverse { flex-direction: row-reverse; }
 .card-body.single { display:block; padding: 12px; }
-.media { flex: 0 0 250px; }
-.media img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
+.card-body.col { flex-direction: column; padding: 0; align-items: stretch; }
+.card-body.col .media { width: 100%; flex: 0 0 auto; border-radius: 0; }
+.card-body.col .media img { height: 180px; border-radius: 0; }
+.card-body.col .content { padding: 12px; min-height: auto; }
+
+.media { flex: 0 0 250px; position: relative; border-radius: 8px; overflow: hidden; }
+.media img { width: 100%; height: 120px; object-fit: cover; display: block; opacity: 0; transition: opacity 0.5s ease; }
+.media img.loaded { opacity: 1; }
+
+.img-loading {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: #232323; display: flex; align-items: center; justify-content: center; z-index: 1;
+}
+.loading-bar {
+  width: 40px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; overflow: hidden;
+}
+.loading-bar::after {
+  content:''; position: absolute; top:0; left:0; height:100%; width:100%;
+  background: #ff4e6a; transform: translateX(-100%); animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .content { flex: 1; display:grid; grid-template-rows: auto 1fr auto; gap: 6px; min-height: 120px; }
 .post-title { font-size: 18px; font-weight: 700; display:block; text-decoration:none; color:#333; margin: 0; }
 .post-desc { color: #666; margin: 0; align-self: start; }
@@ -75,7 +110,7 @@ const displayTags = computed(() => (tags ?? []).slice(0, 4))
 
 @media (max-width: 768px) {
   .card-body.row, .card-body.row-reverse { flex-direction: column; }
-  .media { flex: 0 0 100%; }
-  .media img { width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 14px; object-fit: cover; }
+  .media { flex: 0 0 100%; border-radius: 14px; }
+  .media img { width: 100%; height: auto; aspect-ratio: 16 / 9; }
 }
 </style>
