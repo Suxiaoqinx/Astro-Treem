@@ -20,6 +20,40 @@
         
       </div>
     </el-card>
+
+    <el-card class="block-card todo-card" shadow="hover">
+      <div class="section-title">
+        待办事项
+      </div>
+      <div class="todo-list">
+        <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
+          <div class="checkbox-custom">
+             <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <span class="todo-text">{{ item.text }}</span>
+        </div>
+        <div v-if="visibleTodoCount < todos.length" class="load-more-container">
+          <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
+        </div>
+      </div>
+    </el-card>
+
+    <el-card class="block-card time-card" shadow="hover">
+      <div class="section-title">时光流逝</div>
+      <div class="time-list">
+        <div v-for="(item, index) in timeStats" :key="index" class="time-item">
+          <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}</span> {{ item.unit }}</div>
+          <el-progress 
+            :percentage="item.percent" 
+            :color="item.color" 
+            :stroke-width="10" 
+            striped 
+            striped-flow 
+            :duration="20"
+          />
+        </div>
+      </div>
+    </el-card>
     
     <el-card v-if="notice" class="block-card notice-card" shadow="hover">
       <div class="section-title">公告</div>
@@ -42,9 +76,12 @@
     <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
       <div class="section-title">热门标签</div>
       <div class="section-list">
-        <a v-for="t in hotTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
+        <a v-for="t in visibleTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
           <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
         </a>
+      </div>
+      <div v-if="visibleTagLimit < (hotTags?.length || 0)" class="load-more-container">
+          <el-button link type="primary" size="small" @click="loadMoreTags">加载更多</el-button>
       </div>
     </el-card>
 
@@ -85,18 +122,21 @@
     <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
       <div class="section-title">推荐文章</div>
       <ul class="rec-list">
-        <li v-for="(r, i) in recommendations" :key="r.slug" class="rec-item">
+        <li v-for="(r, i) in visibleRecs" :key="r.slug" class="rec-item">
           <span class="rec-index">{{ i + 1 }}</span>
           <a :href="`/posts/${r.slug}`" class="rec-link">{{ r.title }}</a>
           <span v-if="r.date" class="rec-date">{{ formatDate(r.date as any) }}</span>
         </li>
       </ul>
+      <div v-if="visibleRecLimit < (recommendations?.length || 0)" class="load-more-container">
+          <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
+      </div>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink, ElButton } from 'element-plus'
+import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink, ElButton, ElProgress } from 'element-plus'
 import { ref, onMounted } from 'vue'
 
 type Heading = { slug: string; text: string; depth: number }
@@ -111,6 +151,73 @@ const props = defineProps<{
   recommendations?: { slug: string; title: string; date?: string }[]
   notice?: string
 }>()
+
+import todoList from '../data/todos.json'
+import { computed } from 'vue'
+
+// Todo logic
+const todos = ref(todoList)
+const visibleTodoCount = ref(3)
+const visibleTodos = computed(() => todos.value.slice(0, visibleTodoCount.value))
+function loadMoreTodos() { visibleTodoCount.value += 3 }
+
+// Time Passing Logic
+const timeStats = ref([
+  { label: '今日已经过去', value: 0, unit: '小时', percent: 0, color: '#409eff' },
+  { label: '这周已经过去', value: 0, unit: '天', percent: 0, color: '#e6a23c' },
+  { label: '本月已经过去', value: 0, unit: '天', percent: 0, color: '#f56c6c' },
+  { label: '今年已经过去', value: 0, unit: '个月', percent: 0, color: '#67c23a' }
+])
+
+function updateTimeStats() {
+  const now = new Date()
+  const year = now.getFullYear()
+  
+  // Today
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+  const passedToday = now.getTime() - startOfDay
+  const hoursPassed = Math.floor(passedToday / (1000 * 60 * 60))
+  const percentToday = (passedToday / (1000 * 60 * 60 * 24)) * 100
+
+  // Week (Mon start)
+  const day = now.getDay()
+  const dayIndex = day === 0 ? 6 : day - 1
+  const passedWeekDays = dayIndex
+  const percentWeek = ((dayIndex + (hoursPassed/24)) / 7) * 100
+  
+  // Month
+  const date = now.getDate()
+  const daysInMonth = new Date(year, now.getMonth() + 1, 0).getDate()
+  const passedMonthDays = date - 1
+  const percentMonth = ((passedMonthDays + (hoursPassed/24)) / daysInMonth) * 100
+
+  // Year
+  const month = now.getMonth()
+  const percentYear = ((month + (date/daysInMonth)) / 12) * 100
+  
+  timeStats.value[0].value = hoursPassed
+  timeStats.value[0].percent = Math.round(percentToday)
+  
+  timeStats.value[1].value = passedWeekDays
+  timeStats.value[1].percent = Math.round(percentWeek)
+  
+  timeStats.value[2].value = passedMonthDays
+  timeStats.value[2].percent = Math.round(percentMonth)
+  
+  timeStats.value[3].value = month
+  timeStats.value[3].percent = Math.round(percentYear)
+}
+
+// Tags logic
+const visibleTagLimit = ref(3)
+const visibleTags = computed(() => (props.hotTags || []).slice(0, visibleTagLimit.value))
+function loadMoreTags() { visibleTagLimit.value += 3 }
+
+// Recommendations logic
+// index.astro passes `recommendations = all.slice(0,5)`. Max 5 items.
+const visibleRecLimit = ref(9)
+const visibleRecs = computed(() => (props.recommendations || []).slice(0, visibleRecLimit.value))
+function loadMoreRecs() { visibleRecLimit.value += 3 }
 
 const headingsState = ref<Heading[]>(props.headings || [])
 
@@ -179,6 +286,8 @@ function refreshLatencies() {
 }
 
 onMounted(() => {
+  updateTimeStats()
+  setInterval(updateTimeStats, 60000)
   ;(['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => measure(k))
   try { document.dispatchEvent(new CustomEvent('sidebar:mounted')) } catch {}
 })
@@ -210,7 +319,7 @@ function formatDate(d: string | Date) {
 </script>
 
 <style scoped>
-.sidebar { position: sticky; top: 24px; display:flex; flex-direction:column; gap:16px; animation: fadeUp .5s ease-out both; }
+.sidebar { position: sticky; display:flex; flex-direction:column; gap:10px; animation: fadeUp .3s ease-out both; }
 .profile-card { border-radius: 18px; overflow: hidden; }
 .profile { display:flex; align-items:center; gap:12px; }
 .info { display:flex; flex-direction:column; }
@@ -223,7 +332,8 @@ function formatDate(d: string | Date) {
 .block-card { border-radius: 16px; }
 .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
 .section-header .section-title { margin-bottom: 0; }
-.section-title { font-weight:700; font-size:14px; margin-bottom:8px; }
+.section-title { display: flex; align-items: center; gap: 8px; font-weight:700; font-size:14px; margin-bottom:12px; }
+.section-title::before { content: ""; display: block; width: 4px; height: 16px; background: #e05d98; border-radius: 2px; }
 .section-list { display:flex; gap:8px; flex-wrap:wrap; }
 .item-link { text-decoration:none; }
 .notice-card .notice-content { font-size:13px; color:#4b5563; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
@@ -258,4 +368,32 @@ function formatDate(d: string | Date) {
 @media (max-width: 900px) {
   .sidebar { display: none; }
 }
+
+.todo-list { display: flex; flex-direction: column; gap: 12px; }
+.todo-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #333; line-height: 1.5; transition: all 0.3s; }
+.todo-item.done { text-decoration: line-through; color: #999; opacity: 0.8; }
+.checkbox-custom {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #e05d98;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  transition: all 0.2s;
+  background: transparent;
+}
+.todo-item.done .checkbox-custom {
+  background: #e05d98;
+  border-color: #e05d98;
+}
+.checkbox-custom svg { color: white; }
+.load-more-container { display: flex; justify-content: center; margin-top: 4px; }
+
+.time-list { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
+.time-item { display: flex; flex-direction: column; gap: 6px; }
+.time-label { font-size: 13px; color: #666; display: flex; align-items: center; }
+.time-value { font-weight: bold; font-size: 15px; margin: 0 4px; }
 </style>

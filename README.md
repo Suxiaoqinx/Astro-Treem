@@ -12,10 +12,14 @@
   - 页面入场动画：首页头图、侧边栏、文章列表与文章详情统一使用 `fade-up`
   - 全局回到顶部组件（BackToTop）：页面右下角常驻，一键平滑返回顶部
   - 侧边栏目录（TOC）：使用 Element Plus Anchor 组件，支持平滑滚动与当前位置高亮
+  - 侧边栏增强：
+    - **待办事项**：支持从 `src/data/todos.json` 加载，具备“加载更多”交互，标题统一粉色竖条装饰
+    - **时光流逝**：动态计算今日/本周/本月/本年流逝百分比，集成 Element Plus 条纹进度条
+    - **加载优化**：热门标签与推荐文章支持“加载更多”功能
   - 线路切换测速：侧边栏提供多线路切换与手动延迟测试功能
 - **文章阅读体验**：
   - 图片灯箱（Viewer.js）：仅文章正文区域启用（选择器：`#pjax-container .post-content-card .prose`）
-  - 表格优化：自动包裹 `.table-wrapper`，移动端强制全宽并支持横向滚动，解决排版错位问题
+  - 表格优化：使用 `rehype` 插件自动包裹 `.table-wrapper`，移动端表格支持横向滚动，防止布局溢出
   - URL 净化：文章版权区域自动移除 URL 查询参数与锚点，仅保留纯净链接
   - 字数统计与预计阅读时长
 - **内容组织**：
@@ -32,7 +36,14 @@ src/
     SidebarCard.vue  # 侧边栏卡片（含 TOC、线路切换）
     DonateButtons.vue # 捐赠按钮
     ...
+  data/              # 数据文件
+    friends.json
+    talks.json
+    todos.json       # 待办事项数据
   layouts/           # 页面布局（BaseLayout.astro）、搜索弹窗与图片灯箱初始化
+  markdown/          # Markdown 扩展插件
+    btnShortcode.js
+    rehypeTableWrapper.js # 表格包裹插件
   pages/             # Astro 路由页面（首页、标签、归档、文章详情、分页等）
     posts/[slug].astro
     tags/index.astro

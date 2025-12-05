@@ -1,0 +1,11 @@
+[
+  { "text": "修复友链页面样式丢失", "done": true },
+  { "text": "优化友链头像大小显示", "done": true },
+  { "text": "去除全局样式导致的下划线", "done": true },
+  { "text": "修复页脚未吸附底部问题", "done": true },
+  { "text": "调整页脚为全宽布局", "done": true },
+  { "text": "批量生成测试文章", "done": true },
+  { "text": "开发侧边栏待办事项组件", "done": true },
+  { "text": "统一侧边栏标题UI风格", "done": true },
+  { "text": "重构待办事项数据结构", "done": true }
+]
