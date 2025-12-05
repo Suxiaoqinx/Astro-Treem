@@ -85,6 +85,7 @@ comment: false # 关闭该页面的评论
 - 关于页：`src/pages/about.astro`
 - 友链页：`src/pages/friends.astro`
 - 捐助页：`src/pages/donate.astro`
+- 说说页：`src/pages/talks.astro`（数据来自 `src/data/talks.json`）
 
 ## 搜索
 - 按 `Ctrl/Cmd+K` 打开搜索弹窗
@@ -94,6 +95,20 @@ comment: false # 关闭该页面的评论
 ## 静态资源
 - 将图片等静态资源放到 `public/` 目录，构建后会原样复制到产物
 - 捐助二维码位于 `public/assets/donate/`（`wechat.png`、`alipay.png`）
+
+## 说说数据格式
+`src/data/talks.json`
+
+```json
+[
+  {
+    "id": "t-2025-12-02-1",
+    "date": "2025-12-02T10:15:00+08:00",
+    "content": "清晨的风很温柔，写点代码，喝口咖啡。",
+    "images": ["https://example.com/pic.jpg"]
+  }
+]
+```
 
 ## 自定义与配置
 - 站点信息：`src/site.config.ts`（标题、作者、头像、Hero 文案、公告等）

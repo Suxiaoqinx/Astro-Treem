@@ -1,5 +1,5 @@
 export const siteConfig = {
-  title: '苏晓晴博客', //网站标题
+  title: '苏晓晴博客 - 我的生活记录', //网站标题
   description: '落花如泪，寄托相思情长。', //网站描述
   author: '苏晓晴', //作者名称
   avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=3074193836&spec=640', //作者头像 

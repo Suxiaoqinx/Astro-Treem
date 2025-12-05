@@ -1,46 +1,28 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
-import { getCollection } from 'astro:content'
-import TimelineList from '@components/TimelineList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
+import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
+import talks from 'src/data/talks.json'
+const hero = { title: '说说', description: '记录日常与随感片刻' }
 
-export async function getStaticPaths() {
-  const posts = await getCollection('posts')
-  const years = new Set()
-  for (const p of posts) years.add((p.data.date as Date).getFullYear())
-  return Array.from(years).map((y) => ({ params: { year: String(y) } }))
-}
-
-const { year } = Astro.params
 const all = await getCollection('posts')
 all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
-const filtered = all.filter((p) => (p.data.date as Date).getFullYear() === Number(year))
-filtered.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
-const clientPosts = filtered.map((p) => ({
-  slug: p.slug,
-  data: {
-    title: p.data.title,
-    description: p.data.description || '',
-    date: (p.data.date as Date).toISOString(),
-    tags: p.data.tags || [],
-    category: p.data.category || ''
-  }
-}))
 const postsCount = all.length
 const tagSet = new Set<string>()
 const tagCount = new Map<string, number>()
 for (const p of all) { (p.data.tags || []).forEach((t) => { tagSet.add(t); tagCount.set(t, (tagCount.get(t) || 0) + 1) }) }
 const counts = { posts: postsCount, tags: tagSet.size }
 const profile = { name: siteConfig.author, description: siteConfig.description, avatar: siteConfig.avatar }
-const hero = { title: `归档：${year} 年`, description: '查看该年所有文章' }
 const hotTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).slice(0,10).map(([name,count]) => ({ name, count }))
 const recommendations = all.slice(0,5).map((p) => ({ slug: p.slug, title: p.data.title, date: (p.data.date as Date).toISOString() }))
 const notice = siteConfig.notice
+
+const list = [...talks].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 ---
-<BaseLayout title={`归档：${year} 年`}>
+<BaseLayout title="说说">
   <div class="page-grid">
-    <div id="home-hero" class="hero-card">
+    <div id="home-hero" class="hero-card fade-up">
       <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
       <div class="hero-overlay">
         <div class="hero-title">{hero.title}</div>
@@ -48,21 +30,22 @@ const notice = siteConfig.notice
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
-    <article id="pjax-container" class="post">
-      <div class="post-header">
-        <div class="post-title-box">
-          <h1 class="post-title">归档：{year} 年</h1>
-          <div class="post-submeta">共 {clientPosts.length} 篇</div>
-        </div>
+    <div id="pjax-container">
+      <div class="talks-list fade-up">
+        {list.map((t) => (
+          <div class="talk-card">
+            <div class="talk-meta">{new Date(t.date).toLocaleString()}</div>
+            <div class="talk-content">{t.content}</div>
+            {Array.isArray(t.images) && t.images.length ? (
+              <div class="talk-images">
+                {t.images.map((src) => (<img src={src} alt="" loading="lazy" />))}
+              </div>
+            ) : null}
+          </div>
+        ))}
       </div>
-      <div class="post-content-card">
-        <div class="prose">
-          <TimelineList client:only="vue" posts={clientPosts} />
-        </div>
-      </div>
-    </article>
-  </div>
-  <style>
+    </div>
+    <style>
     .page-grid { display:grid; gap:24px; align-items:start; grid-template-columns: 360px minmax(0,1fr); }
     .hero-card { position: relative; border-radius: 24px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 8px 24px rgba(0,0,0,.06); background: #fff; grid-column: 1 / -1; }
     .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
@@ -72,20 +55,18 @@ const notice = siteConfig.notice
       color: #fff; text-align:center; }
     .hero-title { font-size: 28px; font-weight: 800; }
     .hero-desc { font-size: 14px; margin-top: 6px; opacity: .92; }
-    .post { width: 100%; margin: 0; justify-self: stretch; }
-    .post-header { display:flex; flex-direction:column; gap:18px; }
-    .post-title-box { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px 28px; }
-    .post-title { font-size: 34px; font-weight: 800; margin: 0; letter-spacing: .2px; }
-    .post-submeta { color:#666; font-size:14px; margin-top:10px; }
-    .post-content-card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:22px 24px 22px 16px; margin-top:18px; overflow:hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); min-height:260px; display:flex; flex-direction:column; }
-    .prose { color:#1f2937; font-size:17px; line-height:1.9; width:100%; }
-    .prose :global(.el-timeline) { margin-left: 0; padding-left: 0; }
-    .prose :global(.el-timeline-item) { margin-left: 0; }
+    .talks-list { display:grid; grid-template-columns: 1fr; gap: 16px; }
+    .talk-card { background:#fff; border:1px solid #e5e7eb; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,.06); padding:16px; }
+    .talk-meta { color:#6b7280; font-size:12px; margin-bottom:8px; }
+    .talk-content { color:#374151; font-size:15px; line-height:1.85; }
+    .talk-images { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .talk-images img { width: 180px; height: 120px; object-fit: cover; border-radius: 10px; border:1px solid #eee; background:#fff; box-shadow:0 3px 10px rgba(0,0,0,.06); }
     @media (max-width: 900px) {
       .page-grid { grid-template-columns: 1fr; }
       .hero-img { height: 220px; }
       .hero-title { font-size: 22px; }
       .hero-desc { font-size: 13px; }
     }
-  </style>
+    </style>
+  </div>
 </BaseLayout>

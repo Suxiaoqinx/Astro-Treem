@@ -104,12 +104,13 @@ function formatDate(d: string | Date) {
 
 <style scoped>
 .sidebar { position: sticky; top: 24px; display:flex; flex-direction:column; gap:16px; animation: fadeUp .5s ease-out both; }
+.profile-card { border-radius: 18px; overflow: hidden; }
 .profile { display:flex; align-items:center; gap:12px; }
 .info { display:flex; flex-direction:column; }
 .name { font-weight:700; font-size:16px; }
 .desc { color:#666; margin-top:4px; font-size:13px; }
 .stats { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:14px; }
-.stat { background:#f5f7fa; border-radius:10px; padding:10px 8px; text-align:center; }
+.stat { background:#f5f7fa; border-radius:14px; padding:10px 8px; text-align:center; }
 .label { color:#666; font-size:12px; }
 .value { display:block; font-weight:700; font-size:18px; margin-top:4px; }
 .block-card { border-radius: 16px; }
@@ -117,10 +118,10 @@ function formatDate(d: string | Date) {
 .section-list { display:flex; gap:8px; flex-wrap:wrap; }
 .item-link { text-decoration:none; }
 .notice-card .notice-content { font-size:13px; color:#4b5563; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
-.rec-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px; }
-.rec-item { display:flex; align-items:center; gap:8px; }
-.rec-index { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:#eef2ff; color:#4f46e5; font-size:12px; font-weight:700; }
-.rec-link { text-decoration:none; color:#333; }
+.rec-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
+.rec-item { display:grid; grid-template-columns: 24px 1fr auto; align-items:center; gap:10px; }
+.rec-index { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#eef2ff; color:#4f46e5; font-size:12px; font-weight:700; }
+.rec-link { text-decoration:none; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .rec-link:hover { color:#409eff; }
 .rec-date { margin-left:auto; color:#888; font-size:12px; }
 .toc-card .toc-list { list-style:none; padding:0; margin:0; }

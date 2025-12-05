@@ -13,6 +13,10 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.35-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.65-7 9-7 9Z" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         赞助
       </a>
+      <a href="/talks" class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v10H7l-3 4V5Z" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
+        说说
+      </a>
       <a href="/about" class="nav-item">
         <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm0-9v5M12 8h.01" stroke="#7b8a9b" stroke-width="2" stroke-linecap="round"/></svg>
         关于
