@@ -4,7 +4,7 @@ description: 剖析 Vue 3 基于 Proxy 的响应式系统实现原理，对比 V
 date: 2025-12-04
 tags: [Vue, JavaScript, 源码分析]
 category: 技术深读
-cover: https://eopfapi.2b2x.cn/pic?img=img&id=102
+cover: https://eopfapi.2b2x.cn/ri/h/329.webp
 ---
 
 ## Vue 3 响应式基础
