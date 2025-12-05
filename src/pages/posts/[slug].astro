@@ -173,13 +173,22 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
     .post-nav a:hover { color:#111827; text-decoration:underline; }
     .img-error { border-color:#ddd; border-style:dashed; }
     @media (max-width: 900px) {
-      .page-grid { grid-template-columns: 1fr; }
+      .page-grid { grid-template-columns: minmax(0, 1fr); }
       .post { max-width: 100%; }
     }
     @media (max-width: 640px) {
-      .post-title { font-size: 28px; }
-      .post-content-card { padding: 20px; border-radius: 20px; min-height: 420px; }
-      .prose { font-size: 16px; line-height: 1.85; }
+      .post-title { font-size: 24px; }
+      .post-title-box { padding: 20px; }
+      .post-content-card { padding: 16px; border-radius: 20px; min-height: auto; }
+      .prose { font-size: 16px; line-height: 1.75; }
+      .meta-grid { grid-template-columns: 1fr; gap: 12px; }
+      .meta-item { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+      .meta-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .post-nav { flex-direction: column; gap: 12px; }
+      .post-nav a { display: block; background: #f9fafb; padding: 12px; border-radius: 12px; border: 1px solid #eee; text-align: center; font-size: 14px; }
+      .meta-card { padding: 16px; }
+      .meta-card::after { font-size: 60px; right: 10px; bottom: 10px; opacity: 0.5; }
+      .prose :global(table) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
     </style>
     <style>
