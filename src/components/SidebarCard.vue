@@ -44,6 +44,27 @@
       </div>
     </el-card>
 
+    <el-card class="block-card route-card" shadow="hover">
+      <div class="section-title">线路切换</div>
+      <div class="routes">
+        <a href="https://blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'cn' }">
+          <span class="rt-label">EdgeOne CN</span>
+          <span class="rt-latency" :class="latencyClass('cn')">{{ latencyText('cn') }}</span>
+          <span class="rt-dot" :class="dotClass('cn')"></span>
+        </a>
+        <a href="https://vercel-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'vercel' }">
+          <span class="rt-label">Vercel</span>
+          <span class="rt-latency" :class="latencyClass('vercel')">{{ latencyText('vercel') }}</span>
+          <span class="rt-dot" :class="dotClass('vercel')"></span>
+        </a>
+        <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
+          <span class="rt-label">Dev</span>
+          <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
+          <span class="rt-dot" :class="dotClass('dev')"></span>
+        </a>
+      </div>
+    </el-card>
+
     <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
       <div class="section-title">推荐文章</div>
       <ul class="rec-list">
@@ -59,7 +80,7 @@
 
 <script setup lang="ts">
 import { ElCard, ElAvatar, ElTag } from 'element-plus'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 type Heading = { slug: string; text: string; depth: number }
 
@@ -75,6 +96,63 @@ const props = defineProps<{
 }>()
 
 const headingsState = ref<Heading[]>(props.headings || [])
+
+const currentLine = ref<'cn' | 'vercel' | 'dev' | 'other'>('other')
+try {
+  const h = window.location.host
+  if (h === 'blog.toubiec.cn') currentLine.value = 'cn'
+  else if (h === 'vercel-blog.toubiec.cn') currentLine.value = 'vercel'
+  else if (h === 'localhost:4321') currentLine.value = 'dev'
+} catch {}
+
+type LineKey = 'cn' | 'vercel' | 'dev'
+const targets: Record<LineKey, string> = {
+  cn: 'https://blog.toubiec.cn/',
+  vercel: 'https://vercel-blog.toubiec.cn/',
+  dev: 'http://localhost:4321/'
+}
+const latencies = ref<Record<LineKey, number | null>>({ cn: null, vercel: null, dev: null })
+
+async function measure(key: LineKey) {
+  const url = targets[key]
+  const start = performance.now()
+  try {
+    const ctrl = new AbortController()
+    const t = setTimeout(() => ctrl.abort(), 6000)
+    await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
+    clearTimeout(t as any)
+    latencies.value[key] = Math.round(performance.now() - start)
+  } catch {
+    latencies.value[key] = -1
+  }
+}
+
+function latencyText(key: LineKey) {
+  const v = latencies.value[key]
+  if (v === null) return '测试中'
+  if (v < 0) return '超时'
+  return `${v}ms`
+}
+function latencyClass(key: LineKey) {
+  const v = latencies.value[key]
+  if (v === null) return 'lat-na'
+  if (v < 0) return 'lat-bad'
+  if (v <= 150) return 'lat-ok'
+  if (v <= 400) return 'lat-warn'
+  return 'lat-bad'
+}
+function dotClass(key: LineKey) {
+  const v = latencies.value[key]
+  if (v === null) return 'dot na'
+  if (v < 0) return 'dot bad'
+  if (v <= 150) return 'dot ok'
+  if (v <= 400) return 'dot warn'
+  return 'dot bad'
+}
+
+onMounted(() => {
+  ;(['cn', 'vercel', 'dev'] as LineKey[]).forEach((k) => measure(k))
+})
 
 try {
   document.addEventListener('ajax:updateSidebar', (e: Event) => {
@@ -118,6 +196,20 @@ function formatDate(d: string | Date) {
 .section-list { display:flex; gap:8px; flex-wrap:wrap; }
 .item-link { text-decoration:none; }
 .notice-card .notice-content { font-size:13px; color:#4b5563; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
+.route-card .routes { display:flex; flex-direction:column; gap:8px; }
+.route-link { display:grid; grid-template-columns: 1fr auto auto; align-items:center; gap:10px; padding:10px 12px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb; color:#374151; text-decoration:none; }
+.route-link .rt-label { font-weight:700; font-size:14px; }
+.route-link.active { border-color:#60a5fa; background:#eff6ff; }
+.rt-latency { font-size:12px; font-weight:700; }
+.rt-dot { width:8px; height:8px; border-radius:50%; }
+.dot.ok { background:#16a34a; }
+.dot.warn { background:#f59e0b; }
+.dot.bad { background:#ef4444; }
+.dot.na { background:#9ca3af; }
+.lat-ok { color:#16a34a; }
+.lat-warn { color:#f59e0b; }
+.lat-bad { color:#ef4444; }
+.lat-na { color:#9ca3af; }
 .rec-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
 .rec-item { display:grid; grid-template-columns: 24px 1fr auto; align-items:center; gap:10px; }
 .rec-index { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#eef2ff; color:#4f46e5; font-size:12px; font-weight:700; }
