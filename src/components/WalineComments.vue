@@ -9,13 +9,21 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { siteConfig } from 'src/site.config'
 
 onMounted(async () => {
-  const { init } = await import('sodesu-comment/aio')
-  init({
-    el: '#sodesu',
-    serverURL: 'https://waline-cyan-phi.vercel.app/',  //WARN *.vercel.app 在国内不可用，请在生产环境绑定自有域名
-  })
+  const serverURL = siteConfig?.comments?.serverURL || ''
+  const mountEl = document.getElementById('sodesu')
+  try {
+    const { init } = await import('sodesu-comment/aio')
+    if (!serverURL) throw new Error('Missing serverURL')
+    init({ el: '#sodesu', serverURL })
+  } catch (e) {
+    if (mountEl) {
+      mountEl.innerHTML = '<div class="wl-empty">评论服务未连接或被阻止，请稍后再试。</div>'
+    }
+    console.warn('[comments] init failed:', e)
+  }
 })
 </script>
 

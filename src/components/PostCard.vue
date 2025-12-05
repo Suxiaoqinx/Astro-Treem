@@ -5,6 +5,7 @@
         <img :src="cover as string" alt="cover" />
       </div>
       <div class="content">
+        <div v-if="top" class="pin-top">置顶</div>
         <a :href="href" class="post-title">{{ title }}</a>
         <div class="post-desc" v-if="description">{{ description }}</div>
         <div class="post-meta">
@@ -20,7 +21,7 @@
 import { computed } from 'vue'
 import { ElCard, ElTag } from 'element-plus'
 
-const { title, description, date, tags, slug, cover, side, showCover } = defineProps<{
+const { title, description, date, tags, slug, cover, side, showCover, top } = defineProps<{
   title: string
   description?: string
   date: string
@@ -29,6 +30,7 @@ const { title, description, date, tags, slug, cover, side, showCover } = defineP
   cover?: string
   side?: 'left' | 'right'
   showCover?: boolean
+  top?: boolean
 }> ()
 
 const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
@@ -52,7 +54,7 @@ const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-rev
 </script>
 
 <style scoped>
-.post-card { border-radius: 16px; overflow: hidden; cursor: pointer; }
+.post-card { border-radius: 16px; overflow: hidden; cursor: pointer; position: relative; }
 .card-body { display:flex; gap:12px; padding: 12px; align-items: center; }
 .card-body.row { flex-direction: row; }
 .card-body.row-reverse { flex-direction: row-reverse; }
@@ -66,6 +68,8 @@ const bodyClass = computed(() => (showMedia.value ? (side === 'right' ? 'row-rev
 .meta-date { color:#ffffff; font-size:12px; }
 .meta-tag { margin-right: 8px; }
 .clickable { cursor: pointer; }
+
+.pin-top { position:absolute; left:12px; top:12px; background:#f5f7fa; color:#374151; border:1px solid #e5e7eb; border-radius:8px; padding:4px 8px; font-size:12px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,.06); }
 
 @media (max-width: 768px) {
   .card-body.row, .card-body.row-reverse { flex-direction: column; }

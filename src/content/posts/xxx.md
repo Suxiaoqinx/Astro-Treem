@@ -2,9 +2,16 @@
 title: xxx
 description: 随机内容示例，包含一张图片与若干段落。
 date: 2025-12-02
+updated: 2025-12-02
+id: postxxg
+categories: []
 tags: [随笔, 测试]
 cover: https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp
 coverSide: left
+recommend: true # 是否推荐文章
+top: true # 是否置顶文章
+hide: false # 是否隐藏文章
+comment: true # 是否开启评论
 ---
 
 ## 随机段落一
@@ -42,3 +49,50 @@ coverSide: left
 <img src="https://eopfapi.b.2.f.f.0.7.4.0.1.0.0.2.ip6.arpa/ri/h/622.webp" alt="插图" class="posts-img" />
 
 > 这是一张随机插图，用于丰富文章内容。封面未设置，仅在正文中展示图片。
+
+## 语法高亮与代码块测试
+
+```ts
+// TypeScript 示例
+type User = { id: string; name: string }
+function greet(u: User) {
+  const msg = `Hello, ${u.name}!`
+  return msg
+}
+console.log(greet({ id: '1', name: 'Astro' }))
+```
+
+```js
+// JavaScript 示例
+const nums = [1,2,3]
+const squared = nums.map(n => n*n)
+console.log('squared =', squared)
+```
+
+```python
+# Python 示例
+def add(a, b):
+    return a + b
+print(add(2, 3))
+```
+
+```bash
+# Bash 示例
+echo "build project"
+npm run build
+```
+
+```json
+{
+  "name": "astro-treem-blog",
+  "private": true,
+  "scripts": { "dev": "astro dev" }
+}
+```
+
+```html
+<!-- HTML 示例 -->
+<div class="card">
+  <span>hello</span>
+</div>
+```

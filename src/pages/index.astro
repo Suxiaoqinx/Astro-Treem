@@ -6,8 +6,8 @@ import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
 const PAGE_SIZE = siteConfig.pageSize
-const all = await getCollection('posts')
-all.sort((a, b) => (b.data.date as Date).getTime() - (a.data.date as Date).getTime())
+const all = (await getCollection('posts')).filter((p) => !((p.data as any).hide === true))
+all.sort((a, b) => (Number(Boolean((b.data as any).top)) - Number(Boolean((a.data as any).top))) || ((b.data.date as Date).getTime() - (a.data.date as Date).getTime()))
 const slice = all.slice(0, PAGE_SIZE)
 
 const postsCount = all.length
@@ -50,6 +50,7 @@ const notice = siteConfig.notice
             cover={p.data.cover || ''}
             side={(p.data as any).coverSide || 'left'}
             showCover={true}
+            top={(p.data as any).top === true}
           />
         ))}
       </div>

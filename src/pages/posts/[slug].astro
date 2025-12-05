@@ -113,7 +113,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
           {prev ? (<a href={`/posts/${prev.slug}`}>← 上一篇：{prev.data.title}</a>) : (<span />)}
           {next ? (<a href={`/posts/${next.slug}`}>下一篇：{next.data.title} →</a>) : (<span />)}
       </div>
-      <WalineComments client:only="vue" />
+      {entry.data.comment !== false ? (<WalineComments client:only="vue" />) : null}
     </div>
     <style>
     .page-grid { display:grid; gap:20px; align-items:start; grid-template-columns: 360px minmax(0, 1fr); }

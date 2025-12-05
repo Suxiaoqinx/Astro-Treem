@@ -1,6 +1,8 @@
 ---
 title: 关于本站
 description: 记录、分享与交流
+type: page
+comment: true
 ---
 
 ### 关于我 | About Me
@@ -57,5 +59,4 @@ description: 记录、分享与交流
 ---
 
 🔥 *Always learning. Always building.* ⚡
-
 

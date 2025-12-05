@@ -15,5 +15,8 @@ export const siteConfig = {
     description: '落花如泪，寄托相思情长。', //Hero中的描述
     bg: 'https://eopfapi.2b2x.cn/pic?img=ua', //Hero的背景图片
   },
-  notice: '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。', //公告
+  notice: '按 Ctrl+K 打开站内搜索；欢迎订阅 RSS。', //公告栏内容
+  comments: {
+    serverURL: 'https://waline-cyan-phi.vercel.app' //生产环境请改为你绑定自有域名的 Waline/Sodesu 服务地址
+  }
 }

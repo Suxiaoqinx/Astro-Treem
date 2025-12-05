@@ -40,23 +40,40 @@ src/
 - 本地预览：`npm run preview`
 
 ## 编写文章
-文章放在 `src/content/posts/`，frontmatter 示例：
+文章放在 `src/content/posts/`，frontmatter 示例（完整字段）：
 
 ```md
 ---
 title: 标题
 description: 描述（可选）
+id: 唯一ID（可选）
 date: 2025-12-01
+updated: 2025-12-02 # 更新日期（可选）
+categories: [分类A, 分类B]
 tags: [前端, Astro]
-category: 技术
+category: 技术 # 单分类（可选）
 cover: https://example.com/cover.jpg
 coverSide: left # 或 right（可选）
+recommend: false # 是否推荐
+top: false # 是否置顶
+hide: false # 是否隐藏（隐藏后不会出现在列表）
+comment: true # 是否开启评论
 ---
 
 正文内容使用 Markdown 书写……
 ```
 
-frontmatter 校验见 `src/content/config.ts`：`title`、`description?`、`date`、`tags[]`、`category?`、`cover?`、`coverSide?`。
+页面 frontmatter 示例：
+
+```md
+---
+title: 友链
+type: links
+comment: false # 关闭该页面的评论
+---
+```
+
+字段校验见 `src/content/config.ts`。
 
 ## 页面说明
 - 首页：`src/pages/index.astro`
@@ -83,6 +100,20 @@ frontmatter 校验见 `src/content/config.ts`：`title`、`description?`、`date
 - 主容器样式：`BaseLayout.astro` 中 `.main-container`（移动端 `<=900px` 自动 `padding: 10px`）
 - 文章版权卡片：`src/pages/posts/[slug].astro`（背景白、边框与阴影可按需调整）
 - 归档页对齐：`src/pages/archives/index.astro` 与 `src/pages/archives/[year].astro`（左侧内边距优化）
+
+### 置顶与隐藏
+- 置顶角标：文章列表卡片在 `top: true` 时显示“置顶”角标（`src/components/PostCard.vue`）
+- 列表排序：首页按置顶优先，其次按日期倒序（`src/pages/index.astro`）
+- 隐藏文章：设置 `hide: true` 后将从首页列表中过滤
+
+### 评论区
+- 配置服务地址：在 `src/site.config.ts` 设置 `comments.serverURL`
+- 文章关闭评论：在文章 frontmatter 设置 `comment: false`
+- 组件：`src/components/WalineComments.vue`（基于 `sodesu-comment/aio`）
+
+### 图片与高亮
+- 图片灯箱：仅在文章正文启用（`#pjax-container .post-content-card .prose`）
+- 语法高亮：使用 Shiki 默认主题；如需更换，在 `astro.config.mjs` 配置 `markdown.shikiConfig.theme`
 
 ## 部署
 - 构建：`npm run build`

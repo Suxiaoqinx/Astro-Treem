@@ -1,4 +1,24 @@
 [
-  { "name": "示例站点 A", "url": "https://example.com", "desc": "内容分享", "avatar": "https://ui-avatars.com/api/?name=Site+A&background=random" },
-  { "name": "示例站点 B", "url": "https://example.org", "desc": "技术交流", "avatar": "https://ui-avatars.com/api/?name=Site+B&background=random" }
+  { "name": "祈杰博客", "url": "https://qijieya.cn", "avatar": "https://oss.qijieya.cn/1/aili3.jpg", "desc": "英桀们的谢幕 必须盛大而壮丽" },
+  { "name": "安鹿轩", "url": "https://www.anlu1314.com", "avatar": "https://www.anlu1314.com/wp-content/uploads/2022/07/1658096981-LP4OYiXkFeVBHgu.png", "desc": "遨游于网络世界，热衷于创作分享~" },
+  { "name": "糖茶砌站", "url": "https://www.sg7z.com", "avatar": "https://obs.sg7z.com/logo/favicon.svg", "desc": "糖茶砌站是极具特色的软件网站" },
+  { "name": "Southerly 个人博客", "url": "https://www.southerly.top", "avatar": "https://www.southerly.top/imgs/favicon.ico", "desc": "一个正在努力搬砖的兼职程序员，记录生活，分享生活，欢迎大家来访。" },
+  { "name": "鱼大大博客", "url": "https://www.yudada.cn", "avatar": "https://www.yudada.cn/favicon.ico", "desc": "专注网络小众技术分享" },
+  { "name": "素颜博客", "url": "https://blog.qqdsw8.cn", "avatar": "https://blog.qqdsw8.cn/IsrNZQ.png", "desc": "素颜博客-网络技术分享" },
+  { "name": "小宜技术猫", "url": "https://www.azpay.cn", "avatar": "https://www.azpay.cn/zb_users/upload/2022/02/20220204111349164394442926050.ico", "desc": "小宜技术猫是一家乐享资源记忆点滴的博客" },
+  { "name": "梦荟楼的后花园", "url": "https://oniya.cn", "avatar": "https://oniya.cn/logo", "desc": "干啥啥不行，干饭第一名" },
+  { "name": "韩小韩博客", "url": "https://www.vvhan.com", "avatar": "https://www.vvhan.com/HanLogo.png", "desc": "要变得更加完美" },
+  { "name": "盛大互联", "url": "https://by.itxmt.com", "avatar": "https://by.itxmt.com/wp-content/uploads/2022/06/cropped-ico.png", "desc": "互联网时代的手工匠" },
+  { "name": "栗木小站", "url": "https://misakishiki.site", "avatar": "https://misakishiki.site/aquced.png", "desc": "搞点后现代" },
+  { "name": "echeverra", "url": "https://echeverra.cn", "avatar": "https://echeverra.cn/wp-content/uploads/2022/03/head.jpg", "desc": "let`s go, together!" },
+  { "name": "南下客", "url": "https://www.nanxiake.vip", "avatar": "https://www.nanxiake.vip/static/img/me.jpg", "desc": "南下客的个人网站，期待与更多的人相遇！" },
+  { "name": "樱次元", "url": "https://www.solaacg.com", "avatar": "https://img.yingciyuan.cn/2021/08/05/20148aae5534f.ico", "desc": "一个基于内容分享,创作与灵感结合的折腾笔记博客" },
+  { "name": "西普拉斯驿站", "url": "https://post.cplus8.com/", "avatar": "https://post.cplus8.com/assets/favicon-t358cxvk.png", "desc": "发现世界，看见更多" },
+  { "name": "琉璃君的日常", "url": "https://0x0.ink", "avatar": "https://0x0.ink/usr/uploads/yeliulee.png", "desc": "夜琉璃的博客|琉璃君的日常" },
+  { "name": "技术松鼠", "url": "https://www.jishusongshu.com", "avatar": "https://tools.jishusongshu.com/img/jsss-logo.png", "desc": "学习，让视野更宽阔！" },
+  { "name": "祭夜の咖啡馆", "url": "https://www.jysafe.cn/", "avatar": "https://cdn.jsdelivr.net/npm/typecho-joe-next@6.0.0/assets/img/link.png", "desc": "我很好奇！" },
+  { "name": "Q青之家", "url": "https://www.2gh1.cn/", "avatar": "https://gcore.jsdelivr.net/npm/typecho-joe-next@6.0.0/assets/img/link.png", "desc": "个人博客，易语言等分享" },
+  { "name": "I Am I", "url": "https://5ime.cn", "avatar": "https://gcore.jsdelivr.net/gh/5ime/img/avatar.jpg", "desc": "Hi, I Am I" },
+  { "name": "星空小站", "url": "https://www.m78.co/", "avatar": "https://www.m78.co/logo.png", "desc": "晓韵萧疏睡雨中" },
+  { "name": "仙人小站", "url": "https://www.wrnxr.cn", "avatar": "https://www.wrnxr.cn/wp-content/uploads/2022/02/287dac4809fc-2.png", "desc": "仙人小站专注于分享精品资源，旨在于打造一个资源宝库" }
 ]
