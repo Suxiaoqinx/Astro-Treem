@@ -4,7 +4,7 @@ description: 深入了解 Astro 的文件路由系统，包括动态路由、静
 date: 2025-12-05
 tags: [Astro, 前端, 路由]
 category: 技术教程
-cover: https://eopfapi.2b2x.cn/pic?img=img&id=101
+cover: https://eopfapi.2b2x.cn/ri/h/618.webp
 ---
 
 ## Astro 路由系统
