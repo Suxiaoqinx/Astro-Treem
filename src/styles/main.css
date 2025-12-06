@@ -262,9 +262,30 @@ body.theme-style-3 .sidebar-right-col {
 /* Responsive */
 @media (max-width: 900px) {
   .page-grid { grid-template-columns: minmax(0, 1fr);}
-  .hero-card { grid-column: 1; grid-row: auto; }
-  #pjax-container { grid-column: 1; grid-row: auto; }
+  
+  /* Force single column layout for ALL themes with high specificity */
+  body .page-grid {
+    grid-template-columns: 100% !important;
+    grid-template-rows: auto !important;
+  }
+  
+  body .hero-card {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  body #pjax-container {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+  }
+
   .sidebar { display: none; }
+  body .sidebar,
+  body .sidebar-left-col,
+  body .sidebar-right-col {
+    display: none !important;
+  }
+
   .hero-img { height: 220px; }
   .hero-title { font-size: 22px; }
   .hero-desc { font-size: 13px; }
@@ -272,31 +293,6 @@ body.theme-style-3 .sidebar-right-col {
   .post { max-width: 100%;}
   .post-content-card { padding: 16px; }
   .main-container-wrapper { padding: 0 10px !important; }
-
-  /* New Styles Overrides for Mobile */
-  body.theme-style-2 .page-grid,
-  body.theme-style-3 .page-grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
-  }
-  body.theme-style-2 .hero-card,
-  body.theme-style-3 .hero-card {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  body.theme-style-2 #pjax-container,
-  body.theme-style-3 #pjax-container {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  body.theme-style-2 .sidebar,
-  body.theme-style-3 .sidebar {
-    display: none !important;
-  }
-  body.theme-style-3 .sidebar-left-col,
-  body.theme-style-3 .sidebar-right-col {
-    display: none !important;
-  }
 }
 
 @media (max-width: 640px) {

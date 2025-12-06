@@ -27,7 +27,16 @@ const props = defineProps<{
   posts: any[]
 }>()
 
-const mode = ref<'list' | 'grid'>('list')
+// Initialize mode from localStorage immediately if available
+const getInitialMode = () => {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('post-list-mode')
+    if (saved === 'list' || saved === 'grid') return saved
+  }
+  return 'list'
+}
+
+const mode = ref<'list' | 'grid'>(getInitialMode())
 
 function setMode(m: 'list' | 'grid') {
   mode.value = m
@@ -39,6 +48,7 @@ function onTagClick(tag: string) {
 }
 
 onMounted(() => {
+  // Re-check in onMounted just in case
   const saved = localStorage.getItem('post-list-mode')
   if (saved === 'list' || saved === 'grid') {
     mode.value = saved
@@ -47,7 +57,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.post-list-wrapper { display: flex; flex-direction: column; gap: 16px; position: relative; }
+.post-list-wrapper { display: flex; flex-direction: column; gap: 10px; position: relative; }
 .simple-list { display: flex; flex-direction: column; gap: 10px; }
-.simple-list.grid-mode { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.simple-list.grid-mode { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
 </style>

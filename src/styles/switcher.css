@@ -11,20 +11,23 @@
 }
 .layout-switcher-box .mode-switch {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .layout-switcher-box .mode-btn {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 6px 10px;
   border: 1px solid #dcdfe6;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
   background: #fff;
   color: #606266;
+  white-space: nowrap;
+  min-width: 60px;
 }
 .layout-switcher-box .mode-btn:hover {
   border-color: #c6e2ff;

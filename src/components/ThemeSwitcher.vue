@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
+import { ref, onMounted, h, watch } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
 const props = defineProps<{
@@ -17,6 +17,11 @@ const props = defineProps<{
 }>()
 
 const mode = ref<'list' | 'grid'>(props.currentMode || 'list')
+
+watch(() => props.currentMode, (val) => {
+  if (val) mode.value = val
+})
+
 const themeStyle = ref<'default' | 'style-1' | 'style-2' | 'style-3'>('default')
 let notifyInstance: any = null
 

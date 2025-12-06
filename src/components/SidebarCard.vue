@@ -2,14 +2,16 @@
   <div class="sidebar" :class="{ 'sidebar-split': isStyle3 }">
     <template v-if="isStyle3">
       <div class="sidebar-left-col fade-up">
-        <el-card class="profile-card" shadow="hover">
-          <div class="profile">
-            <el-avatar :src="avatar" :size="72" />
-            <div class="info">
-              <div class="name">{{ name }}</div>
-              <div class="desc">{{ displayDesc }}</div>
+        <el-card class="profile-card" shadow="hover" :body-style="{ padding: '0px' }">
+          <div class="profile-bg"></div>
+          <div class="profile-wrapper">
+            <div class="profile">
+              <el-avatar :src="avatar" :size="72" class="profile-avatar" />
+              <div class="info">
+                <div class="name">{{ name }}</div>
+                <div class="desc">{{ displayDesc }}</div>
+              </div>
             </div>
-          </div>
           <div class="stats">
             <div class="stat">
               <span class="label">文章</span>
@@ -28,6 +30,7 @@
             <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
             </a>
+          </div>
           </div>
         </el-card>
 
@@ -146,14 +149,16 @@
     </template>
 
     <div v-else class="sidebar-content fade-up">
-      <el-card class="profile-card" shadow="hover">
-        <div class="profile">
-          <el-avatar :src="avatar" :size="72" />
-          <div class="info">
-            <div class="name">{{ name }}</div>
-            <div class="desc">{{ displayDesc }}</div>
+      <el-card class="profile-card" shadow="hover" :body-style="{ padding: '0px' }">
+        <div class="profile-bg"></div>
+        <div class="profile-wrapper">
+          <div class="profile">
+            <el-avatar :src="avatar" :size="72" class="profile-avatar" />
+            <div class="info">
+              <div class="name">{{ name }}</div>
+              <div class="desc">{{ displayDesc }}</div>
+            </div>
           </div>
-        </div>
         <div class="stats">
           <div class="stat">
             <span class="label">文章</span>
@@ -166,14 +171,15 @@
         </div>
         
         <div class="social-links">
-          <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-          </a>
-          <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
-             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
-          </a>
-        </div>
-      </el-card>
+            <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a>
+            <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
+            </a>
+          </div>
+          </div>
+        </el-card>
 
       <el-card class="block-card todo-card" shadow="hover">
         <div class="section-title">待办事项</div>
@@ -466,18 +472,23 @@ onUnmounted(() => {
 .sidebar-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
 }
-.profile-card .profile { display:flex; gap:16px; align-items:center; margin-bottom:16px; }
+.profile-card .profile { display:flex; flex-direction:column; gap:12px; align-items:center; margin-bottom:16px; text-align:center; margin-top: -52px; position: relative; z-index: 1; }
+.profile-avatar { border: 4px solid #fff; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.profile-bg { height: 120px; width: 100%; background-image: url('https://npm.elemecdn.com/typecho-joe-latest/assets/img/aside_author_image.jpg'); background-size: cover; background-position: top left; }
+.profile-wrapper { padding: 16px; position: relative; }
 .profile-card .name { font-size:20px; font-weight:700; color:#1f2937; }
 .profile-card .desc { font-size:13px; color:#6b7280; margin-top:4px; line-height:1.4; }
-.profile-card .stats { display:flex; justify-content:space-around; padding:12px 0; border-top:1px solid #f3f4f6; border-bottom:1px solid #f3f4f6; margin-bottom:16px; }
-.profile-card .stat { display:flex; flex-direction:column; align-items:center; gap:4px; }
-.profile-card .label { font-size:12px; color:#9ca3af; }
-.profile-card .value { font-size:18px; font-weight:700; color:#111827; }
-.social-links { display:flex; justify-content:center; gap:12px; }
-.social-item { width:36px; height:36px; border-radius:50%; background:#f3f4f6; display:flex; align-items:center; justify-content:center; color:#6b7280; transition:all .2s; }
-.social-item:hover { background:#409eff; color:#fff; transform:translateY(-2px); }
+.profile-card .stats { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:0; border:none; margin-bottom:12px; }
+.profile-card .stat { display:flex; flex-direction:column; align-items:center; gap:4px; background:#f9fafb; padding:12px; border-radius:8px; }
+.profile-card .label { font-size:12px; color:#6b7280; }
+.profile-card .value { font-size:20px; font-weight:700; color:#1f2937; line-height:1.2; }
+.social-links { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.social-item { width:auto; height:auto; border-radius:8px; background:#fff; border:1px solid #e5e7eb; display:flex; align-items:center; justify-content:center; color:#6b7280; padding:10px; transition:all .2s; }
+.social-item:hover { border-color:#409eff; color:#409eff; background:#ecf5ff; transform:translateY(-2px); }
+
+:deep(.el-card) { border-radius: 12px !important; overflow: hidden; }
 
 .block-card .section-title { font-size:15px; font-weight:700; color:#111827; margin-bottom:12px; padding-left:10px; border-left:4px solid #409eff; line-height:1; }
 .notice-content { font-size:14px; color:#4b5563; line-height:1.6; background:#f9fafb; padding:10px; border-radius:8px; }
