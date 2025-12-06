@@ -1,151 +1,303 @@
 <template>
-  <div class="sidebar">
-      <div class="sidebar-content fade-up">
-    <el-card class="profile-card" shadow="hover">
-      <div class="profile">
-        <el-avatar :src="avatar" :size="72" />
-        <div class="info">
-          <div class="name">{{ name }}</div>
-          <div class="desc" v-if="description">{{ description }}</div>
-        </div>
-      </div>
-      <div class="stats">
-        <div class="stat">
-          <span class="label">文章</span>
-          <span class="value">{{ counts.posts }}</span>
-        </div>
-        <div class="stat">
-          <span class="label">标签</span>
-          <span class="value">{{ counts.tags }}</span>
-        </div>
-      </div>
-      
-      <div class="social-links">
-        <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-        </a>
-        <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
-           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
-        </a>
-      </div>
-    </el-card>
-
-    <el-card class="block-card todo-card" shadow="hover">
-      <div class="section-title">待办事项</div>
-      <div class="todo-list">
-        <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
-          <div class="checkbox-custom">
-             <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <div class="sidebar" :class="{ 'sidebar-split': isStyle3 }">
+    <template v-if="isStyle3">
+      <div class="sidebar-left-col fade-up">
+        <el-card class="profile-card" shadow="hover" :body-style="{ padding: '0px' }">
+          <div class="profile-bg"></div>
+          <div class="profile-wrapper">
+            <div class="profile">
+              <el-avatar :src="avatar" :size="72" class="profile-avatar" />
+              <div class="info">
+                <div class="name">{{ name }}</div>
+                <div class="desc">{{ displayDesc }}</div>
+              </div>
+            </div>
+          <div class="stats">
+            <div class="stat">
+              <span class="label">文章</span>
+              <span class="value">{{ counts.posts }}</span>
+            </div>
+            <div class="stat">
+              <span class="label">标签</span>
+              <span class="value">{{ counts.tags }}</span>
+            </div>
           </div>
-          <span class="todo-text">{{ item.text }}</span>
-        </div>
-        <div v-if="visibleTodoCount < todos.length" class="load-more-container">
-          <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
-        </div>
-      </div>
-    </el-card>
+          
+          <div class="social-links">
+            <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a>
+            <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
+            </a>
+          </div>
+          </div>
+        </el-card>
 
-    <el-card class="block-card time-card" shadow="hover">
-      <div class="section-title">时光流逝</div>
-      <div class="time-list">
-        <div v-for="(item, index) in timeStats" :key="index" class="time-item">
-          <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}</span> {{ item.unit }}</div>
-          <el-progress 
-            :percentage="item.percent" 
-            :color="item.color" 
-            :stroke-width="10" 
-            striped 
-            striped-flow 
-            :duration="20"
+        <el-card class="block-card todo-card" shadow="hover">
+          <div class="section-title">待办事项</div>
+          <div class="todo-list">
+            <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
+              <div class="checkbox-custom">
+                 <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <span class="todo-text">{{ item.text }}</span>
+            </div>
+            <div v-if="visibleTodoCount < todos.length" class="load-more-container">
+              <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
+            </div>
+          </div>
+        </el-card>
+
+        <el-card class="block-card time-card" shadow="hover">
+          <div class="section-title">时光流逝</div>
+          <div class="time-list">
+            <div v-for="(item, index) in timeStats" :key="index" class="time-item">
+              <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
+              <el-progress 
+                :percentage="item.percent" 
+                :color="item.color" 
+                :stroke-width="10" 
+                striped 
+                striped-flow 
+                :duration="20"
+              />
+            </div>
+          </div>
+        </el-card>
+      </div>
+
+      <div class="sidebar-right-col fade-up">
+        <el-card v-if="notice" class="block-card notice-card" shadow="hover">
+          <div class="section-title">公告</div>
+          <div class="notice-content">{{ notice }}</div>
+        </el-card>
+
+        <el-card v-if="headingsState?.length" class="block-card toc-card" shadow="hover">
+          <div class="section-title">目录</div>
+          <el-anchor :offset="80" class="custom-anchor">
+            <el-anchor-link 
+              v-for="h in headingsState" 
+              :key="h.slug" 
+              :href="`#${h.slug}`" 
+              :title="h.text"
+              :class="`toc-depth-${h.depth}`"
+            />
+          </el-anchor>
+        </el-card>
+
+        <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
+          <div class="section-title">热门标签</div>
+          <div class="section-list">
+            <a v-for="t in visibleTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
+              <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
+            </a>
+          </div>
+          <div v-if="visibleTagLimit < (hotTags?.length || 0)" class="load-more-container">
+              <el-button link type="primary" size="small" @click="loadMoreTags">加载更多</el-button>
+          </div>
+        </el-card>
+
+        <el-card class="block-card route-card" shadow="hover">
+          <div class="section-header">
+            <div class="section-title">线路切换</div>
+            <el-button link type="primary" size="small" @click="refreshLatencies">手动测试</el-button>
+          </div>
+          <div class="routes">
+            <a href="https://blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'cn' }">
+              <span class="rt-label">EdgeOne CN</span>
+              <span class="rt-latency" :class="latencyClass('cn')">{{ latencyText('cn') }}</span>
+              <span class="rt-dot" :class="dotClass('cn')"></span>
+            </a>
+            <a href="https://vercel-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'vercel' }">
+              <span class="rt-label">Vercel</span>
+              <span class="rt-latency" :class="latencyClass('vercel')">{{ latencyText('vercel') }}</span>
+              <span class="rt-dot" :class="dotClass('vercel')"></span>
+            </a>
+            <a href="https://netlify-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'netlify' }">
+              <span class="rt-label">Netlify</span>
+              <span class="rt-latency" :class="latencyClass('netlify')">{{ latencyText('netlify') }}</span>
+              <span class="rt-dot" :class="dotClass('netlify')"></span>
+            </a>
+            <a href="https://cf-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'Cloudflare' }">
+              <span class="rt-label">Cloudflare</span>
+              <span class="rt-latency" :class="latencyClass('Cloudflare')">{{ latencyText('Cloudflare') }}</span>
+              <span class="rt-dot" :class="dotClass('Cloudflare')"></span>
+            </a>
+            <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
+              <span class="rt-label">Dev</span>
+              <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
+              <span class="rt-dot" :class="dotClass('dev')"></span>
+            </a>
+          </div>
+        </el-card>
+
+        <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
+          <div class="section-title">推荐文章</div>
+          <ul class="rec-list">
+            <li v-for="(r, i) in visibleRecs" :key="r.slug" class="rec-item">
+              <span class="rec-index">{{ i + 1 }}</span>
+              <a :href="`/posts/${r.slug}`" class="rec-link">{{ r.title }}</a>
+              <span v-if="r.date" class="rec-date">{{ formatDate(r.date as any) }}</span>
+            </li>
+          </ul>
+          <div v-if="visibleRecLimit < (recommendations?.length || 0)" class="load-more-container">
+              <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
+          </div>
+        </el-card>
+      </div>
+    </template>
+
+    <div v-else class="sidebar-content fade-up">
+      <el-card class="profile-card" shadow="hover" :body-style="{ padding: '0px' }">
+        <div class="profile-bg"></div>
+        <div class="profile-wrapper">
+          <div class="profile">
+            <el-avatar :src="avatar" :size="72" class="profile-avatar" />
+            <div class="info">
+              <div class="name">{{ name }}</div>
+              <div class="desc">{{ displayDesc }}</div>
+            </div>
+          </div>
+        <div class="stats">
+          <div class="stat">
+            <span class="label">文章</span>
+            <span class="value">{{ counts.posts }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">标签</span>
+            <span class="value">{{ counts.tags }}</span>
+          </div>
+        </div>
+        
+        <div class="social-links">
+            <a href="https://github.com/Suxiaoqinx" target="_blank" class="social-item" title="Github">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </a>
+            <a href="https://space.bilibili.com/9372624" target="_blank" class="social-item" title="Bilibili">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect><path d="M8 2l2 2"></path><path d="M16 2l-2 2"></path><path d="M9 12v.01"></path><path d="M15 12v.01"></path></svg>
+            </a>
+          </div>
+          </div>
+        </el-card>
+
+      <el-card class="block-card todo-card" shadow="hover">
+        <div class="section-title">待办事项</div>
+        <div class="todo-list">
+          <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
+            <div class="checkbox-custom">
+               <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <span class="todo-text">{{ item.text }}</span>
+          </div>
+          <div v-if="visibleTodoCount < todos.length" class="load-more-container">
+            <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
+          </div>
+        </div>
+      </el-card>
+
+      <el-card class="block-card time-card" shadow="hover">
+        <div class="section-title">时光流逝</div>
+        <div class="time-list">
+          <div v-for="(item, index) in timeStats" :key="index" class="time-item">
+            <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
+            <el-progress 
+              :percentage="item.percent" 
+              :color="item.color" 
+              :stroke-width="10" 
+              striped 
+              striped-flow 
+              :duration="20"
+            />
+          </div>
+        </div>
+      </el-card>
+      
+      <el-card v-if="notice" class="block-card notice-card" shadow="hover">
+        <div class="section-title">公告</div>
+        <div class="notice-content">{{ notice }}</div>
+      </el-card>
+
+      <el-card v-if="headingsState?.length" class="block-card toc-card" shadow="hover">
+        <div class="section-title">目录</div>
+        <el-anchor :offset="80" class="custom-anchor">
+          <el-anchor-link 
+            v-for="h in headingsState" 
+            :key="h.slug" 
+            :href="`#${h.slug}`" 
+            :title="h.text"
+            :class="`toc-depth-${h.depth}`"
           />
+        </el-anchor>
+      </el-card>
+
+      <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
+        <div class="section-title">热门标签</div>
+        <div class="section-list">
+          <a v-for="t in visibleTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
+            <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
+          </a>
         </div>
-      </div>
-    </el-card>
-    
-    <el-card v-if="notice" class="block-card notice-card" shadow="hover">
-      <div class="section-title">公告</div>
-      <div class="notice-content">{{ notice }}</div>
-    </el-card>
+        <div v-if="visibleTagLimit < (hotTags?.length || 0)" class="load-more-container">
+            <el-button link type="primary" size="small" @click="loadMoreTags">加载更多</el-button>
+        </div>
+      </el-card>
 
-    <el-card v-if="headingsState?.length" class="block-card toc-card" shadow="hover">
-      <div class="section-title">目录</div>
-      <el-anchor :offset="80" class="custom-anchor">
-        <el-anchor-link 
-          v-for="h in headingsState" 
-          :key="h.slug" 
-          :href="`#${h.slug}`" 
-          :title="h.text"
-          :class="`toc-depth-${h.depth}`"
-        />
-      </el-anchor>
-    </el-card>
+      <el-card class="block-card route-card" shadow="hover">
+        <div class="section-header">
+          <div class="section-title">线路切换</div>
+          <el-button link type="primary" size="small" @click="refreshLatencies">手动测试</el-button>
+        </div>
+        <div class="routes">
+          <a href="https://blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'cn' }">
+            <span class="rt-label">EdgeOne CN</span>
+            <span class="rt-latency" :class="latencyClass('cn')">{{ latencyText('cn') }}</span>
+            <span class="rt-dot" :class="dotClass('cn')"></span>
+          </a>
+          <a href="https://vercel-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'vercel' }">
+            <span class="rt-label">Vercel</span>
+            <span class="rt-latency" :class="latencyClass('vercel')">{{ latencyText('vercel') }}</span>
+            <span class="rt-dot" :class="dotClass('vercel')"></span>
+          </a>
+          <a href="https://netlify-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'netlify' }">
+            <span class="rt-label">Netlify</span>
+            <span class="rt-latency" :class="latencyClass('netlify')">{{ latencyText('netlify') }}</span>
+            <span class="rt-dot" :class="dotClass('netlify')"></span>
+          </a>
+          <a href="https://cf-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'Cloudflare' }">
+            <span class="rt-label">Cloudflare</span>
+            <span class="rt-latency" :class="latencyClass('Cloudflare')">{{ latencyText('Cloudflare') }}</span>
+            <span class="rt-dot" :class="dotClass('Cloudflare')"></span>
+          </a>
+          <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
+            <span class="rt-label">Dev</span>
+            <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
+            <span class="rt-dot" :class="dotClass('dev')"></span>
+          </a>
+        </div>
+      </el-card>
 
-    <el-card v-if="hotTags?.length" class="block-card hot-tags-card" shadow="hover">
-      <div class="section-title">热门标签</div>
-      <div class="section-list">
-        <a v-for="t in visibleTags" :key="t.name" :href="`/tags/${t.name}`" class="item-link">
-          <el-tag size="small" effect="plain">{{ t.name }}（{{ t.count }}）</el-tag>
-        </a>
-      </div>
-      <div v-if="visibleTagLimit < (hotTags?.length || 0)" class="load-more-container">
-          <el-button link type="primary" size="small" @click="loadMoreTags">加载更多</el-button>
-      </div>
-    </el-card>
-
-    <el-card class="block-card route-card" shadow="hover">
-      <div class="section-header">
-        <div class="section-title">线路切换</div>
-        <el-button link type="primary" size="small" @click="refreshLatencies">手动测试</el-button>
-      </div>
-      <div class="routes">
-        <a href="https://blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'cn' }">
-          <span class="rt-label">EdgeOne CN</span>
-          <span class="rt-latency" :class="latencyClass('cn')">{{ latencyText('cn') }}</span>
-          <span class="rt-dot" :class="dotClass('cn')"></span>
-        </a>
-        <a href="https://vercel-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'vercel' }">
-          <span class="rt-label">Vercel</span>
-          <span class="rt-latency" :class="latencyClass('vercel')">{{ latencyText('vercel') }}</span>
-          <span class="rt-dot" :class="dotClass('vercel')"></span>
-        </a>
-        <a href="https://netlify-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'netlify' }">
-          <span class="rt-label">Netlify</span>
-          <span class="rt-latency" :class="latencyClass('netlify')">{{ latencyText('netlify') }}</span>
-          <span class="rt-dot" :class="dotClass('netlify')"></span>
-        </a>
-        <a href="https://cf-blog.toubiec.cn" class="route-link" :class="{ active: currentLine === 'Cloudflare' }">
-          <span class="rt-label">Cloudflare</span>
-          <span class="rt-latency" :class="latencyClass('Cloudflare')">{{ latencyText('Cloudflare') }}</span>
-          <span class="rt-dot" :class="dotClass('Cloudflare')"></span>
-        </a>
-        <a href="http://localhost:4321" class="route-link" :class="{ active: currentLine === 'dev' }">
-          <span class="rt-label">Dev</span>
-          <span class="rt-latency" :class="latencyClass('dev')">{{ latencyText('dev') }}</span>
-          <span class="rt-dot" :class="dotClass('dev')"></span>
-        </a>
-      </div>
-    </el-card>
-
-    <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
-      <div class="section-title">推荐文章</div>
-      <ul class="rec-list">
-        <li v-for="(r, i) in visibleRecs" :key="r.slug" class="rec-item">
-          <span class="rec-index">{{ i + 1 }}</span>
-          <a :href="`/posts/${r.slug}`" class="rec-link">{{ r.title }}</a>
-          <span v-if="r.date" class="rec-date">{{ formatDate(r.date as any) }}</span>
-        </li>
-      </ul>
-      <div v-if="visibleRecLimit < (recommendations?.length || 0)" class="load-more-container">
-          <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
-      </div>
-    </el-card>
-      </div>
+      <el-card v-if="recommendations?.length" class="block-card recommend-card" shadow="hover">
+        <div class="section-title">推荐文章</div>
+        <ul class="rec-list">
+          <li v-for="(r, i) in visibleRecs" :key="r.slug" class="rec-item">
+            <span class="rec-index">{{ i + 1 }}</span>
+            <a :href="`/posts/${r.slug}`" class="rec-link">{{ r.title }}</a>
+            <span v-if="r.date" class="rec-date">{{ formatDate(r.date as any) }}</span>
+          </li>
+        </ul>
+        <div v-if="visibleRecLimit < (recommendations?.length || 0)" class="load-more-container">
+            <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ElCard, ElAvatar, ElTag, ElAnchor, ElAnchorLink, ElButton, ElProgress } from 'element-plus'
-import { ref, onMounted } from 'vue'
+import quotes from '../data/quotes.json'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 type Heading = { slug: string; text: string; depth: number }
 
@@ -160,8 +312,10 @@ const props = defineProps<{
   notice?: string
 }>()
 
+const displayDesc = ref(props.description || '')
+const isStyle3 = ref(false)
+
 import todoList from '../data/todos.json'
-import { computed } from 'vue'
 
 // Todo logic
 const todos = ref(todoList)
@@ -196,221 +350,201 @@ function updateTimeStats() {
   // Month
   const date = now.getDate()
   const daysInMonth = new Date(year, now.getMonth() + 1, 0).getDate()
-  const passedMonthDays = date - 1
-  const percentMonth = ((passedMonthDays + (hoursPassed/24)) / daysInMonth) * 100
-
+  const percentMonth = ((date - 1 + (hoursPassed/24)) / daysInMonth) * 100
+  
   // Year
-  const month = now.getMonth()
-  const percentYear = ((month + (date/daysInMonth)) / 12) * 100
+  const startOfYear = new Date(year, 0, 1).getTime()
+  const passedYear = now.getTime() - startOfYear
+  const percentYear = (passedYear / (1000 * 60 * 60 * 24 * (year % 4 === 0 ? 366 : 365))) * 100
   
   timeStats.value[0].value = hoursPassed
-  timeStats.value[0].percent = Math.round(percentToday)
-  
+  timeStats.value[0].percent = Number(percentToday.toFixed(0))
   timeStats.value[1].value = passedWeekDays
-  timeStats.value[1].percent = Math.round(percentWeek)
-  
-  timeStats.value[2].value = passedMonthDays
-  timeStats.value[2].percent = Math.round(percentMonth)
-  
-  timeStats.value[3].value = month
-  timeStats.value[3].percent = Math.round(percentYear)
+  timeStats.value[1].percent = Number(percentWeek.toFixed(0))
+  timeStats.value[2].value = date - 1
+  timeStats.value[2].percent = Number(percentMonth.toFixed(0))
+  timeStats.value[3].value = now.getMonth()
+  timeStats.value[3].percent = Number(percentYear.toFixed(0))
 }
 
-// Tags logic
-const visibleTagLimit = ref(11)
-const visibleTags = computed(() => (props.hotTags || []).slice(0, visibleTagLimit.value))
-function loadMoreTags() { visibleTagLimit.value += 3 }
-
-// Recommendations logic
-// index.astro passes `recommendations = all.slice(0,5)`. Max 5 items.
-const visibleRecLimit = ref(9)
-const visibleRecs = computed(() => (props.recommendations || []).slice(0, visibleRecLimit.value))
-function loadMoreRecs() { visibleRecLimit.value += 3 }
-
+// Headings
 const headingsState = ref<Heading[]>(props.headings || [])
 
-const currentLine = ref<LineKey>('cn')
-try {
-  const h = window.location.host
-  if (h === 'blog.toubiec.cn') currentLine.value = 'cn'
-  else if (h === 'vercel-blog.toubiec.cn') currentLine.value = 'vercel'
-  else if (h === 'netlify-blog.toubiec.cn') currentLine.value = 'netlify'
-  else if (h === 'cf-blog.toubiec.cn') currentLine.value = 'Cloudflare'
-  else if (h === 'localhost:4321') currentLine.value = 'dev'
-} catch {}
+// Hot Tags
+const visibleTagLimit = ref(10)
+const visibleTags = computed(() => (props.hotTags || []).slice(0, visibleTagLimit.value))
+function loadMoreTags() { visibleTagLimit.value += 10 }
 
-type LineKey = 'cn' | 'vercel' | 'dev' | 'netlify' | 'Cloudflare'
-const targets: Record<LineKey, string> = {
-  cn: 'https://blog.toubiec.cn/',
-  vercel: 'https://vercel-blog.toubiec.cn/',
-  dev: 'http://localhost:4321/',
-  netlify: 'https://netlify-blog.toubiec.cn/',
-  Cloudflare: 'https://cf-blog.toubiec.cn/',
+// Recommendations
+const visibleRecLimit = ref(5)
+const visibleRecs = computed(() => (props.recommendations || []).slice(0, visibleRecLimit.value))
+function loadMoreRecs() { visibleRecLimit.value += 5 }
+
+function formatDate(str: string) {
+  return new Date(str).toLocaleDateString('zh-CN')
 }
-const latencies = ref<Record<LineKey, number | null>>({ cn: null, vercel: null, dev: null, netlify: null, Cloudflare: null })
 
-async function measure(key: LineKey) {
-  const url = targets[key]
+// Latency Test
+const currentLine = ref('dev')
+const latencies = ref<Record<string, number>>({})
+
+function latencyClass(key: string) {
+  const l = latencies.value[key]
+  if (!l) return 'gray'
+  if (l < 200) return 'green'
+  if (l < 500) return 'orange'
+  return 'red'
+}
+function dotClass(key: string) {
+  return latencyClass(key)
+}
+function latencyText(key: string) {
+  const l = latencies.value[key]
+  if (!l) return '测速中'
+  return l + 'ms'
+}
+
+async function testLatency(url: string, key: string) {
   const start = performance.now()
   try {
-    const ctrl = new AbortController()
-    const t = setTimeout(() => ctrl.abort(), 6000)
-    await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal })
-    clearTimeout(t as any)
-    latencies.value[key] = Math.round(performance.now() - start)
+    await fetch(url, { method: 'HEAD', mode: 'no-cors' })
+    const end = performance.now()
+    latencies.value[key] = Math.round(end - start)
   } catch {
-    latencies.value[key] = -1
+    latencies.value[key] = 999
   }
 }
 
-function latencyText(key: LineKey) {
-  const v = latencies.value[key]
-  if (v === null) return '测试中'
-  if (v < 0) return '超时'
-  return `${v}ms`
-}
-function latencyClass(key: LineKey) {
-  const v = latencies.value[key]
-  if (v === null) return 'lat-na'
-  if (v < 0) return 'lat-bad'
-  if (v <= 150) return 'lat-ok'
-  if (v <= 400) return 'lat-warn'
-  return 'lat-bad'
-}
-function dotClass(key: LineKey) {
-  const v = latencies.value[key]
-  if (v === null) return 'dot na'
-  if (v < 0) return 'dot bad'
-  if (v <= 150) return 'dot ok'
-  if (v <= 400) return 'dot warn'
-  return 'dot bad'
+function refreshLatencies() {
+  latencies.value = {}
+  testLatency('https://blog.toubiec.cn', 'cn')
+  testLatency('https://vercel-blog.toubiec.cn', 'vercel')
+  testLatency('https://netlify-blog.toubiec.cn', 'netlify')
+  testLatency('https://cf-blog.toubiec.cn', 'Cloudflare')
+  testLatency('http://localhost:4321', 'dev')
 }
 
-function refreshLatencies() {
-  (['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => {
-    latencies.value[k] = null
-    measure(k)
-  })
+// Determine current line
+function checkLine() {
+  const h = window.location.hostname
+  if (h.includes('vercel')) currentLine.value = 'vercel'
+  else if (h.includes('netlify')) currentLine.value = 'netlify'
+  else if (h.includes('cf-blog')) currentLine.value = 'Cloudflare'
+  else if (h.includes('localhost')) currentLine.value = 'dev'
+  else currentLine.value = 'cn'
+}
+
+function handleThemeChange(e: any) {
+  isStyle3.value = e.detail === 'style-3'
 }
 
 onMounted(() => {
   updateTimeStats()
   setInterval(updateTimeStats, 60000)
-  ;(['cn', 'vercel', 'dev', 'netlify', 'Cloudflare'] as LineKey[]).forEach((k) => measure(k))
-  try { document.dispatchEvent(new CustomEvent('sidebar:mounted')) } catch {}
+  checkLine()
+  refreshLatencies()
+  
+  // Random quote logic
+  if (quotes && quotes.length > 0) {
+    // If no description provided or user wants random update
+    // Check if user provided description in props. If yes, maybe append?
+    // User said "update sidebar personal info description... using random json"
+    // So we override displayDesc
+    const randomIndex = Math.floor(Math.random() * quotes.length)
+    displayDesc.value = quotes[randomIndex].content
+  }
+  
+  const style = localStorage.getItem('theme-style')
+  isStyle3.value = style === 'style-3'
+  
+  window.addEventListener('theme-style-change', handleThemeChange)
 })
 
-try {
-  document.addEventListener('ajax:updateSidebar', (e: Event) => {
-    const ce = e as CustomEvent<{ headings?: Heading[] }>
-    const hs = (ce.detail && ce.detail.headings) || []
-    headingsState.value = Array.isArray(hs) ? hs : []
-  })
-} catch {}
-
-function onToc(slug: string) {
-  try {
-    const el = document.getElementById(slug)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      try { history.replaceState(null, '', `#${slug}`) } catch {}
-    }
-  } catch {}
-}
-
-function formatDate(d: string | Date) {
-  try {
-    const iso = new Date(d).toISOString()
-    return iso.slice(0, 10)
-  } catch { return '' }
-}
+onUnmounted(() => {
+  window.removeEventListener('theme-style-change', handleThemeChange)
+})
 </script>
 
 <style scoped>
-.sidebar { height: 100%; }
-.sidebar-inner::-webkit-scrollbar { display: none; }
-.sidebar-content { display:flex; flex-direction:column; gap:10px; }
-.profile-card { border-radius: 18px; overflow: hidden; }
-.profile { display:flex; flex-direction:column; align-items:center; gap:12px; padding: 12px 0; }
-:deep(.el-avatar) { transition: transform .6s ease-in-out; }
-:deep(.el-avatar:hover) { transform: rotate(360deg); }
-.info { display:flex; flex-direction:column; align-items:center; text-align: center; }
-.name { font-weight:700; font-size:16px; }
-.desc { color:#666; margin-top:4px; font-size:13px; }
-.stats { display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-top:14px; }
-.stat { background:#f5f7fa; border-radius:14px; padding:10px 8px; text-align:center; }
-.label { color:#666; font-size:12px; }
-.value { display:block; font-weight:700; font-size:18px; margin-top:4px; }
-.block-card { border-radius: 16px; }
-.section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.section-header .section-title { margin-bottom: 0; }
-.section-title { display: flex; align-items: center; gap: 8px; font-weight:700; font-size:14px; margin-bottom:12px; }
-.section-title::before { content: ""; display: block; width: 4px; height: 16px; background: #e05d98; border-radius: 2px; }
-.section-list { display:flex; gap:8px; flex-wrap:wrap; }
-.item-link { text-decoration:none; }
-.notice-card .notice-content { font-size:13px; color:#4b5563; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
-.route-card .routes { display:flex; flex-direction:column; gap:8px; }
-.route-link { display:grid; grid-template-columns: 1fr auto auto; align-items:center; gap:10px; padding:10px 12px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb; color:#374151; text-decoration:none; }
-.route-link .rt-label { font-weight:700; font-size:14px; }
-.route-link.active { border-color:#60a5fa; background:#eff6ff; }
-.rt-latency { font-size:12px; font-weight:700; }
-.rt-dot { width:8px; height:8px; border-radius:50%; }
-.dot.ok { background:#16a34a; }
-.dot.warn { background:#f59e0b; }
-.dot.bad { background:#ef4444; }
-.dot.na { background:#9ca3af; }
-.lat-ok { color:#16a34a; }
-.lat-warn { color:#f59e0b; }
-.lat-bad { color:#ef4444; }
-.lat-na { color:#9ca3af; }
-.rec-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
-.rec-item { display:grid; grid-template-columns: 24px 1fr auto; align-items:center; gap:10px; }
-.rec-index { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#eef2ff; color:#4f46e5; font-size:12px; font-weight:700; }
-.rec-link { text-decoration:none; color:#333; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-.rec-link:hover { color:#409eff; }
-.rec-date { margin-left:auto; color:#888; font-size:12px; }
-:deep(.custom-anchor .el-anchor__marker) { background: #409eff; }
-:deep(.custom-anchor .el-anchor__link) { font-size: 13px; line-height: 1.6; height: auto; padding: 6px 0; color: #606266; }
-:deep(.custom-anchor .el-anchor__link.is-active) { color: #409eff; font-weight: 700; }
-:deep(.custom-anchor .el-anchor__link:hover) { color: #409eff; }
-:deep(.toc-depth-3) { padding-left: 12px; }
-:deep(.toc-depth-4) { padding-left: 24px; }
-:deep(.toc-depth-5) { padding-left: 36px; }
-:deep(.custom-anchor) { background: transparent; }
-@media (max-width: 900px) {
-  .sidebar { display: none; }
+.sidebar {
+  /* Default sidebar styles */
 }
-
-.todo-list { display: flex; flex-direction: column; gap: 12px; }
-.todo-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #333; line-height: 1.5; transition: all 0.3s; }
-.todo-item.done { text-decoration: line-through; color: #999; opacity: 0.8; }
-.checkbox-custom {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  border: 1.5px solid #e05d98;
-  border-radius: 4px;
+.sidebar-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-  transition: all 0.2s;
-  background: transparent;
+  flex-direction: column;
+  gap: 10px;
 }
-.todo-item.done .checkbox-custom {
-  background: #e05d98;
-  border-color: #e05d98;
+.profile-card .profile { display:flex; flex-direction:column; gap:12px; align-items:center; margin-bottom:16px; text-align:center; margin-top: -52px; position: relative; z-index: 1; }
+.profile-avatar { border: 4px solid #fff; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.profile-bg { height: 120px; width: 100%; background-image: url('https://npm.elemecdn.com/typecho-joe-latest/assets/img/aside_author_image.jpg'); background-size: cover; background-position: top left; }
+.profile-wrapper { padding: 16px; position: relative; }
+.profile-card .name { font-size:20px; font-weight:700; color:#1f2937; }
+.profile-card .desc { font-size:13px; color:#6b7280; margin-top:4px; line-height:1.4; }
+.profile-card .stats { display:grid; grid-template-columns: 1fr 1fr; gap:12px; padding:0; border:none; margin-bottom:12px; }
+.profile-card .stat { display:flex; flex-direction:column; align-items:center; gap:4px; background:#f9fafb; padding:12px; border-radius:8px; }
+.profile-card .label { font-size:12px; color:#6b7280; }
+.profile-card .value { font-size:20px; font-weight:700; color:#1f2937; line-height:1.2; }
+.social-links { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.social-item { width:auto; height:auto; border-radius:8px; background:#fff; border:1px solid #e5e7eb; display:flex; align-items:center; justify-content:center; color:#6b7280; padding:10px; transition:all .2s; }
+.social-item:hover { border-color:#409eff; color:#409eff; background:#ecf5ff; transform:translateY(-2px); }
+
+:deep(.el-card) { border-radius: 12px !important; overflow: hidden; }
+
+.block-card .section-title { font-size:15px; font-weight:700; color:#111827; margin-bottom:12px; padding-left:10px; border-left:4px solid #409eff; line-height:1; }
+.notice-content { font-size:14px; color:#4b5563; line-height:1.6; background:#f9fafb; padding:10px; border-radius:8px; }
+
+.custom-anchor :deep(.el-anchor__link) { font-size:13px; padding: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.custom-anchor :deep(.el-anchor__link.is-active) { color:#409eff; font-weight:600; }
+.toc-depth-2 { margin-left: 0; }
+.toc-depth-3 { margin-left: 12px; }
+.toc-depth-4 { margin-left: 24px; }
+
+.section-list { display:flex; flex-wrap:wrap; gap:8px; }
+.item-link { text-decoration:none; }
+
+.route-card .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.routes { display:flex; flex-direction:column; gap:8px; }
+.route-link { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:#f9fafb; border-radius:8px; text-decoration:none; color:#374151; font-size:13px; transition:all .2s; border:1px solid transparent; }
+.route-link:hover { background:#f3f4f6; }
+.route-link.active { background:#ecf5ff; border-color:#d9ecff; color:#409eff; }
+.rt-latency { margin-left:auto; margin-right:8px; font-size:12px; font-family:monospace; }
+.rt-latency.green { color:#67c23a; }
+.rt-latency.orange { color:#e6a23c; }
+.rt-latency.red { color:#f56c6c; }
+.rt-latency.gray { color:#909399; }
+.rt-dot { width:8px; height:8px; border-radius:50%; background:#909399; }
+.rt-dot.green { background:#67c23a; }
+.rt-dot.orange { background:#e6a23c; }
+.rt-dot.red { background:#f56c6c; }
+
+.rec-list { list-style:none; padding:0; margin:0; }
+.rec-item { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed #f3f4f6; }
+.rec-item:last-child { border-bottom:none; }
+.rec-index { width:18px; height:18px; background:#f3f4f6; color:#909399; font-size:11px; display:flex; align-items:center; justify-content:center; border-radius:4px; flex-shrink:0; }
+.rec-item:nth-child(1) .rec-index { background:#f56c6c; color:#fff; }
+.rec-item:nth-child(2) .rec-index { background:#e6a23c; color:#fff; }
+.rec-item:nth-child(3) .rec-index { background:#67c23a; color:#fff; }
+.rec-link { flex:1; font-size:13px; color:#4b5563; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rec-link:hover { color:#409eff; text-decoration:underline; }
+.rec-date { font-size:12px; color:#9ca3af; flex-shrink:0; }
+
+.todo-list { display: flex; flex-direction: column; gap: 8px; }
+.todo-item { display: flex; align-items: center; gap: 8px; padding: 8px; background: #f9fafb; border-radius: 6px; }
+.todo-item.done .todo-text { text-decoration: line-through; color: #9ca3af; }
+.checkbox-custom { width: 16px; height: 16px; border: 1px solid #dcdfe6; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #409eff; background: #fff; }
+.todo-item.done .checkbox-custom { border-color: #409eff; background: #ecf5ff; }
+.todo-text { font-size: 13px; color: #606266; }
+.load-more-container { text-align: center; margin-top: 8px; }
+
+.time-list { display: flex; flex-direction: column; gap: 12px; }
+.time-item { }
+.time-label { font-size: 13px; color: #606266; margin-bottom: 4px; display: flex;}
+.time-value { font-weight: 700; margin: 0 4px; }
+
+/* Split Mode Styles */
+.sidebar-left-col, .sidebar-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-.checkbox-custom svg { color: white; }
-.load-more-container { display: flex; justify-content: center; margin-top: 4px; }
-
-.time-list { display: flex; flex-direction: column; gap: 16px; padding: 4px 0; }
-.time-item { display: flex; flex-direction: column; gap: 6px; }
-.time-label { font-size: 13px; color: #666; display: flex; align-items: center; }
-.time-value { font-weight: bold; font-size: 15px; margin: 0 4px; }
-
-.social-links { display: flex; justify-content: space-between; margin-top: 14px; gap: 8px; }
-.social-item { display: flex; align-items: center; justify-content: center; flex: 1; height: 40px; border: 1px solid #e5e7eb; border-radius: 12px; color: #374151; transition: all .2s; }
-.social-item:hover { border-color: #e05d98; color: #e05d98; background: #fff0f6; transform: translateY(-2px); }
-.social-item svg { width: 20px; height: 20px; }
 </style>

@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
 import DonateButtons from '@components/DonateButtons.vue'
 import WalineComments from '@components/WalineComments.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import { getEntry, getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -64,6 +65,7 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
+    <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post fade-up">
       <div class="post-header">
         <div class="post-title-box">

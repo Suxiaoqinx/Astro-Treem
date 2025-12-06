@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import { getCollection, getEntry } from 'astro:content'
 import friends from '../data/friends.json'
 import { siteConfig } from 'src/site.config'
@@ -29,6 +30,7 @@ const { Content, headings } = await entry.render()
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} headings={headings} />
+    <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
