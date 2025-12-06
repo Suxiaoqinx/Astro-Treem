@@ -426,6 +426,7 @@ function refreshLatencies() {
 
 // Determine current line
 function checkLine() {
+  if (typeof window === 'undefined') return
   const h = window.location.hostname
   if (h.includes('vercel')) currentLine.value = 'vercel'
   else if (h.includes('netlify')) currentLine.value = 'netlify'
@@ -445,7 +446,7 @@ onMounted(() => {
   refreshLatencies()
   
   // Random quote logic
-  if (quotes && quotes.length > 0) {
+  if (typeof window !== 'undefined' && quotes && quotes.length > 0) {
     // If no description provided or user wants random update
     // Check if user provided description in props. If yes, maybe append?
     // User said "update sidebar personal info description... using random json"
@@ -454,8 +455,10 @@ onMounted(() => {
     displayDesc.value = quotes[randomIndex].content
   }
   
-  const style = localStorage.getItem('theme-style')
-  isStyle3.value = style === 'style-3'
+  if (typeof localStorage !== 'undefined') {
+    const style = localStorage.getItem('theme-style')
+    isStyle3.value = style === 'style-3'
+  }
   
   window.addEventListener('theme-style-change', handleThemeChange)
 })

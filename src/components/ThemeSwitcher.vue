@@ -20,6 +20,7 @@ const isHome = ref(false)
 let notifyInstance: any = null
 
 function checkIsHome() {
+  if (typeof window === 'undefined') return
   const path = window.location.pathname
   isHome.value = path === '/' || path === '/index.html'
 }

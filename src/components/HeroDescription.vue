@@ -11,7 +11,8 @@ const text = ref(props.defaultText || '')
 
 onMounted(() => {
   if (quotes && quotes.length > 0) {
-    text.value = quotes[Math.floor(Math.random() * quotes.length)]
+    const q = quotes[Math.floor(Math.random() * quotes.length)]
+    text.value = q.content || q.text || (typeof q === 'string' ? q : JSON.stringify(q))
   }
 })
 </script>

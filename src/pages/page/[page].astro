@@ -61,7 +61,7 @@ const notice = siteConfig.notice
       <div class="hero-overlay">
         <img class="hero-avatar" src={profile.avatar} alt="avatar" />
         <div class="hero-title">{siteConfig.hero.title}</div>
-        <HeroDescription client:only="vue" defaultText={siteConfig.hero.description} />
+        <HeroDescription client:load defaultText={siteConfig.hero.description} />
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />

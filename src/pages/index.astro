@@ -44,7 +44,7 @@ const notice = siteConfig.notice
 <BaseLayout title={siteConfig.title}>
   <div class="page-grid">
     <Hero profile={profile}>
-      <HeroDescription client:only="vue" defaultText={siteConfig.hero.description} />
+      <HeroDescription client:load defaultText={siteConfig.hero.description} />
     </Hero>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
