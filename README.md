@@ -159,3 +159,14 @@ comment: false # 关闭该页面的评论
 - 构建：`npm run build`
 - 将 `dist/` 目录部署至任意静态托管（Nginx、Vercel、Netlify 等）
 - 在 `astro.config.mjs` 中设置 `site` 为生产域名（用于 sitemap 与 RSS）
+
+## 部署注意事项
+- 确保服务器支持 SPA 路由（如 Nginx 需配置 `try_files`）
+- 静态托管服务需开启 HTTPS 以支持评论区
+
+## 贡献
+- 欢迎提交 PR 改进项目
+- 代码规范：使用 Prettier 格式化，ESLint 检查
+
+## 协议
+- 本项目基于 MIT 协议开源，您可以在遵守协议条款的前提下自由使用、修改与分发
