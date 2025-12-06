@@ -2,9 +2,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import PostList from '@components/PostList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
-import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import PaginationNav from '@components/PaginationNav.vue'
 import HeroDescription from '@components/HeroDescription.vue'
+import Hero from '@components/Hero.astro'
 import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -43,16 +43,10 @@ const notice = siteConfig.notice
 ---
 <BaseLayout title={siteConfig.title}>
   <div class="page-grid">
-    <div id="home-hero" class="hero-card fade-up">
-      <img class="hero-img" src={siteConfig.hero.bg} alt="首页头图" referrerpolicy="no-referrer" />
-      <div class="hero-overlay">
-        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
-        <div class="hero-title">{siteConfig.hero.title}</div>
-        <HeroDescription client:only="vue" defaultText={siteConfig.hero.description} />
-      </div>
-    </div>
+    <Hero profile={profile}>
+      <HeroDescription client:only="vue" defaultText={siteConfig.hero.description} />
+    </Hero>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
-    <ThemeSwitcher client:only="vue" />
     <div id="pjax-container">
       <div class="fade-up">
         <PostList client:only="vue" posts={clientPosts} />
@@ -60,5 +54,4 @@ const notice = siteConfig.notice
       <PaginationNav client:visible current={1} pageSize={PAGE_SIZE} total={postsCount} basePath="/page" />
     </div>
   </div>
-
 </BaseLayout>

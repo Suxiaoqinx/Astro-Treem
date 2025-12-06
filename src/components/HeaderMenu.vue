@@ -44,7 +44,7 @@ function openDrawer(){ drawerRef.value?.open() }
 </script>
 
 <style scoped>
-.header-nav { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.header-nav { margin-left:auto; display:flex; align-items:center;}
 .nav-list-card { display:flex; align-items:center; gap:6px; background:#f5f7fa; border:1px solid #e5e7eb; border-radius:12px; padding:6px 8px; }
 .nav-item { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; text-decoration:none; color:#374151; border-radius:10px; }
 .nav-item:hover { background:#eef2ff; color:#4f46e5; }

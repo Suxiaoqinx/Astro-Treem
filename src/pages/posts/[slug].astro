@@ -3,7 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
 import DonateButtons from '@components/DonateButtons.vue'
 import WalineComments from '@components/WalineComments.vue'
-import ThemeSwitcher from '@components/ThemeSwitcher.vue'
+import Hero from '@components/Hero.astro'
 import { getEntry, getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -56,16 +56,10 @@ const readMinutes = Math.max(1, Math.round(wordCount / 500))
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description}>
   <div class="page-grid">
-    <div id="home-hero" class="hero-card fade-up">
-      <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
-      <div class="hero-overlay">
-        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
-        <div class="hero-title">{siteConfig.hero.title}</div>
-        <div class="hero-desc">{siteConfig.hero.description}</div>
-      </div>
-    </div>
+    <Hero profile={profile}>
+      <div class="hero-desc">{siteConfig.hero.description}</div>
+    </Hero>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} headings={headings} notice={notice} />
-    <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post fade-up">
       <div class="post-header">
         <div class="post-title-box">

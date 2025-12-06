@@ -175,7 +175,7 @@ body.theme-style-3 .sidebar-right-col {
 .copy-btn:hover { background: rgba(255,255,255,.2); }
 
 /* Talks Page */
-.talks-list { display: flex; flex-direction: column; gap: 20px; }
+.talks-list { display: flex; flex-direction: column; gap: 10px; }
 .talk-card { background: #fff; padding: 20px; border-radius: 16px; border: 1px solid #e5e7eb; }
 .talk-meta { color: #9ca3af; font-size: 13px; margin-bottom: 8px; }
 .talk-content { color: #374151; font-size: 16px; line-height: 1.7; }

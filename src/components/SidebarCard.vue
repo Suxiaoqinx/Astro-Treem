@@ -35,36 +35,19 @@
         </el-card>
 
         <el-card class="block-card todo-card" shadow="hover">
-          <div class="section-title">待办事项</div>
-          <div class="todo-list">
-            <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
-              <div class="checkbox-custom">
-                 <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              </div>
-              <span class="todo-text">{{ item.text }}</span>
+        <div class="section-title">待办事项</div>
+        <div class="todo-list">
+          <div v-for="(item, index) in visibleTodos" :key="index" class="todo-item" :class="{ done: item.done }">
+            <div class="checkbox-custom">
+               <svg v-if="item.done" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <div v-if="visibleTodoCount < todos.length" class="load-more-container">
-              <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
-            </div>
+            <span class="todo-text">{{ item.text }}</span>
           </div>
-        </el-card>
-
-        <el-card class="block-card time-card" shadow="hover">
-          <div class="section-title">时光流逝</div>
-          <div class="time-list">
-            <div v-for="(item, index) in timeStats" :key="index" class="time-item">
-              <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
-              <el-progress 
-                :percentage="item.percent" 
-                :color="item.color" 
-                :stroke-width="10" 
-                striped 
-                striped-flow 
-                :duration="20"
-              />
-            </div>
+          <div v-if="visibleTodoCount < todos.length" class="load-more-container">
+            <el-button link type="primary" size="small" @click="loadMoreTodos">加载更多</el-button>
           </div>
-        </el-card>
+        </div>
+      </el-card>
       </div>
 
       <div class="sidebar-right-col fade-up">
@@ -145,6 +128,23 @@
               <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
           </div>
         </el-card>
+
+        <el-card class="block-card time-card" shadow="hover">
+          <div class="section-title">时光流逝</div>
+          <div class="time-list">
+            <div v-for="(item, index) in timeStats" :key="index" class="time-item">
+              <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
+              <el-progress 
+                :percentage="item.percent" 
+                :color="item.color" 
+                :stroke-width="10" 
+                striped 
+                striped-flow 
+                :duration="20"
+              />
+            </div>
+          </div>
+        </el-card>
       </div>
     </template>
 
@@ -196,23 +196,6 @@
         </div>
       </el-card>
 
-      <el-card class="block-card time-card" shadow="hover">
-        <div class="section-title">时光流逝</div>
-        <div class="time-list">
-          <div v-for="(item, index) in timeStats" :key="index" class="time-item">
-            <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
-            <el-progress 
-              :percentage="item.percent" 
-              :color="item.color" 
-              :stroke-width="10" 
-              striped 
-              striped-flow 
-              :duration="20"
-            />
-          </div>
-        </div>
-      </el-card>
-      
       <el-card v-if="notice" class="block-card notice-card" shadow="hover">
         <div class="section-title">公告</div>
         <div class="notice-content">{{ notice }}</div>
@@ -288,6 +271,23 @@
         </ul>
         <div v-if="visibleRecLimit < (recommendations?.length || 0)" class="load-more-container">
             <el-button link type="primary" size="small" @click="loadMoreRecs">加载更多</el-button>
+        </div>
+      </el-card>
+
+      <el-card class="block-card time-card" shadow="hover">
+        <div class="section-title">时光流逝</div>
+        <div class="time-list">
+          <div v-for="(item, index) in timeStats" :key="index" class="time-item">
+            <div class="time-label">{{ item.label }} <span class="time-value" :style="{ color: item.color }">{{ item.value }}{{ item.unit }}</span></div>
+            <el-progress 
+              :percentage="item.percent" 
+              :color="item.color" 
+              :stroke-width="10" 
+              striped 
+              striped-flow 
+              :duration="20"
+            />
+          </div>
         </div>
       </el-card>
     </div>

@@ -60,7 +60,7 @@ onUnmounted(() => {
   --el-backtop-bg-color: #fff;
   --el-backtop-text-color: #409eff;
   --el-backtop-hover-bg-color: #f2f6fc;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border: 1px solid #e5e7eb;
   width: 40px;
   height: 40px;

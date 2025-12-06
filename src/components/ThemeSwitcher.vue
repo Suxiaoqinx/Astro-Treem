@@ -7,28 +7,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, h, watch } from 'vue'
+import { ref, onMounted, h, watch, onUnmounted } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
 const props = defineProps<{
   showModeSwitch?: boolean
-  onModeChange?: (mode: 'list' | 'grid') => void
-  currentMode?: 'list' | 'grid'
 }>()
 
-const mode = ref<'list' | 'grid'>(props.currentMode || 'list')
-
-watch(() => props.currentMode, (val) => {
-  if (val) mode.value = val
-})
-
+const mode = ref<'list' | 'grid'>('list')
 const themeStyle = ref<'default' | 'style-1' | 'style-2' | 'style-3'>('default')
+const isHome = ref(false)
 let notifyInstance: any = null
+
+function checkIsHome() {
+  const path = window.location.pathname
+  isHome.value = path === '/' || path === '/index.html'
+}
 
 function setMode(m: 'list' | 'grid') {
   mode.value = m
-  if (props.onModeChange) {
-    props.onModeChange(m)
+  window.dispatchEvent(new CustomEvent('layout-mode-change', { detail: m }))
+}
+
+function handleModeSync(e: Event) {
+  const customEvent = e as CustomEvent
+  if (customEvent.detail) {
+    mode.value = customEvent.detail
   }
 }
 
@@ -54,7 +58,7 @@ function openSettings() {
 
   const content = []
 
-  if (props.showModeSwitch) {
+  if (isHome.value) {
     content.push(h('div', { class: 'switcher-title' }, '显示模式'))
     content.push(h('div', { class: 'mode-switch' }, [
       h('div', { 
@@ -96,7 +100,7 @@ function openSettings() {
     ]))
   }
 
-  content.push(h('div', { class: 'switcher-title', style: props.showModeSwitch ? 'margin-top: 12px' : '' }, '主题样式'))
+  content.push(h('div', { class: 'switcher-title', style: isHome.value ? 'margin-top: 12px' : '' }, '主题样式'))
   content.push(h('div', { class: 'mode-switch' }, [
     h('div', { 
       class: `mode-btn ${themeStyle.value === 'default' ? 'active' : ''}`,
@@ -157,10 +161,16 @@ function openSettings() {
 }
 
 onMounted(() => {
-  if (props.currentMode) {
-    mode.value = props.currentMode
-  }
+  checkIsHome()
+  document.addEventListener('swup:page:view', checkIsHome)
+  window.addEventListener('layout-mode-sync', handleModeSync)
   
+  // Try to read initial mode from localstorage if available, though PostList usually handles this
+  const savedMode = localStorage.getItem('layout-mode')
+  if (savedMode === 'list' || savedMode === 'grid') {
+    mode.value = savedMode
+  }
+
   const savedStyle = localStorage.getItem('theme-style') as any
   if (['default', 'style-1', 'style-2', 'style-3'].includes(savedStyle)) {
     themeStyle.value = savedStyle
@@ -174,6 +184,11 @@ onMounted(() => {
     }
   }
 })
+
+onUnmounted(() => {
+  document.removeEventListener('swup:page:view', checkIsHome)
+  window.removeEventListener('layout-mode-sync', handleModeSync)
+})
 </script>
 
 <style scoped>
@@ -185,7 +200,7 @@ onMounted(() => {
   height: 40px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   border: 1px solid #e5e7eb;
   display: flex;
   align-items: center;

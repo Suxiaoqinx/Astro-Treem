@@ -9,19 +9,12 @@
         @tagClick="onTagClick"
       />
     </div>
-
-    <ThemeSwitcher 
-      :showModeSwitch="true" 
-      :currentMode="mode"
-      :onModeChange="setMode"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import PostCard from './PostCard.vue'
-import ThemeSwitcher from './ThemeSwitcher.vue'
 
 const props = defineProps<{
   posts: any[]
@@ -43,16 +36,32 @@ function setMode(m: 'list' | 'grid') {
   localStorage.setItem('post-list-mode', m)
 }
 
+function handleModeChange(e: Event) {
+  const customEvent = e as CustomEvent
+  if (customEvent.detail) {
+    setMode(customEvent.detail)
+  }
+}
+
 function onTagClick(tag: string) {
   window.location.href = `/tags/${tag}`
 }
 
 onMounted(() => {
+  window.addEventListener('layout-mode-change', handleModeChange)
+  
   // Re-check in onMounted just in case
   const saved = localStorage.getItem('post-list-mode')
   if (saved === 'list' || saved === 'grid') {
     mode.value = saved
   }
+  
+  // Sync with switcher
+  window.dispatchEvent(new CustomEvent('layout-mode-sync', { detail: mode.value }))
+})
+
+onUnmounted(() => {
+  window.removeEventListener('layout-mode-change', handleModeChange)
 })
 </script>
 

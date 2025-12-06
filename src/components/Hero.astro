@@ -1,0 +1,13 @@
+---
+import { siteConfig } from 'src/site.config'
+const { profile } = Astro.props
+---
+
+<div id="home-hero" class="hero-card fade-up">
+  <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
+  <div class="hero-overlay">
+    <img class="hero-avatar" src={profile.avatar} alt="avatar" />
+    <div class="hero-title">{siteConfig.hero.title}</div>
+    <slot />
+  </div>
+</div>

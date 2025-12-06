@@ -3,12 +3,16 @@ import 'element-plus/dist/index.css'
 import 'src/styles/main.css'
 import 'src/styles/switcher.css'
 import { getCollection } from 'astro:content'
-import HeaderMenu from '@components/HeaderMenu.vue'
+import Header from '@components/Header.astro'
+import Footer from '@components/Footer.astro'
 import BackToTop from '@components/BackToTop.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import { siteConfig } from 'src/site.config'
+
 const { title = siteConfig.title, description = siteConfig.description } = Astro.props
 const all = await getCollection('posts')
 const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', description: p.data.description || '', tags: p.data.tags || [] }))
+const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html'
 ---
 <html lang="zh-CN">
   <head>
@@ -19,54 +23,29 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     <link rel="icon" href={siteConfig.avatar} type="image/svg+xml" />
     <link rel="stylesheet" href="https://unpkg.com/sodesu-comment@0.5.1/dist/sodesu-comment.css" />
     <link rel="stylesheet" href="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.css" />
-    <script src="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js"></script>
-
+    <script src="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js" is:inline></script>
+    <style>
+      /* Swup Transitions */
+      .transition-fade {
+        transition: opacity 0.3s;
+        opacity: 1;
+      }
+      html.is-animating .transition-fade {
+        opacity: 0;
+      }
+    </style>
   </head>
   <body style="margin:0; min-height:100vh; font-family: system-ui, -apple-system, sans-serif;">
     <div class="common-layout" style="min-height:100vh; display:flex; flex-direction:column;">
       <div class="el-container is-vertical" style="flex:1; display: flex; flex-direction: column;">
-        <header class="el-header" style="padding:0; height:auto; border-bottom:1px solid #eee;">
-          <div style="max-width:85rem; margin:0 auto; width:100%; padding:10px 20px 10px; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:16px;">
-            <a href="/" class="home-button">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 11l9-7 9 7v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-7Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 15c.8 1 2.2 1 3 0" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Home</span>
-            </a>
-            <HeaderMenu client:only="vue" />
-          </div>
-        </header>
-
-        <slot name="hero" />
-
-        <div class="el-container main-container-wrapper" style="max-width:85rem; margin:20px auto; width:100%; padding:0 20px; box-sizing:border-box; gap:20px; flex: 1;">
-           {Astro.slots.has('sidebar') && (
-              <aside class="el-aside" style="width:360px;">
-                 <slot name="sidebar" />
-              </aside>
-           )}
-           
-           <div class="el-container is-vertical" style="overflow:visible; flex: 1; display: flex; flex-direction: column;">
-              <main class="el-main" style="padding:0; overflow:visible; flex: 1;">
-                 <slot />
-              </main>
-           </div>
-        </div>
         
-        <footer class="el-footer" style="height:auto; padding:0; text-align:center; color:#666; border-top:1px solid #eee; margin-top: 40px; width: 100%; box-sizing: border-box;">
-          <div style="max-width:85rem; margin:0 auto; width:100%; padding:24px 20px; box-sizing: border-box;">
-             <div class="footer-badges">
-               <span class="badge purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 4h10v4H7zM4 10h16v10H4z" stroke="#7e57c2" stroke-width="2"/></svg>Frame</span>
-               <span class="badge purple">Astro</span>
-               <a href="https://github.com/Suxiaoqinx/Astro-Treem" class="badge gray" style="text-decoration:none;" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>GitHub开源</a>
-               <a href="/sitemap-index.xml" class="badge orange" style="text-decoration:none;" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 6h12v4H6zM6 14h12v4H6z" stroke="#e67e22" stroke-width="2"/></svg>Sitemap</a>
-               <a href="/rss.xml" class="badge orange" style="text-decoration:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="18" r="2" fill="#e67e22"/><path d="M4 4c8 0 16 8 16 16" stroke="#e67e22" stroke-width="2"/><path d="M4 10c5 0 10 5 10 10" stroke="#e67e22" stroke-width="2"/></svg>RSS订阅</a>
-               <span class="badge gray">桂ICP备2022007996号-1</span>
-             </div>
-             <div style="margin-top:10px;">© 2020 - {new Date().getFullYear()} {siteConfig.title}</div>
-          </div>
-        </footer>
+        <Header />
+
+        <main id="swup" class="transition-fade" style="flex: 1; width: 100%; max-width: 100rem; margin: 20px auto; padding: 0 20px; box-sizing: border-box;">
+            <slot />
+        </main>
+        
+        <Footer />
       </div>
     </div>
 
@@ -91,15 +70,51 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
     </div>
     </div>
     
+    <ThemeSwitcher client:only="vue" showModeSwitch={isHomePage} />
     <BackToTop client:only="vue" />
 
-    <script type="module" is:inline>
-      const CONTAINER_ID = 'pjax-container'
+    <script>
+      import Swup from 'swup';
+      const swup = new Swup({
+        containers: ['#swup'],
+        animateHistoryBrowsing: true
+      });
       
+      swup.hooks.on('page:view', () => {
+        document.dispatchEvent(new CustomEvent('swup:page:view'));
+      });
+
+      const CONTAINER_ID = 'pjax-container' // This ID is expected to be inside #swup by the content pages
       
       let VIEWER_INSTANCE = null
+
+      function init() {
+        emitSidebarHeadings(); 
+        enhancePostImages(); 
+        setupDonateOverlay(); 
+        setupViewer(); 
+        wrapTables(); 
+        setupCodeCopy();
+        revealPage();
+        
+        // Re-initialize Search logic (events need to be re-attached if elements were replaced, but search overlay is OUTSIDE swup, so it persists!)
+        // However, if the user navigated, we might want to ensure everything is clean.
+        // Search logic is mostly global.
+      }
+
+      // Run on initial load
+      init();
+      
+      // Run on Swup content replacement
+      swup.hooks.on('content:replace', () => {
+        // Scroll to top or handle hash
+        init();
+      });
+
+      // Helper functions
       function enhancePostImages(){
-        const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
+        // Look for .prose inside #swup (which contains #pjax-container usually)
+        const root = document.querySelector('.post-content-card .prose')
         if (!root) return
         const imgs = Array.from(root.querySelectorAll('img'))
         for (const img of imgs){
@@ -115,11 +130,11 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
             this.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
             this.classList.add('img-error')
           }, { once: true })
-          
         }
       }
+
       function setupViewer(){
-        const root = document.querySelector('#'+CONTAINER_ID+' .post-content-card .prose')
+        const root = document.querySelector('.post-content-card .prose')
         if (!root || !(window && window.Viewer)) return
         if (VIEWER_INSTANCE && typeof VIEWER_INSTANCE.destroy === 'function') {
           try { VIEWER_INSTANCE.destroy() } catch {}
@@ -136,12 +151,18 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           filter(image){ try { return image.classList && image.classList.contains('posts-img') } catch { return false } }
         })
       }
+
       function setupDonateOverlay(){
-        const overlay = document.querySelector('#'+CONTAINER_ID+' #donate-overlay')
-        const title = document.querySelector('#'+CONTAINER_ID+' #donate-title')
-        const img = document.querySelector('#'+CONTAINER_ID+' #donate-qr')
-        const closeBtn = document.querySelector('#'+CONTAINER_ID+' #donate-close')
+        // Note: The donate overlay HTML is inside the content (in [slug].astro), so it gets replaced.
+        // We need to find it inside the new content.
+        const overlay = document.querySelector('.donate-overlay')
+        const title = document.querySelector('#donate-title')
+        const img = document.querySelector('#donate-qr')
+        const closeBtn = document.querySelector('#donate-close')
         const backdrop = overlay ? overlay.querySelector('.donate-backdrop') : null
+        
+        if (!overlay) return;
+
         function show(type){
           if (!(overlay instanceof HTMLElement) || !(title instanceof HTMLElement) || !(img instanceof HTMLImageElement)) return
           title.textContent = type === 'wechat' ? '推荐使用微信' : '推荐使用支付宝'
@@ -155,11 +176,13 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           document.body.style.overflow = 'hidden'
         }
         function hide(){ if (!(overlay instanceof HTMLElement)) return; overlay.style.display = 'none'; document.body.style.overflow = '' }
-        const btns = Array.from(document.querySelectorAll('#'+CONTAINER_ID+' .donate-card [data-donate]'))
+        
+        const btns = Array.from(document.querySelectorAll('.donate-card [data-donate]'))
         for (const b of btns){ b.addEventListener('click', (e) => { e.preventDefault(); show(b.getAttribute('data-donate')||'') }) }
         if (closeBtn) closeBtn.addEventListener('click', () => hide())
         if (backdrop) backdrop.addEventListener('click', () => hide())
-        const a = document.querySelector('#'+CONTAINER_ID+' #article-url')
+        
+        const a = document.querySelector('#article-url')
         if (a && a instanceof HTMLAnchorElement) {
           const url = window.location.origin + window.location.pathname
           a.textContent = url
@@ -168,9 +191,7 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
       }
       
       function emitSidebarHeadings(){
-        const container = document.getElementById(CONTAINER_ID)
-        if (!container) return
-        const prose = container.querySelector('.prose')
+        const prose = document.querySelector('.prose')
         const hs = []
         if (prose) {
           const nodes = Array.from(prose.querySelectorAll('h2,h3,h4'))
@@ -184,17 +205,20 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
             hs.push({ slug, text, depth })
           })
         }
+        // Sidebar is re-rendered by Swup if it is inside #swup.
+        // If Sidebar is a Vue component inside #swup, it needs to be mounted.
+        // But Swup destroys it.
+        // If Sidebar is outside #swup, we dispatch event.
         try { document.dispatchEvent(new CustomEvent('ajax:updateSidebar', { detail: { headings: hs } })) } catch {}
       }
       
-      
-      
       function revealPage(){
-        const c = document.getElementById(CONTAINER_ID)
+        const c = document.getElementById('pjax-container') // Keep using pjax-container ID for internal styling/reference if needed
         if (c) c.classList.add('page-ready')
       }
+
       function wrapTables() {
-        const tables = document.querySelectorAll('#pjax-container .prose table')
+        const tables = document.querySelectorAll('.prose table')
         tables.forEach(table => {
           if (table.parentNode.className !== 'table-wrapper') {
             const wrapper = document.createElement('div')
@@ -204,8 +228,9 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           }
         })
       }
+
       function setupCodeCopy() {
-        const pres = document.querySelectorAll('#pjax-container .prose pre')
+        const pres = document.querySelectorAll('.prose pre')
         pres.forEach(pre => {
           if (pre.parentNode.className.includes('code-wrapper')) return
           const wrapper = document.createElement('div')
@@ -214,18 +239,15 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           wrapper.appendChild(pre)
           const btn = document.createElement('button')
           btn.className = 'copy-btn'
-          // SVG icon for clipboard
           btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
           btn.addEventListener('click', async () => {
             const code = pre.querySelector('code')
             const text = code ? code.innerText : pre.innerText
             try {
               await navigator.clipboard.writeText(text)
-              // Success icon (checkmark)
               btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
               if (window.ElMessage) window.ElMessage({ message: '复制成功', type: 'success', duration: 2000 })
               setTimeout(() => { 
-                // Restore clipboard icon
                 btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
               }, 2000)
             } catch (err) {
@@ -236,13 +258,8 @@ const searchIndex = all.map((p) => ({ slug: p.slug, title: p.data.title || '', d
           wrapper.appendChild(btn)
         })
       }
-      try {
-        document.addEventListener('astro:page-load', () => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer(); wrapTables(); setupCodeCopy() })
-        document.addEventListener('sidebar:mounted', () => { revealPage() })
-      } catch {}
-      setTimeout(() => { emitSidebarHeadings(); enhancePostImages(); setupDonateOverlay(); setupViewer(); wrapTables(); setupCodeCopy() }, 0)
-      setTimeout(() => { revealPage() }, 1500)
       
+      // Search Logic (Global)
       let INDEX = []
       try {
         const el = document.getElementById('search-index')
