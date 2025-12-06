@@ -2,7 +2,9 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import PostList from '@components/PostList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import PaginationNav from '@components/PaginationNav.vue'
+import HeroDescription from '@components/HeroDescription.vue'
 import { getCollection } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 
@@ -46,10 +48,11 @@ const notice = siteConfig.notice
       <div class="hero-overlay">
         <img class="hero-avatar" src={profile.avatar} alt="avatar" />
         <div class="hero-title">{siteConfig.hero.title}</div>
-        <div class="hero-desc">{siteConfig.hero.description}</div>
+        <HeroDescription client:only="vue" defaultText={siteConfig.hero.description} />
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <ThemeSwitcher client:only="vue" />
     <div id="pjax-container">
       <div class="fade-up">
         <PostList client:only="vue" posts={clientPosts} />

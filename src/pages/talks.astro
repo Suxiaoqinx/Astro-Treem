@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
 import SidebarCard from '@components/SidebarCard.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import { getCollection, getEntry } from 'astro:content'
 import { siteConfig } from 'src/site.config'
 import talks from 'src/data/talks.json'
@@ -31,6 +32,7 @@ const list = [...talks].sort((a, b) => new Date(b.date).getTime() - new Date(a.d
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post">
       <div class="talks-list fade-up">
         {list.map((t) => (

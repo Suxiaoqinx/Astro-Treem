@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 import SidebarCard from '@components/SidebarCard.vue'
+import ThemeSwitcher from '@components/ThemeSwitcher.vue'
 import TagsList from '@components/TagsList.vue'
 import { siteConfig } from 'src/site.config'
 // import TagFilter from '@components/TagFilter.vue'
@@ -43,6 +44,7 @@ const allTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).map(([na
       </div>
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
+    <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post">
       <div class="post-header">
         <div class="post-title-box">
