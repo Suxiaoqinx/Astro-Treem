@@ -44,7 +44,12 @@ function handleModeChange(e: Event) {
 }
 
 function onTagClick(tag: string) {
-  window.location.href = `/tags/${tag}`
+  const url = `/tags/${tag}`
+  if ((window as any).swup) {
+    (window as any).swup.navigate(url)
+  } else {
+    window.location.href = url
+  }
 }
 
 onMounted(() => {

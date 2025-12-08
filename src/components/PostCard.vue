@@ -44,16 +44,24 @@ function onLoad() {
 
 const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
 
+function navigateTo(url: string) {
+  if ((window as any).swup) {
+    (window as any).swup.navigate(url)
+  } else {
+    window.location.href = url
+  }
+}
+
 function onTagClick(t: string) {
   const url = `/tags/${t}`
-  window.location.href = url
+  navigateTo(url)
 }
 
 function onCardClick(e: MouseEvent) {
   const target = e.target as HTMLElement
   if (target.closest('a')) return
   const url = href.value
-  window.location.href = url
+  navigateTo(url)
 }
 
 const dateStr = computed(() => new Date(date).toLocaleDateString())
