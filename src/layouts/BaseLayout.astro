@@ -26,11 +26,11 @@ const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/index.
     <script src="https://unpkg.com/viewerjs@1.11.6/dist/viewer.min.js" is:inline></script>
     <style>
       /* Swup Transitions */
-      #pjax-container {
+      #pjax-container, #home-hero {
         transition: opacity 0.3s;
         opacity: 1;
       }
-      html.is-animating #pjax-container {
+      html.is-animating #pjax-container, html.is-animating #home-hero {
         opacity: 0;
       }
     </style>
@@ -76,7 +76,7 @@ const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/index.
     <script>
       import Swup from 'swup';
       const swup = new Swup({
-        containers: ['#pjax-container'],
+        containers: ['#home-hero', '#pjax-container'],
         animateHistoryBrowsing: true
       });
       window.swupInstance = swup;    swup.hooks.on('page:view', () => {

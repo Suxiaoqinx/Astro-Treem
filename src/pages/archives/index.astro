@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
+import Hero from '@components/Hero.astro'
 import { getCollection } from 'astro:content'
 import TagsList from '@components/TagsList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
@@ -28,13 +29,9 @@ const notice = siteConfig.notice
 ---
 <BaseLayout title="归档">
   <div class="page-grid">
-    <div id="home-hero" class="hero-card">
-      <img class="hero-img" src={siteConfig.hero.bg} alt="头图" referrerpolicy="no-referrer" />
-      <div class="hero-overlay">
-        <div class="hero-title">{hero.title}</div>
-        <div class="hero-desc">{hero.description}</div>
-      </div>
-    </div>
+    <Hero title={hero.title}>
+      <div class="hero-desc">{hero.description}</div>
+    </Hero>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <ThemeSwitcher client:only="vue" />
     <article id="pjax-container" class="post fade-up">

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro'
+import Hero from '@components/Hero.astro'
 import PostList from '@components/PostList.vue'
 import SidebarCard from '@components/SidebarCard.vue'
 import PaginationNav from '@components/PaginationNav.vue'
@@ -56,14 +57,9 @@ const notice = siteConfig.notice
 ---
 <BaseLayout title="博客">
   <div class="page-grid">
-    <div id="home-hero" class="hero-card fade-up">
-      <img class="hero-img" src={siteConfig.hero.bg} alt="首页头图" referrerpolicy="no-referrer" />
-      <div class="hero-overlay">
-        <img class="hero-avatar" src={profile.avatar} alt="avatar" />
-        <div class="hero-title">{siteConfig.hero.title}</div>
-        <HeroDescription client:load defaultText={siteConfig.hero.description} />
-      </div>
-    </div>
+    <Hero profile={profile}>
+      <HeroDescription client:load defaultText={siteConfig.hero.description} />
+    </Hero>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <div id="pjax-container">
       <div class="fade-up">
