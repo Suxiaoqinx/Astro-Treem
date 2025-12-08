@@ -282,13 +282,11 @@ const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/index.
       function openOverlay() {
         if (!overlay) return
         overlay.style.display = 'block'
-        document.body.style.overflow = 'hidden'
         setTimeout(() => { input && input.focus() }, 0)
       }
       function closeOverlay() {
         if (!overlay) return
         overlay.style.display = 'none'
-        document.body.style.overflow = ''
         if (input) input.value = ''
         if (list) list.innerHTML = ''
         if (empty) empty.style.display = 'none'
