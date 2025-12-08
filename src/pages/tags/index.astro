@@ -45,7 +45,7 @@ const allTags = Array.from(tagCount.entries()).sort((a,b) => b[1]-a[1]).map(([na
     </div>
     <SidebarCard client:only="vue" name={profile.name} description={profile.description} avatar={profile.avatar} counts={counts} hotTags={hotTags} recommendations={recommendations} notice={notice} />
     <ThemeSwitcher client:only="vue" />
-    <article id="pjax-container" class="post">
+    <article id="pjax-container" class="post fade-up">
       <div class="post-header">
         <div class="post-title-box">
           <h1 class="post-title">标签</h1>

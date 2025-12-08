@@ -79,8 +79,7 @@ const isHomePage = Astro.url.pathname === '/' || Astro.url.pathname === '/index.
         containers: ['#pjax-container'],
         animateHistoryBrowsing: true
       });
-      
-      swup.hooks.on('page:view', () => {
+      window.swupInstance = swup;    swup.hooks.on('page:view', () => {
         document.dispatchEvent(new CustomEvent('swup:page:view'));
       });
 

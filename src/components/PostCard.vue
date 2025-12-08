@@ -13,7 +13,7 @@
         <div class="post-desc" v-if="description">{{ description }}</div>
         <div class="post-meta">
           <el-tag type="danger" size="small" effect="dark" class="meta-date">{{ dateStr }}</el-tag>
-          <el-tag v-for="t in displayTags" :key="t" class="meta-tag clickable" @click.stop="onTagClick(t)">{{ t }}</el-tag>
+          <el-tag v-for="t in displayTags" :key="t" size="small" class="meta-tag clickable" @click.stop="onTagClick(t)">{{ t }}</el-tag>
         </div>
       </div>
     </div>
@@ -45,8 +45,8 @@ function onLoad() {
 const emit = defineEmits<{ (e: 'tagClick', tag: string): void }>()
 
 function navigateTo(url: string) {
-  if ((window as any).swup) {
-    (window as any).swup.navigate(url)
+  if ((window as any).swupInstance) {
+    (window as any).swupInstance.navigate(url)
   } else {
     window.location.href = url
   }

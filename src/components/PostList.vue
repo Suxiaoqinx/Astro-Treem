@@ -45,8 +45,8 @@ function handleModeChange(e: Event) {
 
 function onTagClick(tag: string) {
   const url = `/tags/${tag}`
-  if ((window as any).swup) {
-    (window as any).swup.navigate(url)
+  if ((window as any).swupInstance) {
+    (window as any).swupInstance.navigate(url)
   } else {
     window.location.href = url
   }
